@@ -26,6 +26,8 @@ Potential adaptations discussed include intelligence cards, source-linked detail
 
 ## Materials and organization
 
+Independent public-source research is available in the [September 9, 2026 research dossier](docs/research/2026-09-09/README.md). Four reports cover company/services, markets/buyers/demand, competitors/public proof, and marketing content. Findings distinguish verified evidence, company claims, and analyst hypotheses. No website was built as part of this research.
+
 As materials are provided, organize them by purpose:
 
 - `assets/strategy/`: supplied ICPs, positioning, service priorities, and other foundational documents.
@@ -36,7 +38,7 @@ These are planned destinations; folders will be added when relevant files are su
 
 ## Next planning steps
 
-1. Receive and review 3HUE's customer profiles and strategy materials.
+1. Review the independent research dossier, then reconcile it with 3HUE's customer profiles and strategy materials when supplied.
 2. Define priority marketing decisions and deliverables the tool should support.
 3. Agree on the first-release scope, information sources, and refresh expectations.
 4. Finalize the interface and implementation plan before building.
