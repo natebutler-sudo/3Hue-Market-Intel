@@ -1,2 +1,2 @@
-# 3Hue---Market-Intel
+# 3Hue-Market-Intel
 Marketing Tool
