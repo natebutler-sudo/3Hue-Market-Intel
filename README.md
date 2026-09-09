@@ -28,17 +28,19 @@ Potential adaptations discussed include intelligence cards, source-linked detail
 
 Independent public-source research is available in the [September 9, 2026 research dossier](docs/research/2026-09-09/README.md). Four reports cover company/services, markets/buyers/demand, competitors/public proof, and marketing content. Findings distinguish verified evidence, company claims, and analyst hypotheses. No website was built as part of this research.
 
-As materials are provided, organize them by purpose:
+All 40 supplied September 8–9 source files are preserved in the [organized source library](assets/strategy/2026-09-08-09-source-library/README.md), with original filenames and a checksum manifest. The [document review and build-readiness assessment](docs/discovery/source-review-2026-09-09/README.md) covers every file, version conflicts, and the remaining product decisions.
+
+Materials are organized by purpose:
 
 - `assets/strategy/`: supplied ICPs, positioning, service priorities, and other foundational documents.
 - `assets/brand/`: supplied logos, brand guidelines, and visual references.
 - `docs/`: planning notes, requirements, decisions, and summaries derived from the supplied materials.
 
-These are planned destinations; folders will be added when relevant files are supplied. Preserve original documents and keep derived planning notes separate.
+Original documents are preserved separately from derived planning notes.
 
 ## Next planning steps
 
-1. Review the independent research dossier, then reconcile it with 3HUE's customer profiles and strategy materials when supplied.
+1. Discuss the source-review findings and adopt the reconciled business context as a working foundation.
 2. Define priority marketing decisions and deliverables the tool should support.
 3. Agree on the first-release scope, information sources, and refresh expectations.
 4. Finalize the interface and implementation plan before building.
