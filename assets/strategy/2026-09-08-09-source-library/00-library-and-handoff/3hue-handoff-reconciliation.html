@@ -1,0 +1,390 @@
+<meta charset="utf-8">
+<title>The Handoff</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#f6f7f9; --surface:#ffffff; --sunken:#f0f2f6; --line:#e2e7ee; --line-strong:#cbd5e1;
+  --ink:#101822; --ink-2:#3d4a5a; --ink-3:#6b7a8c; --ink-4:#8d9aa9;
+  --brand:#2f86b3; --brand-bright:#44a8d9; --brand-wash:#e6f3fa; --brand-edge:#bfe0f1;
+  --ok:#2f8562; --ok-wash:#e4f2ec; --watch:#a8781f; --watch-wash:#f7efdd; --trap:#a4462f; --trap-wash:#f7e8e4;
+  --shadow:0 1px 2px rgba(16,24,34,.05), 0 8px 22px rgba(16,24,34,.06);
+  --display:"Sora","Trebuchet MS",system-ui,sans-serif;
+  --body:"IBM Plex Sans","Segoe UI",Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono","SFMono-Regular",Consolas,monospace;
+  --measure:66ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b1118; --surface:#111827; --sunken:#0f172a; --line:#1f2937; --line-strong:#334155;
+    --ink:#f8fafc; --ink-2:#cbd5f5; --ink-3:#94a3b8; --ink-4:#748296;
+    --brand:#44a8d9; --brand-bright:#6cc0e6; --brand-wash:#0f2b3a; --brand-edge:#1d4e68;
+    --ok:#4bb98a; --ok-wash:#0f2a20; --watch:#d6a844; --watch-wash:#2c2312; --trap:#d97a60; --trap-wash:#2e1712;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b1118; --surface:#111827; --sunken:#0f172a; --line:#1f2937; --line-strong:#334155;
+  --ink:#f8fafc; --ink-2:#cbd5f5; --ink-3:#94a3b8; --ink-4:#748296;
+  --brand:#44a8d9; --brand-bright:#6cc0e6; --brand-wash:#0f2b3a; --brand-edge:#1d4e68;
+  --ok:#4bb98a; --ok-wash:#0f2a20; --watch:#d6a844; --watch-wash:#2c2312; --trap:#d97a60; --trap-wash:#2e1712;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 26px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px 96px}
+.col{max-width:var(--measure)}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+h1{font-size:clamp(2.1rem,4.6vw,3.1rem);font-weight:700;line-height:1.08;letter-spacing:-.02em}
+h2{font-size:clamp(1.4rem,2.4vw,1.72rem);font-weight:700;line-height:1.2;letter-spacing:-.012em}
+h3{font-size:1.04rem;font-weight:600;line-height:1.3}
+p{margin:0}
+a{color:var(--brand);text-underline-offset:3px}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+header.top{border-bottom:1px solid var(--line);padding:56px 0 40px;display:flex;flex-direction:column;gap:22px}
+.brandline{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.chip{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;padding:4px 9px;border-radius:5px;border:1px solid var(--brand-edge);background:var(--brand-wash);color:var(--brand);white-space:nowrap}
+.lede{font-size:1.16rem;color:var(--ink-2);max-width:62ch}
+.lede strong{color:var(--ink);font-weight:600}
+.srcs{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:760px){.srcs{grid-template-columns:1fr 1fr}}
+.src{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.src .sn{font-family:var(--mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.src .st{font-weight:600;font-size:.94rem;line-height:1.3}
+.src .sm{font-size:.82rem;color:var(--ink-3)}
+
+.shell{display:block}
+nav.idx{display:none}
+@media(min-width:1080px){
+  .shell{display:grid;grid-template-columns:186px minmax(0,1fr);gap:56px;align-items:start}
+  nav.idx{position:sticky;top:24px;padding-top:52px;display:block}
+}
+nav.idx ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;border-left:1px solid var(--line)}
+nav.idx a{display:block;padding:5px 0 5px 14px;margin-left:-1px;border-left:2px solid transparent;font-size:.8rem;color:var(--ink-3);text-decoration:none;line-height:1.35}
+nav.idx a:hover{color:var(--brand);border-left-color:var(--brand-edge)}
+nav.idx .n{font-family:var(--mono);font-size:.68rem;color:var(--ink-4);margin-right:6px}
+
+section{padding-top:52px;scroll-margin-top:18px}
+.sechead{display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+.sechead .num{font-family:var(--mono);font-size:.74rem;color:var(--brand);letter-spacing:.08em}
+.stack{display:flex;flex-direction:column;gap:16px}
+.bleed{margin-top:26px}
+
+.note{border-left:3px solid var(--brand);background:var(--brand-wash);padding:15px 18px;border-radius:0 8px 8px 0;font-size:.95rem;color:var(--ink-2)}
+.note strong{color:var(--ink)}
+.warn{border-left-color:var(--trap);background:var(--trap-wash)}
+.good{border-left-color:var(--ok);background:var(--ok-wash)}
+
+/* timeline */
+.tlbox{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:22px 18px 16px;box-shadow:var(--shadow);overflow-x:auto}
+.tl{width:100%;min-width:820px;height:auto;display:block}
+.tl .axis{stroke:var(--line-strong);stroke-width:1.4}
+.tl .stem{stroke:var(--line-strong);stroke-width:1;stroke-dasharray:3 3}
+.tl .node{stroke:var(--surface);stroke-width:2.5}
+.tl .node.past{fill:var(--ink-4)} .tl .node.mid{fill:var(--watch)} .tl .node.now{fill:var(--trap)}
+.tl .card{fill:var(--sunken);stroke:var(--line);stroke-width:1}
+.tl .card.now{fill:var(--trap-wash);stroke:var(--trap)}
+.tl .card.mid{fill:var(--watch-wash);stroke:var(--watch)}
+.tl .cdate{font-family:var(--mono);font-size:10px;letter-spacing:.11em;fill:var(--ink-3)}
+.tl .cdate.now{fill:var(--trap)} .tl .cdate.mid{fill:var(--watch)}
+.tl .chead{font-family:var(--display);font-size:13.5px;font-weight:600;fill:var(--ink)}
+.tl .cline{font-family:var(--body);font-size:11.5px;fill:var(--ink-2)}
+.tl .brk{stroke:var(--line-strong);stroke-width:1.2;fill:none}
+.tl .brkbox{fill:var(--surface);stroke:var(--line-strong);stroke-width:1}
+.tl .brkt{font-family:var(--mono);font-size:12px;fill:var(--ink);text-anchor:middle;letter-spacing:.04em}
+.cap{font-size:.8rem;color:var(--ink-4);margin-top:12px;line-height:1.5}
+
+.tbl{width:100%;overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:var(--shadow)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:.875rem}
+thead th{text-align:left;font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);font-weight:400;padding:12px 14px;border-bottom:1px solid var(--line);background:var(--sunken);white-space:nowrap;vertical-align:bottom}
+tbody td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.45}
+tbody tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+td.k{font-weight:500}
+tr.hl td{background:var(--trap-wash)}
+.pill{display:inline-block;font-family:var(--mono);font-size:.68rem;padding:2px 7px;border-radius:4px;white-space:nowrap}
+.p-ok{background:var(--ok-wash);color:var(--ok)}
+.p-watch{background:var(--watch-wash);color:var(--watch)}
+.p-trap{background:var(--trap-wash);color:var(--trap)}
+
+/* findings */
+.finds{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
+.finds>article{display:grid;grid-template-columns:1fr;gap:9px;padding:20px;border-bottom:1px solid var(--line)}
+.finds>article:last-child{border-bottom:0}
+@media(min-width:860px){.finds>article{grid-template-columns:34px 1fr 210px;gap:22px;align-items:start}}
+.finds .fi{font-family:var(--mono);font-size:.86rem;color:var(--brand);padding-top:2px}
+.finds h3{margin-bottom:5px}
+.finds .fb{font-size:.9rem;color:var(--ink-2)}
+.finds .fb em{color:var(--ink);font-style:normal;font-weight:500}
+.finds .fa{font-size:.8rem;color:var(--ink-3);border-left:2px solid var(--brand-edge);padding-left:12px;line-height:1.5}
+.finds .fa b{display:block;font-family:var(--mono);font-size:.64rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:3px;font-weight:400}
+
+/* agree/conflict */
+.conf{display:flex;flex-direction:column;gap:14px}
+.cc{border:1px solid var(--line);border-radius:12px;background:var(--surface);padding:18px 20px;display:flex;flex-direction:column;gap:10px;box-shadow:var(--shadow);border-left:3px solid var(--watch)}
+.cc .ct{font-family:var(--display);font-weight:600;font-size:1rem}
+.cc .row{display:grid;grid-template-columns:1fr;gap:6px;font-size:.88rem}
+@media(min-width:720px){.cc .row{grid-template-columns:92px 1fr;gap:16px;align-items:baseline}}
+.cc .lb{font-family:var(--mono);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-4)}
+.cc .vv{color:var(--ink-2)}
+.cc .res{border-top:1px solid var(--line);padding-top:10px;font-size:.88rem;color:var(--ink)}
+.cc .res b{color:var(--ok);font-weight:600}
+
+.agree{display:grid;gap:0;border-top:1px solid var(--line)}
+.agree>div{display:grid;grid-template-columns:1fr;gap:3px;padding:12px 0;border-bottom:1px solid var(--line)}
+@media(min-width:700px){.agree>div{grid-template-columns:1fr 240px;gap:24px;align-items:baseline}}
+.agree .at{font-size:.92rem;color:var(--ink)}
+.agree .ad{font-family:var(--mono);font-size:.78rem;color:var(--brand)}
+
+.keep{display:grid;gap:12px;grid-template-columns:1fr}
+@media(min-width:820px){.keep{grid-template-columns:1fr 1fr}}
+.kc{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:15px 17px;display:flex;flex-direction:column;gap:5px}
+.kc .kt{font-weight:600;font-size:.92rem}
+.kc .kd{font-size:.85rem;color:var(--ink-2)}
+
+footer.srcf{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);font-size:.82rem;color:var(--ink-3);display:flex;flex-direction:column;gap:10px}
+footer.srcf code{font-family:var(--mono);font-size:.78rem;color:var(--ink-2)}
+a:focus-visible{outline:2px solid var(--brand);outline-offset:3px;border-radius:3px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="brandline">
+    <span class="chip">3HUE · Marketing</span>
+    <span class="chip">Document reconciliation</span>
+    <span class="chip">4 Sep 2026</span>
+  </div>
+  <h1>The Handoff</h1>
+  <p class="lede">What the marketing leader's two strategy documents contain, how they line up against the research already done, and the one thing in them that matters more than everything else: <strong>a website diagnosis made in February 2024 that is still accurate today.</strong></p>
+  <div class="srcs">
+    <div class="src"><span class="sn">Source 1 · 37 pages</span><span class="st">3HUE Marketing Strategy &amp; Site Recommendations 2024</span><span class="sm">By Pablo Alvarez. Business overview, tone &amp; voice, personas, consumer journey, SEO, email, social, and a page-by-page website audit with a Semrush export.</span></div>
+    <div class="src"><span class="sn">Source 2 · 17 slides</span><span class="st">3HUE 2026–2027 GTM &amp; Marketing Strategy</span><span class="sm">Marked confidential draft for leadership discussion. Self-described as rebuilt from the 2024 deck plus a current website review.</span></div>
+  </div>
+</header>
+
+<div class="shell">
+<nav class="idx" aria-label="Sections">
+  <ol>
+    <li><a href="#diagnosis"><span class="n">01</span>The standing diagnosis</a></li>
+    <li><a href="#new"><span class="n">02</span>Six things we didn't know</a></li>
+    <li><a href="#agree"><span class="n">03</span>Where it all converges</a></li>
+    <li><a href="#conflict"><span class="n">04</span>Four conflicts, resolved</a></li>
+    <li><a href="#keep"><span class="n">05</span>What carries forward</a></li>
+    <li><a href="#changed"><span class="n">06</span>What changed in our docs</a></li>
+    <li><a href="#reply"><span class="n">07</span>What to say back</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<section id="diagnosis">
+  <div class="sechead"><span class="num">01</span><h2>The standing diagnosis</h2></div>
+  <div class="stack col">
+    <p>Buried on page 36 of the 2024 deck is a Semrush export dated 29 February 2024. It is the most valuable page in either document, and not for a good reason.</p>
+  </div>
+  <div class="bleed tlbox">
+    <svg viewBox="0 0 1010 360" role="img" aria-label="Timeline: a website diagnosis made in February 2024, restated in the 2026 GTM deck, and still unresolved in September 2026" class="tl">
+<title>Thirty months between the diagnosis and today</title>
+<defs><marker id="tlh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--line-strong)"/></marker></defs>
+<line x1="60" y1="196" x2="952" y2="196" class="axis" marker-end="url(#tlh)"/>
+<line x1="100.0" y1="196" x2="100.0" y2="172.0" class="stem"/>
+<circle cx="100.0" cy="196" r="6" class="node past"/>
+<rect x="44" y="38.0" width="352" height="134" rx="9" class="card past"/>
+<text x="59" y="57.0" class="cdate past">29 FEB 2024</text>
+<text x="59" y="76.0" class="chead">Semrush audit, in the 2024 deck</text>
+<text x="59" y="94.0" class="cline">Authority Score 2 · organic traffic 0</text>
+<text x="59" y="111.0" class="cline">2 organic keywords · 155 backlinks</text>
+<text x="59" y="128.0" class="cline">11 errors · 241 warnings · 4 pages 4XX</text>
+<text x="59" y="145.0" class="cline">19 pages with no h1 heading</text>
+<line x1="816.3" y1="196" x2="816.3" y2="220.0" class="stem"/>
+<circle cx="816.3" cy="196" r="6" class="node mid"/>
+<rect x="556" y="220.0" width="336" height="117" rx="9" class="card mid"/>
+<text x="571" y="239.0" class="cdate mid">2026 · UNDATED DRAFT</text>
+<text x="571" y="258.0" class="chead">GTM deck restates it</text>
+<text x="571" y="276.0" class="cline">“Highest-priority fix: remove/update</text>
+<text x="571" y="293.0" class="cline">dated availability language such as</text>
+<text x="571" y="310.0" class="cline">Q2 2026 and make all CTAs current.”</text>
+<line x1="900.0" y1="196" x2="900.0" y2="172.0" class="stem"/>
+<circle cx="900.0" cy="196" r="6" class="node now"/>
+<rect x="612" y="38.0" width="374" height="134" rx="9" class="card now"/>
+<text x="627" y="57.0" class="cdate now">4 SEP 2026</text>
+<text x="627" y="76.0" class="chead">Verified today</text>
+<text x="627" y="94.0" class="cline">Q2 2026 copy still live</text>
+<text x="627" y="111.0" class="cline">apex ≠ www</text>
+<text x="627" y="128.0" class="cline">no sitemap, canonical</text>
+<text x="627" y="145.0" class="cline">or JSON-LD</text>
+<path class="brk" d="M 100.0 337 V 346 H 900.0 V 337"/>
+<rect x="366.0" y="334" width="268" height="24" rx="6" class="brkbox"/>
+<text x="500.0" y="350" class="brkt">30 months · same diagnosis</text>
+</svg>
+    <p class="cap">The 2024 figures are read directly from the Semrush screenshots in the source deck. The September 2026 column was verified against the live site on 4 September 2026 by fetching both hostnames.</p>
+  </div>
+
+  <div class="bleed tbl">
+    <table>
+      <thead><tr><th>Measure</th><th class="num">29 Feb 2024</th><th class="num">4 Sep 2026</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr class="hl"><td class="k">Organic search traffic</td><td class="num">0</td><td class="num">still not ranking for the company name</td><td><span class="pill p-trap">unchanged</span></td></tr>
+        <tr class="hl"><td class="k">Organic keywords</td><td class="num">2</td><td class="num">page one for "3HUE" is Crunchbase, ZoomInfo, D&amp;B, BBB</td><td><span class="pill p-trap">unchanged</span></td></tr>
+        <tr><td class="k">Authority Score</td><td class="num">2 ↓</td><td class="num">—</td><td><span class="pill p-watch">not re-measured</span></td></tr>
+        <tr><td class="k">Backlinks / referring domains</td><td class="num">155 / 33</td><td class="num">—</td><td><span class="pill p-watch">not the bottleneck</span></td></tr>
+        <tr><td class="k">Site health</td><td class="num">87% · 39 pages<br>11 errors · 241 warnings</td><td class="num">—</td><td><span class="pill p-watch">not re-measured</span></td></tr>
+        <tr class="hl"><td class="k">Indexation basics</td><td class="num">4 pages returning 4XX<br>19 pages with no h1</td><td class="num">no sitemap.xml · no canonical<br>no og:url · zero JSON-LD</td><td><span class="pill p-trap">worse</span></td></tr>
+        <tr class="hl"><td class="k">One site or two</td><td class="num">one</td><td class="num">apex and www serve different sites</td><td><span class="pill p-trap">new failure</span></td></tr>
+        <tr class="hl"><td class="k">Availability copy</td><td class="num">—</td><td class="num">"Now accepting Q2 2026 Snapshot engagements"</td><td><span class="pill p-trap">stale since 30 Jun</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="stack col" style="margin-top:20px">
+    <p>The two headlines live today, at two spellings of the same domain:</p>
+    <div class="note" style="border-left-color:var(--line-strong);background:var(--sunken)">
+      <span class="mono" style="font-size:.78rem;color:var(--ink-3)">3hue.net</span><br><strong>"Enterprise AI needs a governing layer. We build it."</strong><br><br>
+      <span class="mono" style="font-size:.78rem;color:var(--ink-3)">www.3hue.net</span><br><strong>"My Organization needs…"</strong> — Virtual Chief Digital Officer, Virtual CIO. No mention of AI governance anywhere on the page.
+    </div>
+    <p>The GTM deck names the fix precisely — <em>"Highest-priority fix: remove/update dated availability language such as Q2 2026 and make all CTAs current"</em> — and that exact string is still on the homepage. There is also no landing page behind the primary call to action: <strong>"Book the AI Snapshot" goes straight to Calendly</strong>, so there is no form, no UTM capture into the CRM, and no qualification before someone holds time on Andrew's calendar.</p>
+    <div class="note warn"><strong>The honest read.</strong> This is not a research gap. Two separate consultants, two and a half years apart, found the same problem and wrote it down. What is missing is not analysis — it is an owner, developer time, and a date. Every channel plan any of us writes inherits this, because every plan eventually points at the website.</div>
+  </div>
+</section>
+
+<section id="new">
+  <div class="sechead"><span class="num">02</span><h2>Six things we didn't know</h2></div>
+  <div class="stack col"><p>These are facts present in the handed-over documents and absent from every public source I researched. Each one changes something.</p></div>
+  <div class="bleed finds">
+    <article>
+      <div class="fi">01</div>
+      <div><h3>3HUE is a Veteran-Owned Small Business</h3><div class="fb">The 2024 deck states it plainly on the About Our Company slide, alongside "Founded in 2015" and "2020 Go-To-Market". <em>It appears on no current page of 3hue.net, in no third-party listing I found, and in none of the eight documents we have built.</em> For the regulated and federal-adjacent buyers in the ICP — and for supplier-diversity programs inside large enterprises — this is a qualification, not a nice-to-have.</div></div>
+      <div class="fa"><b>Action</b>Confirm VOSB vs SDVOSB and current SBA registration before it goes anywhere public. Then it belongs in the site footer, the LinkedIn page, and the claims library.</div>
+    </article>
+    <article>
+      <div class="fi">02</div>
+      <div><h3>There is a four-person on-camera bench</h3><div class="fb">The GTM deck names the YouTube cast: <strong>Andrew</strong> on board-level AI risk, <strong>Shay</strong> on how AI changes incident response and monitoring, <strong>Ariel</strong> on Power Platform automation and where governance must lead, <strong>Teriah</strong> on turning business ideas into controlled AI use cases. <em>This answers the one open question left in The Rollout.</em></div></div>
+      <div class="fa"><b>Action</b>Already applied. The Rollout v2 adds a fifth franchise, The Bench, and closes the founder-dependency risk.</div>
+    </article>
+    <article>
+      <div class="fi">03</div>
+      <div><h3>3HUE has published real prices before</h3><div class="fb">The 2024 site carried "Starting as low as $15 per endpoint" on the MDR page, with a $15 EDR and $45 XDR CTA pair, and named SentinelOne as the agent. The current site publishes nothing. <em>The 2024 website was commercially more transparent than the 2026 one.</em></div></div>
+      <div class="fa"><b>Action</b>Removes the "we don't publish pricing" objection to a published pricing architecture. There is precedent, and it was 3HUE's own.</div>
+    </article>
+    <article>
+      <div class="fi">04</div>
+      <div><h3>The old quote form is a ready-made ROI model</h3><div class="fb">The three-step "Get a Quote" flow collected user endpoints, server endpoints, AWS and Azure accounts, mobile devices, technology assets, vendors with access to sensitive data, physical locations, users, employees, admin users — plus yes/no on PCI-DSS, HITRUST, SOC 2, CMMC and HIPAA. <em>That is a complete scoping input set, and it is 3HUE's own historical logic rather than something invented.</em></div></div>
+      <div class="fa"><b>Action</b>Use it as the input model for the ROI calculator still on the build list, instead of designing one from scratch.</div>
+    </article>
+    <article>
+      <div class="fi">05</div>
+      <div><h3>Named partners nobody is using</h3><div class="fb">The 2024 material names SentinelOne as the EDR/XDR technology, Roar Technical Inspectors as a partner, "White Dog" as the whitepaper producer, and HubSpot's free tier as the email platform. None appear in current materials, and the LinkedIn company page had 211 followers at the time of the screenshot.</div></div>
+      <div class="fa"><b>Action</b>Confirm which relationships are live. Partner logos and a co-marketing motion are among the cheapest credibility available.</div>
+    </article>
+    <article>
+      <div class="fi">06</div>
+      <div><h3>Three public surfaces, two founding years</h3><div class="fb">The site and the 2024 deck say founded 2015. BBB lists incorporation on 27 July 2015. The LinkedIn company About text, screenshotted inside the 2024 deck, says <em>"established in 2017 and debuted its one-of-a-kind Virtual CIO managed services in 2020."</em></div></div>
+      <div class="fa"><b>Action</b>Resolve before any "X years in business" claim ships. A buyer who checks two sources and finds two answers stops checking.</div>
+    </article>
+  </div>
+</section>
+
+<section id="agree">
+  <div class="sechead"><span class="num">03</span><h2>Where it all converges</h2></div>
+  <div class="stack col">
+    <p>This is worth stating plainly, because it is unusual. The GTM deck was written from the 2024 material and a website review. Our eight documents were written from public research, social listening and keyword data. Neither saw the other. They arrive at the same place on seven substantive calls.</p>
+  </div>
+  <div class="bleed agree col" style="max-width:none">
+    <div><span class="at">Snapshot → Build → Operate as the offer architecture</span><span class="ad">= The Capability Map</span></div>
+    <div><span class="at">An ICP defined by buying pain, urgency and readiness rather than demographics</span><span class="ad">= The Forcing Function</span></div>
+    <div><span class="at">Buying triggers: board pressure, tool adoption, governance gap, customer assurance, audit pressure, shadow AI</span><span class="ad">= the trigger work</span></div>
+    <div><span class="at">Channel jobs: Website converts · LinkedIn distributes · YouTube teaches · Email nurtures · Search gets you found</span><span class="ad">= The Rollout linking map</span></div>
+    <div><span class="at">"Measure pipeline quality, not vanity traffic" — with YouTube watch time explicitly demoted to a secondary health metric</span><span class="ad">= The Rollout 90-day KPI</span></div>
+    <div><span class="at">A 90-day shape: fix the site and messaging, then launch LinkedIn and the first YouTube batch, then run the campaign and report pipeline</span><span class="ad">= the 12-week rollout</span></div>
+    <div><span class="at">Case studies packaged five ways: web page, one-page PDF, LinkedIn post, short video, sales proof slide</span><span class="ad">= The Ship List</span></div>
+  </div>
+  <div class="stack col" style="margin-top:20px">
+    <div class="note good"><strong>What this is worth.</strong> Independent convergence is the strongest evidence available that the direction is right. It also means the marketing leader and this workstream are not competing plans — the GTM deck is the strategy at leadership altitude, and the eight documents are the execution layer underneath it. Say that out loud when you hand this back.</div>
+  </div>
+</section>
+
+<section id="conflict">
+  <div class="sechead"><span class="num">04</span><h2>Four conflicts, resolved</h2></div>
+  <div class="stack col"><p>Where the documents disagree, here is the call and the evidence behind it. All four are already applied.</p></div>
+  <div class="bleed conf">
+    <div class="cc">
+      <span class="ct">A · How long should the videos be?</span>
+      <div class="row"><span class="lb">GTM deck</span><span class="vv">"6–10 minute explainers."</span></div>
+      <div class="row"><span class="lb">The data</span><span class="vv">ControlCase's long-form averages about 22 minutes — 19 uploads produced 4.1M views. Summit 7's averages about 16. The highest-velocity video in the entire competitive set is a 51-minute guest episode at 108.9 views per hour.</span></div>
+      <p class="res"><b>Resolved:</b> length follows the franchise, not a house rule. 6–10 minutes is right for The Bench, where the job is one mechanism explained cleanly. 15–25 for The Snapshot and The Findings, 30–50 for The Room.</p>
+    </div>
+    <div class="cc">
+      <span class="ct">B · Are cybersecurity professionals a target audience?</span>
+      <div class="row"><span class="lb">2024 deck</span><span class="vv">Lists "Cybersecurity Professionals" as a target audience, with broad category blog titles to match.</span></div>
+      <div class="row"><span class="lb">The data</span><span class="vv">Practitioners searching YouTube are overwhelmingly career-intent, and every broad category term is contracting: cyber security −23.0%, cybersecurity −18.9%, information security −36.3%, ai ethics −45.8%.</span></div>
+      <p class="res"><b>Resolved:</b> the GTM deck already corrects this by moving the ICP off demographics. Practitioners stay as an influence audience — people who recommend 3HUE — not a demand-generation target.</p>
+    </div>
+    <div class="cc">
+      <span class="ct">C · What still needs leadership approval?</span>
+      <div class="row"><span class="lb">GTM deck</span><span class="vv">Slide 16 requests sign-off on four items: positioning and ICP, Snapshot-first CTA, the 90-day rollout, and website fixes.</span></div>
+      <div class="row"><span class="lb">Reality</span><span class="vv">Andrew has explicitly delegated marketing direction. Three of the four are decided and documented.</span></div>
+      <p class="res"><b>Resolved:</b> only the website fix still needs something from leadership — and what it needs is an owner and developer hours, not a marketing decision.</p>
+    </div>
+    <div class="cc">
+      <span class="ct">D · Is link-building the SEO priority?</span>
+      <div class="row"><span class="lb">2024 deck</span><span class="vv">Recommends HARO/Connectively, prospecting, email outreach and the skyscraper technique.</span></div>
+      <div class="row"><span class="lb">The data</span><span class="vv">The site already had 155 backlinks from 33 referring domains in 2024 — and zero organic traffic. Links were never the constraint.</span></div>
+      <p class="res"><b>Resolved:</b> fix indexation first — one hostname, a sitemap, canonicals, structured data. Link-building is a later-order problem and wasted effort until a crawler can tell which site is the site.</p>
+    </div>
+  </div>
+</section>
+
+<section id="keep">
+  <div class="sechead"><span class="num">05</span><h2>What carries forward</h2></div>
+  <div class="stack col"><p>The 2024 deck is two and a half years old and most of it has been superseded. These five pieces have not been, and re-deriving them would be waste.</p></div>
+  <div class="bleed keep">
+    <div class="kc"><span class="kt">The tone &amp; voice framework</span><span class="kd">Eight attributes, and "Confidence without Arrogance" is the best line in either document. It survives intact into the brand standard.</span></div>
+    <div class="kc"><span class="kt">The consumer journey map</span><span class="kd">Awareness → Consideration → Acquisition → Service → Loyalty, with real touchpoints named at each stage. Still the right spine for the nurture program.</span></div>
+    <div class="kc"><span class="kt">The "Company &amp; Culture" navigation</span><span class="kd">Our Story · Meet the Team · Careers · Contact, alongside Life at 3HUE · Partners · Awards &amp; Certifications. The current site has no equivalent, and a founder-led firm needs one.</span></div>
+    <div class="kc"><span class="kt">Non-LinkedIn social carries culture, not leads</span><span class="kd">Correct in 2024 and correct now. It saves the team from trying to make five platforms do demand generation.</span></div>
+    <div class="kc"><span class="kt">The buyer-persona discipline</span><span class="kd">Keep the method — how they research, how they want to be reached, what they are measured on. Drop the demographic detail; "45–54, mostly male" is not a targeting instruction.</span></div>
+    <div class="kc"><span class="kt">The GTM deck's buying committee</span><span class="kd">Risk · Executive · Finance · Tech · Operations, each needing the message translated. This is better than anything in our documents and gets absorbed into the message stack.</span></div>
+  </div>
+</section>
+
+<section id="changed">
+  <div class="sechead"><span class="num">06</span><h2>What changed in our documents</h2></div>
+  <div class="stack col"><p>Applied today, not queued.</p></div>
+  <div class="bleed tbl">
+    <table>
+      <thead><tr><th>Document</th><th>Change</th><th>Because</th></tr></thead>
+      <tbody>
+        <tr><td class="k">The Rollout <span class="pill p-ok">v2 published</span></td><td>Added a fifth franchise, <strong>The Bench</strong> — biweekly 6–10 minute practitioner explainers from Shay, Ariel and Teriah. Assigned presenters to all five franchises.</td><td>The GTM deck's named cast. Removes the founder dependency entirely.</td></tr>
+        <tr><td class="k">The Rollout</td><td>Closed the open on-camera question; replaced it with an open <em>verification</em> item on veteran-owned status.</td><td>The question was answered by the handed-over material.</td></tr>
+        <tr><td class="k">The Rollout</td><td>Reconciled runtime guidance and showed the peer evidence rather than just asserting a number.</td><td>Conflict A above.</td></tr>
+        <tr><td class="k">The Rollout</td><td>Week 1 now explicitly includes stripping the Q2 2026 strings, and the linking map flags that <span class="mono">/ai-risk-snapshot</span> does not exist — the CTA goes straight to Calendly.</td><td>Verified on the live site today.</td></tr>
+        <tr><td class="k">ROI calculator <span class="pill p-watch">not started</span></td><td>Will use the old quote form's input set as its scoping model.</td><td>Finding 04.</td></tr>
+        <tr><td class="k">The Message Stack <span class="pill p-watch">pending</span></td><td>Veteran-owned status and the buying-committee translation both belong in the claims library — one after verification, one immediately.</td><td>Findings 01 and section 05.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="reply">
+  <div class="sechead"><span class="num">07</span><h2>What to say back</h2></div>
+  <div class="stack col">
+    <p>A suggested reply to the marketing leader, in the order that respects the work:</p>
+    <div class="note"><p style="margin-bottom:10px"><strong>1. The GTM deck holds up.</strong> Independent research arrived at the same offer architecture, the same trigger list, the same channel roles and the same "pipeline over vanity metrics" KPI stance. That is not a coincidence worth glossing over — it means the strategy is right and we can stop debating direction.</p>
+    <p style="margin-bottom:10px"><strong>2. Two things in the handover we did not have and needed.</strong> The named on-camera bench unblocked the YouTube plan's single biggest risk. And the veteran-owned status may be the most under-used asset in the company — nobody outside these documents knows about it.</p>
+    <p style="margin-bottom:10px"><strong>3. One thing needs an owner, not another document.</strong> The website was diagnosed as non-ranking in February 2024. The GTM deck re-diagnosed it and named the highest-priority fix. That fix is still not done, the site now serves two different companies at two spellings of the domain, and the homepage is advertising a quarter that ended in June. Nothing else in any plan compounds until this is fixed.</p>
+    <p><strong>4. The ask.</strong> A name and a date against the website work. Everything else can proceed in parallel, and will.</p></div>
+  </div>
+</section>
+
+<footer class="srcf">
+  <p><strong>Sourcing.</strong> All 2024 figures are read directly from the Semrush screenshots and slide content in <code>3HUE Marketing Strategy &amp; Site Recommendations 2024.pdf</code> (37 pages). All 2026 strategy positions are quoted or paraphrased from <code>3HUE_2026_2027_GTM_Marketing_Strategy.pptx</code> (17 slides), which is marked a confidential draft for leadership discussion and should not be treated as approved policy.</p>
+  <p>Live-site findings dated 4 September 2026 were verified by fetching <code>https://3hue.net/</code> and <code>https://www.3hue.net/</code> and reading the returned pages. Search-demand and competitor figures referenced here come from the vidIQ pull documented in <em>The Rollout</em>. Nothing in this document is estimated; where a 2024 metric has not been re-measured it is marked as such rather than assumed unchanged.</p>
+  <p>The veteran-owned status, partner relationships, founding date and any pricing precedent are reported here as they appear in the source documents. All four require verification against company records before external use.</p>
+</footer>
+
+</main>
+</div>
+</div>

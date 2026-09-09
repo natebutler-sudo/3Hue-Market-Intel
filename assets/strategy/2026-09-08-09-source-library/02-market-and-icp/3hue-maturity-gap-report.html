@@ -1,0 +1,919 @@
+<meta charset="utf-8">
+<title>The Maturity Gap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --paper:#F6F7F5;
+  --surface:#FFFFFF;
+  --surface-2:#EEF1EF;
+  --ink:#172033;
+  --ink-2:#3B4658;
+  --muted:#66707F;
+  --rule:#D5DBD9;
+  --accent:#0F6F6A;
+  --accent-ink:#0B5551;
+  --accent-soft:#DDEFEC;
+  --amber:#A85A0B;
+  --amber-soft:#F7E9D6;
+  --quote-bar:#0F6F6A;
+  --link:#0B5551;
+  --chip-li:#DCE6F5; --chip-li-ink:#1F3B73;
+  --chip-x:#E4E4E7;  --chip-x-ink:#18181B;
+  --chip-yt:#F8DEDC; --chip-yt-ink:#7A1F1A;
+  --chip-hn:#FBE4CF; --chip-hn-ink:#7A3E00;
+  --chip-tt:#E3F1F0; --chip-tt-ink:#0F4C49;
+  --chip-web:#E8E9F2; --chip-web-ink:#2B2F55;
+  --chip-rd:#FDE4D6; --chip-rd-ink:#8A3400;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F141C; --surface:#151C26; --surface-2:#1C2430;
+    --ink:#E7EBF0; --ink-2:#C3CBD6; --muted:#8C97A6; --rule:#2A3441;
+    --accent:#4FCBBF; --accent-ink:#7EDBD2; --accent-soft:#12302E;
+    --amber:#E5A24A; --amber-soft:#3A2A14; --quote-bar:#4FCBBF; --link:#7EDBD2;
+    --chip-li:#1F3B73; --chip-li-ink:#DCE6F5;
+    --chip-x:#2A2A2E;  --chip-x-ink:#E4E4E7;
+    --chip-yt:#4A1F1C; --chip-yt-ink:#F8DEDC;
+    --chip-hn:#4A2E12; --chip-hn-ink:#FBE4CF;
+    --chip-tt:#12302E; --chip-tt-ink:#CFEDEA;
+    --chip-web:#2B2F55; --chip-web-ink:#E8E9F2;
+    --chip-rd:#4A2410; --chip-rd-ink:#FBD9C6;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F141C; --surface:#151C26; --surface-2:#1C2430;
+  --ink:#E7EBF0; --ink-2:#C3CBD6; --muted:#8C97A6; --rule:#2A3441;
+  --accent:#4FCBBF; --accent-ink:#7EDBD2; --accent-soft:#12302E;
+  --amber:#E5A24A; --amber-soft:#3A2A14; --quote-bar:#4FCBBF; --link:#7EDBD2;
+  --chip-li:#1F3B73; --chip-li-ink:#DCE6F5;
+  --chip-x:#2A2A2E;  --chip-x-ink:#E4E4E7;
+  --chip-yt:#4A1F1C; --chip-yt-ink:#F8DEDC;
+  --chip-hn:#4A2E12; --chip-hn-ink:#FBE4CF;
+  --chip-tt:#12302E; --chip-tt-ink:#CFEDEA;
+  --chip-web:#2B2F55; --chip-web-ink:#E8E9F2;
+  --chip-rd:#4A2410; --chip-rd-ink:#FBD9C6;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;font-optical-sizing:auto}
+a{color:var(--link);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+a:hover{text-decoration-thickness:2px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3,h4{font-family:var(--display);color:var(--ink);text-wrap:balance;margin:0}
+h1{font-size:clamp(2.1rem,4.6vw,3.4rem);font-weight:800;line-height:1.02;letter-spacing:-.02em}
+h2{font-size:1.65rem;font-weight:700;letter-spacing:-.012em;line-height:1.15}
+h3{font-size:1.18rem;font-weight:700;line-height:1.25;margin-top:.2rem}
+h4{font-size:1rem;font-weight:700}
+p{margin:0 0 1rem}
+.eyebrow{font-family:var(--mono);font-size:.72rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.wrap{max-width:1160px;margin:0 auto;padding:0 clamp(16px,4vw,40px)}
+.masthead{padding:clamp(28px,5vw,56px) 0 22px;border-bottom:1px solid var(--rule)}
+.masthead .eyebrow{margin-bottom:14px}
+.masthead .lede{font-size:1.2rem;line-height:1.45;max-width:60ch;color:var(--ink-2);margin:16px 0 0}
+.meta{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px 28px;margin-top:26px;padding-top:18px;border-top:1px solid var(--rule)}
+.meta div{font-size:.92rem;line-height:1.45;color:var(--ink-2)}
+.meta .eyebrow{display:block;margin-bottom:4px}
+.layout{display:grid;grid-template-columns:1fr;gap:0}
+@media(min-width:1000px){.layout{grid-template-columns:230px minmax(0,1fr);gap:48px}}
+.toc{padding:22px 0 8px}
+@media(min-width:1000px){.toc{position:sticky;top:0;align-self:start;max-height:100vh;overflow:auto;padding:30px 0}}
+.toc ol{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.toc a{font-family:var(--display);font-size:.9rem;font-weight:500;text-decoration:none;color:var(--ink-2);display:block;padding:3px 0 3px 12px;border-left:2px solid var(--rule)}
+.toc a:hover{color:var(--ink);border-left-color:var(--accent)}
+main{min-width:0;padding-bottom:80px}
+section{padding:40px 0 8px;border-bottom:1px solid var(--rule)}
+section:last-of-type{border-bottom:0}
+section>h2{margin-bottom:6px}
+.prose{max-width:68ch}
+.prose p+h3{margin-top:1.4rem}
+.prose ul,.prose ol{padding-left:1.25rem;margin:0 0 1rem}
+.prose li{margin-bottom:.45rem}
+.prose strong{font-weight:600}
+.callout{background:var(--accent-soft);border-left:3px solid var(--accent);padding:14px 18px;border-radius:0 6px 6px 0;margin:14px 0 20px;max-width:72ch}
+.callout p:last-child{margin:0}
+.reasons{display:grid;gap:14px;margin:18px 0 6px;max-width:76ch}
+.reason{display:grid;grid-template-columns:1fr;gap:4px;padding:14px 0;border-top:1px solid var(--rule)}
+.reason h3{font-size:1.08rem}
+.reason p{margin:0;color:var(--ink-2);font-size:1rem}
+.reason .src{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:22px 32px;margin:16px 0 26px}
+.stat{display:flex;flex-direction:column;gap:4px;border-top:2px solid var(--ink);padding-top:10px}
+.stat .n{font-family:var(--display);font-size:1.9rem;font-weight:800;line-height:1;letter-spacing:-.02em;color:var(--accent-ink);font-variant-numeric:tabular-nums}
+.stat .c{font-size:.98rem;line-height:1.4;color:var(--ink)}
+.stat .s{font-family:var(--mono);font-size:.7rem;line-height:1.45;color:var(--muted);margin-top:2px}
+.stat .s a{color:var(--muted)}
+.tablewrap{overflow-x:auto;margin:14px 0 24px;border:1px solid var(--rule);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-size:.93rem;min-width:560px}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font-family:var(--display);font-weight:700;font-size:.82rem;letter-spacing:.02em;background:var(--surface-2)}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:.85rem}
+tr:last-child td{border-bottom:0}
+.tablecap{font-family:var(--mono);font-size:.72rem;color:var(--muted);margin:-16px 0 24px}
+.exhibits{display:grid;gap:16px;margin:16px 0 28px}
+.exhibit{background:var(--surface);border:1px solid var(--rule);border-radius:8px;padding:16px 18px 14px;display:grid;gap:10px}
+.exhibit header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
+.exhibit .who{font-family:var(--display);font-weight:700;font-size:.98rem}
+.exhibit .role{font-size:.9rem;color:var(--muted)}
+.exhibit blockquote{margin:0;padding:2px 0 2px 14px;border-left:3px solid var(--quote-bar);font-size:1.02rem;line-height:1.5;color:var(--ink)}
+.exhibit blockquote p{margin:0 0 .5rem}
+.exhibit blockquote p:last-child{margin:0}
+.exhibit .why{font-size:.93rem;color:var(--ink-2);margin:0}
+.exhibit footer{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;font-family:var(--mono);font-size:.72rem;color:var(--muted);border-top:1px solid var(--rule);padding-top:10px}
+.exhibit footer a{color:var(--link)}
+.chip{display:inline-block;font-family:var(--mono);font-size:.68rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 8px;border-radius:999px;line-height:1.2}
+.chip.li{background:var(--chip-li);color:var(--chip-li-ink)}
+.chip.x{background:var(--chip-x);color:var(--chip-x-ink)}
+.chip.yt{background:var(--chip-yt);color:var(--chip-yt-ink)}
+.chip.hn{background:var(--chip-hn);color:var(--chip-hn-ink)}
+.chip.tt{background:var(--chip-tt);color:var(--chip-tt-ink)}
+.chip.web{background:var(--chip-web);color:var(--chip-web-ink)}
+.chip.rd{background:var(--chip-rd);color:var(--chip-rd-ink)}
+.ver{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.68rem;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:4px;border:1px solid var(--rule);color:var(--ink-2)}
+.ver.ok{border-color:var(--accent);color:var(--accent-ink)}
+.ver.snip{border-color:var(--amber);color:var(--amber)}
+.ver::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.phrases{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 24px;max-width:80ch}
+.phrases span{font-family:var(--body);font-style:italic;font-size:.95rem;background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:5px 10px;color:var(--ink)}
+.phrases .h{background:var(--amber-soft);border-color:var(--amber)}
+.icp{display:grid;grid-template-columns:1fr;gap:0;margin:14px 0 26px;border-top:1px solid var(--rule)}
+.icp .row{display:grid;grid-template-columns:1fr;gap:4px;padding:12px 0;border-bottom:1px solid var(--rule)}
+@media(min-width:700px){.icp .row{grid-template-columns:180px minmax(0,1fr);gap:20px}}
+.icp .k{font-family:var(--display);font-weight:700;font-size:.9rem;color:var(--ink-2)}
+.icp .v{font-size:.98rem;line-height:1.5}
+.icp .v p{margin:0 0 .4rem}
+.persona{display:grid;gap:8px;padding:16px 18px;background:var(--surface);border:1px solid var(--rule);border-radius:8px}
+.personas{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:16px 0 26px}
+.persona h4{font-size:1.02rem}
+.persona .t{font-family:var(--mono);font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink)}
+.persona p{margin:0;font-size:.95rem;color:var(--ink-2)}
+.persona ul{margin:0;padding-left:1.1rem;font-size:.93rem}
+.persona li{margin-bottom:.25rem}
+.note{font-family:var(--mono);font-size:.74rem;color:var(--muted);line-height:1.5;max-width:80ch}
+.sources{columns:1;font-size:.86rem;line-height:1.5;padding-left:1.2rem}
+@media(min-width:800px){.sources{columns:2;column-gap:36px}}
+.sources li{break-inside:avoid;margin-bottom:.4rem}
+.two{display:grid;grid-template-columns:1fr;gap:12px 32px}
+@media(min-width:800px){.two{grid-template-columns:1fr 1fr}}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:.95rem;margin:10px 0 18px}
+.kv dt{font-family:var(--display);font-weight:700;font-size:.85rem;color:var(--ink-2)}
+.kv dd{margin:0}
+@media (prefers-reduced-motion:no-preference){a{transition:text-decoration-thickness .12s}}
+@media print{.toc{display:none}.layout{display:block}}
+</style>
+
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">Marketing research dossier · 3HUE + AiVRIC · September 2, 2026</div>
+    <h1>The Maturity Gap</h1>
+    <p class="lede">Why organizations from small business to enterprise are not maturing on NIST, ISO, SOC 2, ITIL and COBIT even though the playbooks are public, what decision makers are actually saying about it on LinkedIn, X, YouTube and practitioner forums, and who 3HUE should anchor to as its ideal customer.</p>
+    <div class="meta">
+      <div><span class="eyebrow">Prepared for</span>Nate, 3HUE marketing. Shareable with Andrew Ramirez and the team.</div>
+      <div><span class="eyebrow">Evidence standard</span>Every statistic links to the report it came from. Every social post carries its verbatim text, engagement count and a working link. Posts marked <em>verified</em> were opened in a logged-in browser today.</div>
+      <div><span class="eyebrow">Coverage</span>LinkedIn, X and TikTok read in logged-in sessions; Reddit read through Nate's Chrome; YouTube watch pages; Hacker News threads; 25+ industry reports. Browser screenshots could not be exported as files, so quotes plus links are the evidence trail.</div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="toc" aria-label="Contents">
+      <div class="eyebrow">Contents</div>
+      <ol>
+        <li><a href="#answer">The short answer</a></li>
+        <li><a href="#company">3HUE and AiVRIC today</a></li>
+        <li><a href="#data">What the data says</a></li>
+        <li><a href="#social">What people are saying</a></li>
+        <li><a href="#language">The words buyers use</a></li>
+        <li><a href="#icp">Ideal customer profile</a></li>
+        <li><a href="#marketing">What it means for marketing</a></li>
+        <li><a href="#method">Method, limits, sources</a></li>
+      </ol>
+    </nav>
+
+    <main>
+
+<section id="answer">
+  <div class="eyebrow">The short answer</div>
+  <h2>The frameworks are not the problem. Capacity, timing and paper maturity are.</h2>
+  <div class="prose">
+    <p>Nate's question was: if 3HUE anchors to NIST, ISO, TOGAF, ITIL, COBIT and ISACA guidance, why aren't more organizations trying to get more mature? The evidence points to a consistent answer across surveys, forum threads and executive posts. Almost nobody argues against the frameworks. They stall because there is no one to run them, because nothing forces the decision until a customer, insurer, investor or regulator does, and because the organizations that do act usually stop at the certificate and mistake the paperwork for the program.</p>
+  </div>
+  <div class="reasons">
+    <div class="reason">
+      <h3>There is nobody to do the work</h3>
+      <p>93% of organizations call cybersecurity a top priority, yet 68% have one or fewer full-time security people and roughly a third have none. 55% of security teams are understaffed and 65% have open roles. Roughly 35,000 CISOs exist for ~359 million businesses. A framework is a job description with no one to fill it.</p>
+      <div class="src">Secureframe 2026 Benchmark · ISACA State of Cybersecurity 2025 · Cybersecurity Ventures/Sophos 2026 CISO Report</div>
+    </div>
+    <div class="reason">
+      <h3>Maturity is bought at the trigger, not on principle</h3>
+      <p>61% of organizations were <em>required</em> to hold a certification to win or renew a contract; 47% had sales cycles delayed and 38% lost revenue for lacking one. The forum consensus is blunt: "The very first customer required us to get it before we could go live." Insurers, PE diligence and regulators are the other three forcing functions. Absent a trigger, the budget goes elsewhere.</p>
+      <div class="src">Secureframe 2026 · Hacker News ISO 27001 thread (125 pts) · Kroll PE survey 2026</div>
+    </div>
+    <div class="reason">
+      <h3>The market has learned that the certificate is not the program</h3>
+      <p>"SOC 2 has devolved from a meaningful security framework into an expensive checkbox exercise" (164 reactions, 31 comments). 72% of organizations still rely on periodic assessments; 78% of those who failed a recent audit had prior breaches. The Delve scandal in March 2026 (a compliance startup accused of mass-producing near-identical SOC 2 reports, 5.6M views on X) made "compliance theater" a mainstream punchline. Buyers now discount paper and want proof that controls operate.</p>
+      <div class="src">Maya Kaczorowski, LinkedIn · 2026 State of CCM Report · Thales 2025 Data Threat Report · X, @ohryansbelt</div>
+    </div>
+    <div class="reason">
+      <h3>Tools are deployed; controls are not operated</h3>
+      <p>86.8% of small businesses have MFA but only 51.1% require it on all key accounts; 88.4% have backups but only 61.4% have tested them. Organizations run an average of 83 security tools from 29 vendors. As one founder put it, most compliance tools "just hand you a longer to-do list." Governance that isn't operated collapses when a regulator, incident or leadership change arrives.</p>
+      <div class="src">NCA/CISA 2026 Small Business Survey · IBM IBV/Palo Alto 2025 · X, @Rippling · Andrew Ramirez, "Lessons Learned in 2025"</div>
+    </div>
+    <div class="reason">
+      <h3>Leadership can't translate risk into budget</h3>
+      <p>Fewer than 15% of 1,000 US public companies disclose a board member with cyber experience; CISOs estimate 40% of their peers filter what they report upward. "Management underestimates security risks" is a named barrier for 31% of security leaders. The most-engaged vCISO post found (3,422 reactions, 377 comments) is about exactly this: the CISO's inability to speak business risk to the CEO. The most-upvoted practitioner thread on Reddit (667 points) says the same from the other side: nobody outside security knows what "Level 3 maturity" means, and clients respond to money, not maturity scores.</p>
+      <div class="src">Lowry, Vance &amp; Vance (Management Science) via Columbia Law · Fortra 2025 · Rob Black, LinkedIn · r/cybersecurity</div>
+    </div>
+    <div class="reason">
+      <h3>Framework overlap has become its own fatigue</h3>
+      <p>Companies manage an average of eight frameworks; 52% feel overwhelmed just identifying which apply; 25% name "managing multiple audits" their single greatest compliance challenge; 85% have delayed or dropped GRC activities for lack of resources. In small and mid-size discourse, ITIL, COBIT and TOGAF are effectively absent: the vocabulary is SOC 2, NIST CSF, ISO 27001 and, increasingly, AI governance.</p>
+      <div class="src">Drata State of GRC 2025 · A-LIGN 2026 Benchmark · 2026 State of CCM · social listening below</div>
+    </div>
+    <div class="reason">
+      <h3>The confidence paradox keeps small firms from starting</h3>
+      <p>86.3% of SMB leaders rate their confidence in managing cyber risk medium-to-very-high, while 56.1% cannot confirm a clean 12-month security record. 35% of small organizations now admit their resilience is inadequate (7x since 2022), and nearly three-quarters of global cyber leaders concluded that small organizations can no longer adequately secure themselves.</p>
+      <div class="src">NCA/CISA 2026 · World Economic Forum Global Cybersecurity Outlook 2025</div>
+    </div>
+  </div>
+  <div class="callout">
+    <p><strong>What this means for the marketing problem.</strong> 3HUE is not fighting disbelief in frameworks; it is fighting timing and language. The buyers who convert are the ones under a live trigger, they search and speak in outcome terms ("we need a SOC 2 to close the deal," "will our cyber policy pay out," "who owns AI risk"), and they are skeptical of anyone who sells a certificate. That favors a founder-delivered, operated program with continuous evidence, which is what 3HUE and AiVRIC already are. The work is to say so in the buyer's words, at the buyer's moment, in the channel where the buyer is (LinkedIn first).</p>
+  </div>
+</section>
+
+<section id="company">
+  <div class="eyebrow">Due diligence</div>
+  <h2>3HUE and AiVRIC today, as the public sees them</h2>
+  <div class="two">
+    <div class="prose">
+      <h3>3HUE Executive Consulting LLC</h3>
+      <dl class="kv">
+        <dt>Founded</dt><dd>Incorporated July 27, 2015 (BBB); 11 years in business</dd>
+        <dt>Founder</dt><dd>Andrew Ramirez, Founder &amp; CEO; US Army veteran (3rd/187th Infantry); Miami–Fort Lauderdale area</dd>
+        <dt>Standing</dt><dd>BBB Accredited since Aug 28, 2025, A+ rating; Crunchbase lists 1–10 employees, no outside funding; LinkedIn page lists 11–50 employees, 577 followers</dd>
+        <dt>Positioning</dt><dd>"Enterprise AI needs a governing layer. We build it." A "founder-led advisory and managed services firm" for "regulated and operationally complex organizations." "The same advisor who scopes the work delivers it."</dd>
+        <dt>Offer</dt><dd>AI Advisory (10-day AI Risk &amp; Readiness Snapshot, consulting, governance, readiness) · Pro services (SOC 2 Type II readiness, risk posture assessment, staff augmentation, IT PM) · Managed programs (Audit-Ready Security Program with ISMS/ERM/IR, Managed Security Operations, Technology Governance for Scale)</dd>
+        <dt>Verticals</dt><dd>Financial services · SaaS &amp; digital products · Transportation/logistics, energy &amp; OT · Private equity &amp; family offices</dd>
+        <dt>Proof on site</dt><dd>Transit Technologies (no security program → SOC 2 Type I with zero findings, multi-entity Type II) · Large North American bank (1,000+ systems certified under a scalable GRC assessment framework) · Rolly Marine (dealer-system modernization, process maturity). No quotes, logos, pricing or metrics with timeframes.</dd>
+      </dl>
+      <p>Sources: <a href="https://3hue.net/">3hue.net</a>, <a href="https://3hue.net/about.html">about</a>, <a href="https://3hue.net/services/index.html">services</a>, <a href="https://3hue.net/customer-stories/">customer stories</a>, <a href="https://www.bbb.org/us/fl/plantation/profile/business-consultant/3hue-executive-consulting-llc-0633-90570181">BBB profile</a>, <a href="https://www.crunchbase.com/organization/3hue-executive-consulting">Crunchbase</a>, <a href="https://www.linkedin.com/company/3hue">LinkedIn page</a>.</p>
+    </div>
+    <div class="prose">
+      <h3>AiVRIC Technologies, Inc.</h3>
+      <dl class="kv">
+        <dt>Origin</dt><dd>"AiVRIC was founded by 3HUE Security, a security advisory firm that has led security programs at enterprise scale." Wilmington, DE. LinkedIn: 2–10 employees, 16 followers.</dd>
+        <dt>Positioning</dt><dd>"Operational Intelligence for Security, Compliance, Risk &amp; AI Governance." "Govern the agentic enterprise." Mission: "security teams spend their energy on decisions, not documentation."</dd>
+        <dt>Product</dt><dd>CloudSignals+RiskOps (available): multi-cloud CSPM across AWS/Azure/GCP/OCI, 20+ frameworks (SOC 2, ISO 27001, PCI-DSS, CMMC, HIPAA, NIST), risk register, TPRM, GenAI chat, agentic remediation, white-label/MSP. AI Signals, AIRE Agentic Mesh, RogueAgent ASPM, Vision AI Optics in beta/alpha/roadmap.</dd>
+        <dt>Pricing</dt><dd>Free tier; paid from $499/month; enterprise by request; SaaS, customer-hosted Kubernetes or air-gapped</dd>
+        <dt>Channel play</dt><dd>MSP page: "Add enterprise GRC and cloud security to your service catalog. Zero extra headcount required." Priced per cloud account monitored; three sellable tiers from cloud monitoring to Compliance-as-a-Service to vCISO-as-a-Service. Separate private-equity page.</dd>
+      </dl>
+      <p>Sources: <a href="https://aivric.com/">aivric.com</a>, <a href="https://aivric.com/about.html">about</a>, <a href="https://aivric.com/why-aivric.html">why AiVRIC</a>, <a href="https://aivric.com/pricing.html">pricing</a>, <a href="https://aivric.com/cloudsignals-msp.html">MSP</a>, <a href="https://www.linkedin.com/company/aivric/">LinkedIn page</a>.</p>
+    </div>
+  </div>
+
+  <div class="prose">
+    <h3>The founder's own answer to Nate's question</h3>
+    <p>Andrew has already written the thesis this dossier confirms. In <a href="https://www.linkedin.com/pulse/stop-blaming-frameworks-how-security-architecture-risk-andrew-ramirez-rtade">"Stop Blaming Frameworks"</a> (March 5, 2026) he names the layers explicitly: NIST (CSF, 800-53, 800-171, 800-37, 800-30), the Secure Controls Framework, COBIT/ISACA, ITIL, ISO/IEC 27001/27701/22301, SOC 2, PCI-DSS, FFIEC, HIPAA, FedRAMP and CSA CCM, and then draws the line: "Frameworks were never meant to run a security program. They provide structure." His five-layer model (frameworks, control standards, security architecture, risk management, operations) ends with "the problem was never the framework. The problem was program design."</p>
+    <p>In <a href="https://www.linkedin.com/pulse/from-execution-enablement-lessons-learned-2025-what-leaders-ramirez-nwgte">"From Execution to Enablement: Lessons Learned in 2025"</a> (December 29, 2025) the language is even closer to the market data: "Maturity is not a state, it is an operating capability." Organizations that struggled "treated maturity as a documentation exercise. They produced artifacts faster than they produced results." "Governance without informed operational authority is theater." "Tools do not reduce risk, decisions do." "AI does not create maturity, it reveals it." And the <a href="https://www.linkedin.com/pulse/founder-thesis-why-aivric-exists-andrew-ramirez-wplwe">AiVRIC founder thesis</a> (February 3, 2026, 27 reactions) opens with the sentence that should sit on both websites: "Most security programs fail not because teams don't care, but because they were never designed to operate continuously."</p>
+    <h3>Observations a buyer would make</h3>
+    <ul>
+      <li><strong>The public sites don't name the frameworks.</strong> The current 3hue.net pages reference SOC 2, SR 11-7 and 3HUE's own "ISG Managed GRC Operating Model" and "Meta-Compliance Readiness," but NIST CSF, ISO 27001, CIS, ITIL, COBIT and TOGAF do not appear on the live services, industries or insights pages. Buyers and search engines look for those words; Andrew's LinkedIn article uses them, the site does not.</li>
+      <li><strong>The site now leads with AI governance</strong> ("Start with clarity. 10 business days"), while the BBB, Crunchbase and LinkedIn descriptions still say vCIO, cyber risk, managed SOC and digital transformation. The nine Insights articles all carry the same date (January 20, 2026). A prospect doing diligence sees three slightly different companies.</li>
+      <li><strong>Proof is thin relative to the claims.</strong> Three case studies with strong outcomes but no client quotes, no metrics with timeframes, no logos and no pricing or engagement bands. Price transparency and "a company that has done it before" are the two things buyers say they want (see forum evidence below).</li>
+      <li><strong>The 3HUE–AiVRIC relationship is only explained on AiVRIC's about page.</strong> Nowhere does 3hue.net say "our managed programs run on AiVRIC," which is the single most differentiating operational fact against both tool-only vendors and MSP vCISO offers.</li>
+      <li><strong>Distribution runs through one person.</strong> Andrew's profile has 2,003 followers and 11 long-form articles; the 3HUE company page (577 followers) showed no posts on its Posts tab when viewed today and AiVRIC's page has 16 followers. His most recent posts open with "It's been a while LinkedIn," and the two newest articles are about AI writing stigma and merit versus access, thoughtful pieces that are not aimed at the buyer pain documented below.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="data">
+  <div class="eyebrow">Market evidence · 2024–2026</div>
+  <h2>What the data says</h2>
+  <div class="prose">
+    <p>Sixty-plus figures were checked against their source pages for this dossier. The ones below are the load-bearing ones; the rest are in the project notes. Each is dated because these surveys move quickly.</p>
+    <h3>The capacity gap</h3>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n">68%</div><div class="c">of organizations have one or fewer full-time cybersecurity employees; nearly a third have none. 93% still call security a top priority. 75% spend under 15% of budget on security and compliance.</div><div class="s"><a href="https://secureframe.com/newsroom/2026-cybersecurity-and-compliance-benchmark-report">Secureframe, 2026 Cybersecurity &amp; Compliance Benchmark</a> · Dec 9, 2025 · n=255</div></div>
+    <div class="stat"><div class="n">55%</div><div class="c">of cyber teams are understaffed; 65% have unfilled positions; 53% say budgets are underfunded; 38–39% take 3–6 months to fill a role.</div><div class="s"><a href="https://www.isaca.org/about-us/newsroom/press-releases/2025/state-of-cybersecurity-2025-global-press-release">ISACA, State of Cybersecurity 2025</a> · Sep 29, 2025 · n=3,800+</div></div>
+    <div class="stat"><div class="n">10,000:1</div><div class="c">roughly 35,000 CISOs worldwide for ~359 million businesses; full-time CISO compensation runs $250K–$400K; "close to zero percent" of small businesses employ one. Sophos' CEO calls it "a market failure."</div><div class="s"><a href="https://www.sophos.com/en-us/blog/2026-ciso-report">Cybersecurity Ventures with Sophos, 2026 CISO Report</a></div></div>
+    <div class="stat"><div class="n">59%</div><div class="c">name budget the #1 barrier to executing security strategy; 45% lack skills; 40% lack staff; 31% say "management underestimates security risks." NIST CSF use fell five points to 54%.</div><div class="s"><a href="https://static.fortra.com/corporate/pdfs/guide/fta-2025-state-of-cybersecurity-survey-results-gd.pdf">Fortra, 2025 State of Cybersecurity Survey</a> · Feb 2025</div></div>
+    <div class="stat"><div class="n">76%</div><div class="c">of SMBs lack the in-house skills to address security issues; 94% use an MSP; 62% would switch providers for better security and would pay 47% more for it.</div><div class="s"><a href="https://www.connectwise.com/company/press/releases/connectwise-research-finds-78-of-smbs-concerned-a-cyber-attack-could-put-their-organizations-out-of-business">ConnectWise, State of SMB Cybersecurity</a> · Jun 2024 · n=700</div></div>
+    <div class="stat"><div class="n">73%</div><div class="c">of SMBs lack full confidence their MSP could protect them during an attack; 47% would switch for stronger cybersecurity; 57% rank cyber their top business priority, ahead of growth.</div><div class="s"><a href="https://www.connectwise.com/blog/smb-cybersecurity-statistics-and-trends">ConnectWise, SMB statistics and trends 2025</a> · Jul 2025</div></div>
+  </div>
+
+  <div class="prose"><h3>Maturity by size: the gradient is steep</h3><p>The cleanest size-segmented dataset available is the UK government's annual survey (n=2,112 businesses). US surveys tell the same story without the clean cuts.</p></div>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Practice in place</th><th class="num">Micro (1–9)</th><th class="num">Small (10–49)</th><th class="num">Medium (50–249)</th><th class="num">Large (250+)</th></tr></thead>
+      <tbody>
+        <tr><td>Board-level responsibility for cyber</td><td class="num">29%</td><td class="num">37%</td><td class="num">52%</td><td class="num">68%</td></tr>
+        <tr><td>Formal incident response plan</td><td class="num">21%</td><td class="num">—</td><td class="num">57%</td><td class="num">76%</td></tr>
+        <tr><td>Two-factor authentication deployed</td><td class="num">42%</td><td class="num">52%</td><td class="num">72%</td><td class="num">90%</td></tr>
+        <tr><td>Reviews immediate supplier risk</td><td class="num">12%</td><td class="num">—</td><td class="num">30%</td><td class="num">48%</td></tr>
+        <tr><td>Formal cyber security strategy</td><td class="num">—</td><td class="num">—</td><td class="num">57%</td><td class="num">74%</td></tr>
+        <tr><td>Breached or attacked in last 12 months</td><td class="num">42%</td><td class="num">46%</td><td class="num">65%</td><td class="num">69%</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="tablecap">UK DSIT/Home Office, <a href="https://www.gov.uk/government/statistics/cyber-security-breaches-survey-20252026/cyber-security-breaches-survey-20252026">Cyber Security Breaches Survey 2025/2026</a>, published Apr 30, 2026. Only 30% of all businesses do formal risk assessments and 5% hold Cyber Essentials.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="n">3.2 vs 1.6</div><div class="c">average number of compliance frameworks maintained by companies over $100M revenue versus smaller ones; only 52% maintain more than one at all.</div><div class="s"><a href="https://secureframe.com/newsroom/2026-cybersecurity-and-compliance-benchmark-report">Secureframe 2026</a></div></div>
+    <div class="stat"><div class="n">35% vs 7%</div><div class="c">small organizations that say their cyber resilience is inadequate (a sevenfold rise since 2022) versus large ones. Nearly three-quarters of cyber leaders concluded small organizations can no longer adequately secure themselves.</div><div class="s"><a href="https://www.weforum.org/publications/global-cybersecurity-outlook-2025/in-full/executive-summary-4e44b16c32/">World Economic Forum, Global Cybersecurity Outlook 2025</a> · Jan 13, 2025 · large-org figure and "3 in 4" quote via <a href="https://www.cybersecuritydive.com/news/wef-cyber-risk-outlook/737430/">Cybersecurity Dive</a></div></div>
+    <div class="stat"><div class="n">88% vs 39%</div><div class="c">share of SMB breaches involving ransomware versus large organizations. In 2026 ransomware appears in 48% of all breaches and third parties in 48%.</div><div class="s"><a href="https://www.infosecurity-magazine.com/news/verizon-dbir-smb-ransomware-attacks/">Verizon DBIR 2025</a> · <a href="https://www.helpnetsecurity.com/2026/05/25/lessons-from-verizon-dbir-2026-findings/">DBIR 2026 summary</a></div></div>
+    <div class="stat"><div class="n">86.3%</div><div class="c">of SMB leaders rate their confidence in managing cyber risk medium-to-very-high, while 56.1% cannot confirm a clean 12-month record. MFA deployed 86.8% but required everywhere 51.1%; backups 88.4% but tested 61.4%.</div><div class="s"><a href="https://www.staysafeonline.org/articles/2026-small-business-cybersecurity-awareness-practices-survey">NCA with CISA, 2026 Small Business Survey</a> · Aug 2026 · n=1,000 · figures as reported by <a href="https://www.secureworld.io/industry-news/top-cybersecurity-risks-challenges-smb">SecureWorld</a></div></div>
+    <div class="stat"><div class="n">51%</div><div class="c">of SMBs admit they have no formal risk framework; 46% have no incident-response protocol; 83% run no formal awareness training; 62% are not confident they could recover. Average SMB incident loss: $1.6M.</div><div class="s"><a href="https://techaisle.com/blog/647-great-cybersecurity-paradox-why-skyrocketing-smb-spending-is-not-translating-to-readiness">Techaisle, "The Great Cybersecurity Paradox"</a> · Oct 13, 2025</div></div>
+    <div class="stat"><div class="n">$4.99M</div><div class="c">global average cost of a data breach in 2026 (US: $11.5M). Median ransom demand for organizations at or below $250M revenue: under $350K.</div><div class="s"><a href="https://newsroom.ibm.com/2026-07-29-ibm-study-one-in-four-malicious-breaches-are-ai-enabled,-costing-companies-6-million-on-average">IBM, 2026 Cost of a Data Breach</a> · <a href="https://www.sophos.com/en-us/press/press-releases/2025/06/nearly-half-companies-opt-pay-ransom-sophos-report-finds">Sophos, State of Ransomware 2025</a></div></div>
+  </div>
+
+  <div class="prose"><h3>What actually makes them act</h3><p>Four forcing functions show up in every dataset and every thread: a customer contract, an insurer, an investor, a regulator. Fear of breach is real but it is the least reliable trigger for a purchase.</p></div>
+  <div class="stats">
+    <div class="stat"><div class="n">61%</div><div class="c">were required to hold a compliance certification to win or renew a contract; 47% saw sales cycles delayed; 38% lost revenue or bids; 40% are pursuing certification specifically to reach enterprise customers; 33% face investor or partner pressure.</div><div class="s"><a href="https://secureframe.com/newsroom/2026-cybersecurity-and-compliance-benchmark-report">Secureframe 2026</a></div></div>
+    <div class="stat"><div class="n">65%</div><div class="c">say customers, investors and suppliers now demand more proof of compliance than before. Organizations spent 11+ weeks on manual compliance work in 2024 and dedicate 11% of IT budget to security against a recommended 17%.</div><div class="s"><a href="https://www.businesswire.com/news/home/20241023116758/en/Vanta-State-of-Trust-Report-2024-Increasing-Risks-Require-Going-Beyond-the-Standard">Vanta, State of Trust 2024</a> · n=2,500</div></div>
+    <div class="stat"><div class="n">81% vs 29%</div><div class="c">share of PE firms including cybersecurity in transaction diligence: funds over $25B AUM versus funds under $25B. Average cyber impact on a deal: $2.1M; 26% saw reduced valuations; 80% had attack disruption during hold periods.</div><div class="s"><a href="https://www.prnewswire.com/news-releases/private-equity-cybersecurity-a-significant-risk-to-deals-with-2-1m-financial-impact-on-average-kroll-finds-302685183.html">Kroll, Private Equity Cybersecurity</a> · Feb 11, 2026 · n=325</div></div>
+    <div class="stat"><div class="n">$142K</div><div class="c">average cyber claim severity for SMEs in 2025, versus ~$759K for the middle market and ~$4.4M for large accounts (up 586% since 2021). Insurers now price posture and verify controls at claim time.</div><div class="s"><a href="https://www.insurancejournal.com/magazines/mag-features/2026/05/18/869952.htm">Chubb data via Insurance Journal</a> · May 18, 2026</div></div>
+    <div class="stat"><div class="n">80%</div><div class="c">of companies using AI already receive customer questions about their AI risk management; 33% have no AI compliance strategy. 97% of organizations run two or more audits a year; 25% call juggling multiple audits their single greatest challenge.</div><div class="s"><a href="https://www.prnewswire.com/news-releases/a-lign-releases-2026-compliance-benchmark-report-unveils-how-compliance-teams-can-navigate-evolving-governance-landscape-302671958.html">A-LIGN, 2026 Compliance Benchmark</a> · Jan 28, 2026 · n=1,043</div></div>
+    <div class="stat"><div class="n">Nov 10, 2025</div><div class="c">CMMC became enforceable in DoD contracts. On July 13, 2026 the Department of War CIO "immediately suspended" Phase II pending a 60-day reform task force; Phase I self-assessments, NIST SP 800-171 and DFARS 7012 still apply. Level 2 third-party certification was estimated at ~$105K for a small entity.</div><div class="s"><a href="https://www.preveil.com/blog/cmmc-final-rule-published/">PreVeil on the final rule</a> · <a href="https://x.com/DoW_CIO/status/2076755127764160615">@DoW_CIO, Jul 13, 2026</a> · <a href="https://defensescoop.com/2023/12/28/cmmc-implementation-cost-estimates/">DefenseScoop cost estimates</a></div></div>
+  </div>
+
+  <div class="prose"><h3>Why the paperwork fails, in numbers</h3></div>
+  <div class="stats">
+    <div class="stat"><div class="n">72%</div><div class="c">rely on periodic assessments rather than continuous monitoring; 85% have delayed or eliminated GRC activities for lack of resources; 44% postponed control testing; 53% employ someone full-time just to collect evidence.</div><div class="s"><a href="https://www.businesswire.com/news/home/20260120755843/en/2026-State-of-CCM-Report-Resource-Constraints-Drive-85-of-Organizations-to-Rethink-Traditional-GRC-Approaches">RegScale, 2026 State of Continuous Controls Monitoring</a> · Jan 20, 2026 · n=253</div></div>
+    <div class="stat"><div class="n">78%</div><div class="c">of organizations that failed a recent compliance audit had a prior history of breaches, nearly 4x the rate of those passing; 45% did not pass their most recent audit.</div><div class="s"><a href="https://cpl.thalesgroup.com/blog/data-security/ai-quantum-and-the-evolving-threat-landscape-key-findings-from-the-thales-2025-data-threat-report">Thales, 2025 Data Threat Report</a> · May 27, 2025</div></div>
+    <div class="stat"><div class="n">60% vs 41%</div><div class="c">breach rate at organizations with ad-hoc or siloed risk management versus integrated, automated GRC. 55.8% still view GRC as a cost center; only 4% have a board member overseeing compliance; 94.2% of CISOs say continuous controls monitoring improves compliance and security.</div><div class="s"><a href="https://www.prnewswire.com/news-releases/hyperproofs-6th-annual-it-risk-and-compliance-benchmark-report-reveals-an-increased-focus-on-grc-maturity-302356797.html">Hyperproof, 6th Benchmark</a> · <a href="https://hyperproof.io/resource/6-key-findings-2025-benchmark-report/">Summer 2025 Benchmark</a></div></div>
+    <div class="stat"><div class="n">8</div><div class="c">frameworks managed on average; 60% juggle five or more; 52% feel overwhelmed identifying which apply; 93% want to automate more GRC work to reclaim ~14 hours a week, but only 4% have end-to-end automation.</div><div class="s"><a href="https://drata.com/blog/key-takeaways-state-of-grc-2025">Drata, State of GRC 2025</a> · Feb 28, 2025</div></div>
+    <div class="stat"><div class="n">&lt;15%</div><div class="c">of 1,000 US public companies disclose a board member with cybersecurity experience; the median CISO estimates 40% of CISOs filter what they report to management. Non-expert boards ask "surface-level questions."</div><div class="s"><a href="https://clsbluesky.law.columbia.edu/2025/08/13/the-gap-between-cybersecurity-oversight-and-boardroom-expertise">Lowry, Vance &amp; Vance via Columbia Law Blue Sky Blog</a> · Aug 13, 2025</div></div>
+    <div class="stat"><div class="n">83</div><div class="c">security tools from 29 vendors at the average organization; consolidation delivered 4x ROI and cut incident identification by 74 days.</div><div class="s"><a href="https://www.cybersecuritydive.com/news/consolidation-security-tools/738912/">IBM Institute for Business Value with Palo Alto Networks</a> · Jan 31, 2025</div></div>
+  </div>
+
+  <div class="prose"><h3>The vCISO market is exploding and commoditizing at the same time</h3></div>
+  <div class="stats">
+    <div class="stat"><div class="n">21% → 67%</div><div class="c">MSPs/MSSPs offering vCISO services, 2024 to 2025; 79% report strong SMB demand. Blockers for the rest: ROI concerns 35%, upfront resource demands 33%, access to qualified talent 32%. 81% of providers already use AI in delivery, reporting a 68% average workload reduction.</div><div class="s"><a href="https://www.helpnetsecurity.com/2025/07/31/vciso-services-adoption-2025/">Cynomi, 2025 State of the vCISO</a> · Jul 2025 · <a href="https://www.channelinsider.com/channel-business/vendor-leadership-and-partner-programs/cynomi-david-primor-vciso-demand/">Channel Insider interview</a></div></div>
+    <div class="stat"><div class="n">$92.8B</div><div class="c">forecast 2026 spend on security services (from $83.8B), inside $240B total information-security spend; Gartner names "increased regulatory requirements, particularly among small and medium-sized businesses" as a driver.</div><div class="s"><a href="https://www.gartner.com/en/newsroom/press-releases/2025-07-29-gartner-forecasts-worldwide-end-user-spending-on-information-security-to-total-213-billion-us-dollars-in-2025">Gartner</a> · Jul 29, 2025</div></div>
+    <div class="stat"><div class="n">84%</div><div class="c">of SMBs would trust external technology advisors for AI implementation; 70% say SMBs need outside partners to get value from AI. Only 23% of SMBs have documented AI use policies while 90% are already adopting AI.</div><div class="s"><a href="https://www.globenewswire.com/news-release/2026/03/24/3261322/0/en/new-pax8-research-reveals-small-businesses-are-adopting-ai-faster-than-they-re-building-strategies-to-manage-it.html">Pax8</a> · Mar 24, 2026 · <a href="https://www.secureworld.io/industry-news/smb-ai-governance-security">Pax8 Q2 2026 SMB AI Pulse</a></div></div>
+    <div class="stat"><div class="n">68%</div><div class="c">of breached organizations lacked AI governance policies in 2026 (63% in 2025); five of six governance controls declined year over year; shadow-AI incidents doubled to 43% and cost $5.39M on average.</div><div class="s"><a href="https://complexdiscovery.com/policy-without-control-the-ai-governance-gap-in-ibms-2026-cost-of-a-data-breach-report/">IBM 2026 Cost of a Data Breach, AI governance findings</a></div></div>
+    <div class="stat"><div class="n">38%</div><div class="c">of digital-trust professionals report a formal, comprehensive AI policy (28% a year earlier); 25% have none; only 38% are confident their board understands AI risk; 39% have no documented AI shutdown procedure.</div><div class="s"><a href="https://www.isaca.org/about-us/newsroom/press-releases/2026/ai-use-accelerates-while-governance-and-roi-lag-says-new-isaca-research">ISACA, 2026 AI Pulse Poll</a> · May 5, 2026 · n=3,400+</div></div>
+    <div class="stat"><div class="n">$492M → $1B+</div><div class="c">AI governance platform spending, 2026 to 2030; large enterprises will run an average of 10 GRC tools by 2028. Organizations with AI governance platforms are 3.4x more likely to be effective.</div><div class="s"><a href="https://www.gartner.com/en/newsroom/press-releases/2026-02-17-gartner-global-ai-regulations-fuel-billion-dollar-market-for-ai-governance-platforms">Gartner</a> · Feb 17, 2026</div></div>
+  </div>
+  <p class="note">Not citable from open sources, so not used: a dollar size for the vCISO market (only SEO aggregators publish one), the number of SOC 2 reports issued, and current TOGAF/COBIT adoption rates (the newest ITIL adoption survey found is from 2020: 20% adopting ITIL 4, 34% no plans). ISO 27001's apparent "doubling" to 96,709 certificates in the 2024 ISO Survey is a reporting-method change; cite the level, not the growth.</p>
+</section>
+
+<section id="social">
+  <div class="eyebrow">Social listening · captured September 2, 2026</div>
+  <h2>What people are saying, with receipts</h2>
+  <div class="prose">
+    <p>Every exhibit below is a real post. <span class="ver ok">Verified</span> means it was opened today in a logged-in browser and the quote and counts were read off the live page. <span class="ver snip">Snippet</span> means the text comes from a search-engine result for a post that was not opened; treat those as leads, not quotes. Engagement is reactions · comments · reposts (LinkedIn), views · likes (X/YouTube), or points · comments (Hacker News).</p>
+    <h3>LinkedIn: where the buyers and the sellers argue</h3>
+    <p>This is the platform that matters for 3HUE's audience. The pattern in the numbers: one-sentence heretical openers and posts written in the objection's own voice get the engagement; corporate "compliance is a strategic asset" posts get none.</p>
+  </div>
+  <div class="exhibits">
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">Maya Kaczorowski</span><span class="role">Co-founder &amp; CEO, Oblique; ex-GitHub, ex-Google security</span></header>
+      <blockquote><p>"SOC 2 has devolved from a meaningful security framework into an expensive checkbox exercise that mostly serves auditors, not security."</p><p>"Most of your customers requesting your SOC 2 report probably don't even read it. (Did you even check what's in scope?) They check that you have one, mark their vendor security assessment complete, and move on."</p></blockquote>
+      <p class="why">Top comment: "Getting SOC2 is like learning martial arts in school... you won't be able to fight on the streets because real fights don't follow any checklists." Another: "It's exactly the same for EVERY compliance framework."</p>
+      <footer><span>Mar 2025</span><span>164 reactions · 31 comments · 11 reposts</span><a href="https://www.linkedin.com/posts/mayakaczorowski_soc-2-has-devolved-from-a-meaningful-security-activity-7305632631709151234-7dkh">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">Harris D. Schwartz</span><span class="role">CISO/CSO, fractional CISO, advisor to boards and CEOs</span></header>
+      <blockquote><p>"You don't need a full-time CISO. You need someone accountable. Here's why most SMBs learn this too late."</p><p>"I see the same pattern every time an SMB gets breached or stuck. Security is 'handled by IT.' Alongside 20 other jobs. Vendor questionnaires create panic. Customer security reviews get delayed. Regulators sound scary. When an incident hits? No clear leader."</p></blockquote>
+      <p class="why">His own follow-up in the comments: "A CISO function is not about more security. It's about better decisions. When risk has an owner, teams stop reacting and start prioritizing." This is the cleanest articulation of 3HUE's managed-program pitch found anywhere, written by a competitor.</p>
+      <footer><span>~Mar 2026</span><span>377 reactions · 52 comments · 56 reposts</span><a href="https://www.linkedin.com/posts/harrisdschwartz_cybersecurity-ciso-smb-activity-7432077866407759872-GgpN">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">Rob Black</span><span class="role">Fractional CISO to SaaS companies; the most consistent vCISO voice on the platform</span></header>
+      <blockquote><p>"Where should the CISO report? ... One of the terrible reasons to push the CISO's reporting down is the inability to effectively communicate business risk to the CEO."</p><p>"Some reasons that the CISO might not report to the CEO: ... The CEO does not deem cyber risk to be important. ... The CEO does not want to have to parse cyberspeak."</p></blockquote>
+      <p class="why">The highest-engagement post in this entire dataset is not about a framework; it is about the executive translation gap. A CIO commented "sending this to my CISO." Rob Black owns the #fCISO hashtag through volume, not one viral post, which is a replicable strategy.</p>
+      <footer><span>2023</span><span>3,422 reactions · 377 comments · 365 reposts</span><a href="https://www.linkedin.com/posts/blackrob_fciso-ciso-cybersecurity-activity-7051560538333401088-LYdG">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">David Whitelegg</span><span class="role">Deputy CISO, Global Compliance, Compass Group</span></header>
+      <blockquote><p>"AI governance has a control problem, not a policy problem. We're getting good at writing policies about how AI should be used. The harder question is what evidence proves those controls actually work."</p><p>"'AI must be used responsibly' is not a control. A control is something you can test, monitor and prove is working. So when an agent can take action, I want four answers: What can it access? What can it change? Who approved that capability? What evidence shows it stayed inside those boundaries?"</p></blockquote>
+      <p class="why">An enterprise decision maker, five days ago, describing AiVRIC's "evidence capture, MCP trust boundaries, human-in-the-loop" positioning almost word for word. 46 comments in under a week. This is the AI-governance conversation 3HUE should be in.</p>
+      <footer><span>Aug 28, 2026</span><span>65 reactions · 46 comments · 1 repost</span><a href="https://www.linkedin.com/posts/whitelegg_ai-governance-has-a-control-problem-not-activity-7499052330579857408-SeNQ">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">Carlota Sage</span><span class="role">"Your Community CISO," vCISO to startups and SMBs</span></header>
+      <blockquote><p>"I had a very talented CISO call vCISO work 'bullshit' last night... So many CISOs have come up through the enterprise ranks, they just don't care about the SMB space. And this is exactly why vCISOs exist."</p><p>"...helping out the SMB folks that the enterprise CISOs can't be bothered with because those little guys don't come with $250-$350k starting compensation."</p></blockquote>
+      <p class="why">A commenter's reply is the SMB owner's objection in one line: "The SMB market is considered consumer to the Enterprise space." The unserved middle is the market.</p>
+      <footer><span>2023</span><span>202 reactions · 44 comments · 8 reposts</span><a href="https://www.linkedin.com/posts/carlotasage_ciso-vciso-smb-activity-7034215581511774209-Xq3X">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">Shivani Sharma</span><span class="role">Pentesting &amp; compliance for SMBs (KLEAP Cybersecurity)</span></header>
+      <blockquote><p>"SOC 2 is a deal breaker. Yes, I've heard this a number of times and personally know instances where an enterprise deal got stuck and stalled because the vendor couldn't furnish a SOC 2 Type II report."</p><p>"Why has SOC 2 Type II become the baseline - not HIPAA, not a security questionnaire, but SOC 2 specifically?"</p></blockquote>
+      <p class="why">Healthtech and SMBs selling into enterprise healthcare: "this is the stuff that doesn't get talked about until the deal is already on the line."</p>
+      <footer><span>~Jun 2026</span><span>102 reactions · 11 comments</span><a href="https://www.linkedin.com/pulse/soc-2-healthcare-whats-real-need-shivani-sharma-jspye/">Open article</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">Sierra Miramontez</span><span class="role">Managing Principal, Monte Vista Oversight Group</span></header>
+      <blockquote><p>"A director of sales at a growth-stage SaaS company lost the biggest deal of his year on a single sentence. 'Call us back when you have a SOC 2 in hand to provide.'"</p><p>"'Building toward' is not a thing you can hand to a procurement officer... Procurement was polite and unmovable. The competitor that won wasn't better. They were provable."</p></blockquote>
+      <p class="why">"Provable" is the word. It is what an operated program with continuous evidence sells, and what a certificate alone does not.</p>
+      <footer><span>~May 2026</span><span>9 reactions</span><a href="https://www.linkedin.com/in/sierra-miramontez/recent-activity/all/">Author's activity</a><a href="https://www.linkedin.com/search/results/content/?keywords=%22SOC%202%22%20%22lost%20a%20deal%22">Search that surfaces it</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">Deepika Kanakamedala</span><span class="role">AI product analyst, writing about startup compliance</span></header>
+      <blockquote><p>"I thought SOC 2 was just a checkbox. Something big companies dealt with, not something that could quietly kill a startup before it ever got the chance to scale."</p><p>"Founders are losing deals they don't even know they lost. Getting charged $50K–$100K and told to wait 6–9 months for a report they needed. And the compliance industry itself isn't always clean — scams, inflated fees, gatekeeping."</p></blockquote>
+      <footer><span>~May 2026</span><span>22 reactions · 1 repost</span><a href="https://www.linkedin.com/search/results/content/?keywords=%22SOC%202%22%20%22lost%20a%20deal%22">Search that surfaces it</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">Bryce W.</span><span class="role">IT &amp; cybersecurity specialist for smaller banks, credit unions, PE firms and family offices</span></header>
+      <blockquote><p>"A firm files a cyber insurance claim after a breach.... The insurer sends someone to verify the controls that were attested to on the application. What they find does not match what was written down. The policy gets voided. Not because the firm lied."</p><p>"Because the person who filled out the application had a general sense of the firm's security posture rather than a verified picture of it... Does your firm know today whether what your policy says matches what you can actually demonstrate?"</p></blockquote>
+      <p class="why">Low reach, high relevance: this is a direct competitor working 3HUE's own PE and family-office vertical with the attestation-versus-reality story. Note the hashtags: #PrivateEquity #FamilyOffice #RiskManagement.</p>
+      <footer><span>Aug 2026</span><span>3 reactions · 1 comment</span><a href="https://www.linkedin.com/posts/bryce-w-66054776_privateequity-familyoffice-riskmanagement-activity-7493713462489980928-BxUR">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">Josh Duffy</span><span class="role">MSP for accounting, legal and financial firms with 5–200 staff</span></header>
+      <blockquote><p>"'But we pay for cyber insurance… why won't they pay out?!' ... If you don't have the right security measures in place, your insurer can...and often will refuse to pay out."</p><p>"Some of the common deal-breakers: No MFA. Weak or shared passwords. Out-of-date devices. No proper backups. Staff not trained. Admin accounts everywhere. No monitoring or alerting."</p></blockquote>
+      <p class="why">Written in the customer's objection voice, which is the format that travels. A commenter who has consulted SMEs since 2007: "there is still a lot of denial."</p>
+      <footer><span>~Feb 2026</span><span>10 reactions · 4 comments</span><a href="https://www.linkedin.com/posts/josh-duffy_but-we-pay-for-cyber-insurance-why-won-activity-7417943754373894145-3fCI">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">Natasha I. Kiemnec, ARM</span><span class="role">Financial institutions &amp; private equity insurance broker</span></header>
+      <blockquote><p>"40% of cyber insurance claims were denied in 2024. And there's such a simple reason for this (that most CFOs don't realize): the denials often happen because of how D&amp;O, E&amp;O, &amp; cyber policies are designed to exclude each other."</p></blockquote>
+      <p class="why">The 40% figure is not sourced in the post; use the story, not the number, unless a carrier report can be found to back it.</p>
+      <footer><span>2025</span><span>24 reactions · 14 comments</span><a href="https://www.linkedin.com/posts/natashakiemnec_over-40-of-cyber-insurance-claims-were-denied-activity-7351234221299990529-yCf3">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">Gita Poudel</span><span class="role">AI governance author, Director HR/Compliance</span></header>
+      <blockquote><p>"Ten years ago, 'we don't have a CISO' was a red flag investors and boards took seriously. Today, 'we don't have an AI governance framework' is heading the same direction, and most HR and business leaders haven't caught up."</p><p>"Three questions worth asking this week: Do we know which AI tools are actually touching employee decisions? Can we explain, in plain language, how those tools reach a decision? Who owns accountability when one gets it wrong?"</p></blockquote>
+      <footer><span>Aug 2026</span><span>7 reactions</span><a href="https://www.linkedin.com/search/results/content/?keywords=%22we%20don%27t%20have%20a%20CISO%22">Search that surfaces it</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">Marcin Zawadzki</span><span class="role">Founder, CloudSentinel.io (vCISO platform for EU SMEs)</span></header>
+      <blockquote><p>"I kept hearing the same question from smaller companies: 'NIS2 is coming. We don't have a CISO. We can't afford one. What do we do?' The honest answer? Today, there's no good option."</p><p>"A full-time CISO: €180,000-€350,000/year. An MSP/consultant: €30,000-€140,000/year. US compliance platforms (Vanta, Drata): €7,000-€50,000/year — and they're not built for NIS2."</p></blockquote>
+      <p class="why">A buyer's price ladder, stated publicly. Note where a founder-led managed program sits on it and how nobody names that option.</p>
+      <footer><span>~May 2026</span><span>12 reactions · 3 comments · 3 reposts</span><a href="https://www.linkedin.com/search/results/content/?keywords=%22we%20don%27t%20have%20a%20CISO%22">Search that surfaces it</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">J. Michael Daniel, resharing the Center for Long-Term Cybersecurity</span><span class="role">President &amp; CEO, Cyber Threat Alliance (former White House cybersecurity coordinator)</span></header>
+      <blockquote><p>"Too small to target is another version of the old 'security by obscurity' approach. While that idea was pretty dead before widespread generative and agentic AI tools, it is most assuredly dead now."</p><p>CLTC: "There is now no such thing as being too small to target. Hear about the challenges these 'target-rich, resource-poor' organizations face..."</p></blockquote>
+      <p class="why">"Target-rich, resource-poor" is a phrase worth borrowing; it names the ICP's condition without insulting them.</p>
+      <footer><span>Aug 2026</span><span>20 reactions · 2 comments · 1 repost (CLTC post)</span><a href="https://www.linkedin.com/feed/update/urn:li:share:7493458108225179648/">Open CLTC post</a><a href="https://www.linkedin.com/in/j-michael-daniel-cta/">Daniel's profile</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip li">LinkedIn</span><span class="who">Leads not opened (search snippets)</span></header>
+      <blockquote>
+        <p>Troy Fine (SOC 2 auditor): "Do not lie when responding to a security/privacy questionnaire from your..." (27 comments) — <a href="https://www.linkedin.com/posts/troyjfine_do-not-lie-when-responding-to-a-security-activity-6955869483689205760-USv-">post</a></p>
+        <p>ExecutiveGov: "The $200K DIB compliance hurdle" / "CMMC 2.0 Compliance Costs Threaten Small Businesses" — <a href="https://www.linkedin.com/posts/executivegov_the-200k-dib-compliance-hurdle-activity-7439656878453829632-Io6w">post</a></p>
+        <p>Michael Rasmussen ("the GRC Pundit"): "Why Spreadsheets, Documents &amp; Emails Fail for GRC" — <a href="https://www.linkedin.com/pulse/why-spreadsheets-documents-emails-fail-grc-michael-rasmussen">article</a></p>
+        <p>Reid Blackman (author, <em>Ethical Machines</em>): "Five reasons why AI governance fails and..." — <a href="https://www.linkedin.com/posts/reid-blackman_five-reasons-why-ai-governance-fails-and-activity-7488600509088489473-xcyG">post</a></p>
+        <p>Max Clark: "Delve: fake compliance as a service, part..." — <a href="https://www.linkedin.com/posts/maxclark_delve-fake-compliance-as-a-service-part-activity-7440800416218570752-m6R-">post</a></p>
+        <p>Blake Oliver (CPA media): "AICPA's SOC 2 Compliance Theater Exposed" — <a href="https://www.linkedin.com/posts/blaketoliver_is-the-aicpas-gold-standard-for-data-security-activity-7450193211790110720-2uXQ">post</a></p>
+      </blockquote>
+      <footer><span class="ver snip">Snippet</span></footer>
+    </article>
+  </div>
+
+  <div class="prose">
+    <h3>X: reputation, news cycles and the sharpest skepticism</h3>
+    <p>X is not where mid-market buyers shop, but it is where the industry's mood is set. In 2026 that mood was set by one story.</p>
+  </div>
+  <div class="exhibits">
+
+    <article class="exhibit">
+      <header><span class="chip x">X</span><span class="who">Ryan (@ohryansbelt)</span><span class="role">quoting Erin Griffith, New York Times</span></header>
+      <blockquote><p>"Delve, a YC-backed compliance startup that raised $32 million, has been accused of systematically faking SOC 2, ISO 27001, HIPAA, and GDPR compliance reports for hundreds of clients. According to a detailed Substack investigation by DeepDelver, a leaked Google spreadsheet..."</p></blockquote>
+      <p class="why">5.6 million views. The single most valuable narrative asset available to a firm that sells operated, evidence-backed programs: the market just watched "fastest compliance on the planet" turn into 493 near-identical reports.</p>
+      <footer><span>Mar 19, 2026</span><span>5.6M views · 8K likes · 1.3K reposts · 378 replies</span><a href="https://x.com/ohryansbelt/status/2034752685631574022">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip x">X</span><span class="who">Scott Kennedy (@stkenned)</span><span class="role">Founder, responding to the Delve story</span></header>
+      <blockquote><p>"Just completed our annual SOC2 audit using Vanta. They audited every MDM config, device destruction certificate, patched vulnerability. Honestly, it was painful. But we passed each test and I know we do right by our users. Delve is a known 'shortcut'. Never considered it."</p></blockquote>
+      <p class="why">The "painful audit as a badge of honor" counter-narrative. Amjad Masad (CEO, Replit) replied: "Important to take compliance seriously before delving into enterprise sales." Another reply: "They are all guilty. The whole thing is a racket."</p>
+      <footer><span>Mar 19, 2026</span><span>82.4K views · 438 likes · 27 reposts</span><a href="https://x.com/stkenned/status/2034812413288358005">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip x">X</span><span class="who">Peter Girnus (@gothburz)</span><span class="role">Security researcher, satire</span></header>
+      <blockquote><p>"I am the VP of Compliant Outcomes at Delve... We sell SOC 2 certifications (a security audit required to close enterprise deals). The industry standard takes 6 to 12 months. Ours take 5 days. Nobody asked how. Not our customers. Not our investors. Not the auditors. Nobody asked because nobody wanted the answer."</p></blockquote>
+      <p class="why">"Nobody asked how" is the most sellable line in this dossier. A firm whose founder delivers the work can answer "how" on every engagement.</p>
+      <footer><span>Mar 2026</span><span>24.5K views · 164 likes · 36 reposts · 23 replies</span><a href="https://x.com/gothburz/status/2040052589358686370">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip x">X</span><span class="who">@DoW_CIO</span><span class="role">Office of the CIO, US Department of War (official)</span></header>
+      <blockquote><p>"The DoW is immediately suspending CMMC Phase II requirements to clear bureaucratic roadblocks for the DIB. We must scale warfighter readiness, not paperwork... Phase I self-assessments remain firmly in place. NIST SP 800-171 Rev 2 and DFARS 252.204-7012 compliance are still required. Focus is shifting to tangible cybersecurity and operational resilience, not red tape."</p></blockquote>
+      <p class="why">Replies are the small-contractor voice: "The VAST majority of smaller DoW contractors were never going to make it in time, &amp; many just gave up... There aren't enough assessors, or enough time - and the CUI requirements are very onerous for small job shops." And: "This has been a huge burden for us." A government CIO endorsing the anti-checkbox argument changes the DIB pitch from "get certified" to "be actually secure against 800-171, and be able to prove it."</p>
+      <footer><span>Jul 13, 2026</span><span>184K views · 963 likes · 193 reposts · 87 replies</span><a href="https://x.com/DoW_CIO/status/2076755127764160615">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip x">X</span><span class="who">Accidental CISO (@AccidentalCISO)</span><span class="role">Practitioner blog; answering an MSP building a vCISO practice for 25–100 employee clients</span></header>
+      <blockquote><p>"The pure advisory consulting workload can be very inconsistent, and SMB clients struggle to see the value in a retainer for advisory services only. It's execution that produces value for them."</p><p>"The pattern that I suggest has three components. A security assessment up front, the retainer to build and operate the program, and hourly vCISO advisory consulting sprinkled on top sparingly... the MSP leads with a paid security assessment based on some sort of framework. It could be NIST CSF, CIS 18, SIG Lite..."</p></blockquote>
+      <p class="why">This is 3HUE's model described from the outside: a paid framework-based assessment (the 10-day Snapshot), a retainer to build and operate (managed programs), founder advisory on top. It also names the failure mode: "MSPs get burned because they sold a retainer without understanding the client's current state."</p>
+      <footer><span>Jul 31, 2026</span><span>3,820 views · 43 likes · 32 bookmarks</span><a href="https://x.com/AccidentalCISO/status/2083308423395819909">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip x">X</span><span class="who">Rippling (@Rippling), featuring @chandr3w</span><span class="role">Vendor video post</span></header>
+      <blockquote><p>"Most founders know they need SOC 2. Very few can tell you what it actually is. The short version: It's how enterprise buyers verify you won't lose their data. And without it, you're going to lose deals. The longer version: Getting there takes hundreds of hours and a stack of disconnected tools that flag problems but don't fix them... most compliance tools just hand you a longer to-do list."</p></blockquote>
+      <footer><span>Jun 17, 2026</span><span>1,489 views · 7 likes</span><a href="https://x.com/Rippling/status/2067347736580808778">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip x">X</span><span class="who">Bhavesh Patil (@bhaveshpatil094)</span><span class="role">Founder (now building a compliance product)</span></header>
+      <blockquote><p>"Just lost a $500k deal because we didn't have SOC 2. The consultant quoted us $80,000 and 9 months. I'm a founder, not a compliance expert. There has to be a better way."</p></blockquote>
+      <p class="why">Tiny reach, perfect specimen: the trigger (lost deal), the objection (price and time quoted by a consultant), the identity ("not a compliance expert").</p>
+      <footer><span>Jan 19, 2026</span><span>84 views · 4 likes</span><a href="https://x.com/bhaveshpatil094/status/2013471717965078782">Open post</a><span class="ver ok">Verified</span></footer>
+    </article>
+
+    <article class="exhibit">
+      <header><span class="chip x">X</span><span class="who">Leads not opened (search snippets)</span></header>
+      <blockquote>
+        <p>Rinki Sethi (former CISO, Twitter/Rubrik/BILL): "Compliance ≠ Security 🤦🏽‍♀️" — <a href="https://x.com/rinkisethi/status/1386335906647318531">post</a></p>
+        <p>Thomas Ptacek (@tqbf, Fly.io): "SOC2 is just the Boss Fight version of a dumb security questionnaire." — <a href="https://x.com/tqbf/status/1440721886409723905">post</a></p>
+        <p>GovCIO Media, quoting DoW CIO Kirsten Davies: CMMC had become a "burdensome red tape-driven check-the-box" process — <a href="https://x.com/GovCIOMedia/status/2080758731302682736">post</a></p>
+        <p>IANS Research: "CISOs are now leading AI governance teams in 50% of organizations... 85% have AI policies" — <a href="https://x.com/IANS_Security/status/2018748353555701785">post</a></p>
+        <p>The Hacker News: "4 people. No compliance team. No GRC consultant..." (the do-it-without-a-consultant flex, 900K-follower account) — <a href="https://x.com/TheHackersNews/status/2054189700693582309">post</a></p>
+      </blockquote>
+      <footer><span class="ver snip">Snippet</span></footer>
+    </article>
+  </div>
+
+  <div class="prose">
+    <h3>YouTube: search demand is for beginners and careers, not for vendors</h3>
+    <p>View counts were read off the watch pages today where marked verified; the rest come from the public view-count API. The pattern is stark: step-by-step ISO 27001 and "get a GRC job" content draws six figures, while vendor and consultant videos about compliance-versus-security or vCISO draw double digits.</p>
+  </div>
+  <div class="exhibits">
+    <article class="exhibit">
+      <header><span class="chip yt">YouTube</span><span class="who">Dejan Kosutic</span><span class="role">"7 Steps to a Successful ISO 27001 Implementation"</span></header>
+      <p class="why">The highest-viewed compliance video found. Numbered, plain, beginner-level, framework-named. Demand for ISO 27001 basics is real and largely unmet by US advisory firms.</p>
+      <footer><span>Feb 18, 2024</span><span>382,428 views</span><a href="https://www.youtube.com/watch?v=JyrvFaR4Kag">Open video</a><span class="ver ok">Verified</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip yt">YouTube</span><span class="who">UnixGuy | Cyber Security</span><span class="role">"FASTEST Way to Learn GRC and ACTUALLY Get a Job (2026)"</span></header>
+      <p class="why">Career content outperforms practitioner content by roughly 300x. The supply of junior GRC labor is rising fast, which compresses commodity GRC pricing and pushes differentiation toward judgment, scope negotiation and board access.</p>
+      <footer><span>Jul 5, 2025</span><span>113,562 views</span><a href="https://www.youtube.com/watch?v=78Dmz-F5_r8">Open video</a><span class="ver ok">Verified</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip yt">YouTube</span><span class="who">Vanta</span><span class="role">"SOC2 Compliance for Startups"</span></header>
+      <p class="why">The category's largest vendor, six years of shelf life, 18K views. On the same search page today a YouTube Short titled "SOC 2 for Startups: Quick Guide" showed 228K views and "SOC 2 Pricing Breakdown | $3K to $100K Audits!" (BizBuddy) showed 347 views: short, plain, price-transparent formats win.</p>
+      <footer><span>Sep 24, 2020</span><span>18,445 views</span><a href="https://www.youtube.com/watch?v=9tLXJwkCr6g">Open video</a><span class="ver ok">Verified</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip yt">YouTube</span><span class="who">Virtru</span><span class="role">"Why Compliance Doesn't Always Equal Security (A CISO's Perspective)"</span></header>
+      <p class="why">Eighteen views in eight months. The "compliance ≠ security" argument is consensus on LinkedIn and X; on YouTube nobody searches for it. Do not build a YouTube strategy on this thesis.</p>
+      <footer><span>Jan 12, 2026</span><span>18 views</span><a href="https://www.youtube.com/watch?v=Fpn4TcQlyD0">Open video</a><span class="ver ok">Verified</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip yt">YouTube</span><span class="who">Small-business framework and vCISO explainers</span><span class="role">view counts via public API, not opened</span></header>
+      <blockquote>
+        <p>HailBytes, "NIST CSF 2.0 for Small Business, Explained in 10 Minutes" — ~71 views — <a href="https://www.youtube.com/watch?v=DpeL-PbQG8s">video</a></p>
+        <p>Aspire Cyber, "Is Your Small Business Secure? NIST CSF 2.0 Guide" — ~8 views — <a href="https://www.youtube.com/watch?v=x2hoGaK_di0">video</a></p>
+        <p>PBER Academy, "The Strategic Guide to Virtual CISO (vCISO) in 2026 | Podcast for SaaS Founders" — ~6 views — <a href="https://www.youtube.com/watch?v=w6c0_EIU9bI">video</a></p>
+        <p>N-able, "MSP's Guide to Getting Started With Compliance as a Service" — ~356 views — <a href="https://www.youtube.com/watch?v=uNvZonlnZp0">video</a></p>
+        <p>CyberSRC Group, "AI Governance Explained | ISO 42001 &amp; AI Risk Management Every Business Must Know (2026 Guide)" — ~169 views — <a href="https://www.youtube.com/watch?v=l3NY6ObHNjk">video</a></p>
+        <p>Stuart Barker, "ISO 27001 Getting Started | Everything you need to know" — ~34,800 views — <a href="https://www.youtube.com/watch?v=PKhTIpVI0KU">video</a></p>
+        <p>Ken Underhill, "How to be a GRC Analyst" — ~11,000 views — <a href="https://www.youtube.com/watch?v=JDTYzb675-o">video</a></p>
+      </blockquote>
+      <p class="why">vCISO and "NIST CSF for small business" content has almost no organic pull. vCISO is a sales-led category, not a search-led one; NIST CSF is a practitioner's word, not a buyer's.</p>
+      <footer><span class="ver snip">API counts</span></footer>
+    </article>
+  </div>
+
+  <div class="prose">
+    <h3>Reddit: IT managers, MSP owners and small-business founders, unfiltered</h3>
+    <p>Read through Nate's Chrome on September 2, 2026. Reddit is where the buyer side of the mid-market talks without a vendor in the room, and where the people who sell vCISO to that market compare notes on what actually gets bought. Quotes are kept short; the threads are worth reading in full.</p>
+  </div>
+  <div class="exhibits">
+    <article class="exhibit">
+      <header><span class="chip rd">Reddit</span><span class="who">r/cybersecurity: "10 years of IR work (~1,000 incidents). Here's the security report template that gets clients moving"</span></header>
+      <blockquote><p>An incident-response lead who has worked "from 5-person joinery shops to multi-national retail" lists what a decade taught him: compliance framing creates false confidence (certifications exist to make it easier to do business, not to make you secure); clients respond to money, not maturity scores; lead executive readouts with a "time to low risk" plan (months, cost, who does the work, how success is measured) rather than 47 technical findings; organizations die on the periphery systems everyone forgot.</p><p>Comment: what most enterprises really want is "a checkmark as a sales qualification." Another names the "watermelon effect": green dashboards, red inside. An ex-MSP consultant: clients "go straight to the cost breakdown" and read nothing else.</p></blockquote>
+      <p class="why">This one thread answers Nate's question more directly than any survey. The buyer does not want maturity; the buyer wants to know what a bad year costs and what it takes to make it not happen. The author's own exchange: a client asks for a NIST CSF report, then asks "what's our biggest risk?", and the honest answer is that a maturity assessment never told them. Build the Snapshot readout this way.</p>
+      <footer><span>Dec 2025</span><span>667 points · 221 comments</span><a href="https://www.reddit.com/r/cybersecurity/comments/1q0g8py/10_years_of_ir_work_1000_incidents_heres_the/">Open thread</a><span class="ver ok">Verified</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip rd">Reddit</span><span class="who">r/ITManagers: "What are small and mid-size IT teams actually doing for cybersecurity right now?"</span></header>
+      <blockquote><p>A CIO/CISO at a 700-user firm with a staff of ten: "We've been reactionary to compliance checks since 2020," starting with a contract that required cyber coverage; "compliance is a way bigger driver over recognized risk due to resource and budget limitations"; incident response is whoever is online when something happens. A ~150-person shop: a fix that costs "70 consultant hours" is hard to approve at 200 employees and easy at 5,000; keeping up feels like "bailing out the Titanic with a teaspoon." A ~550-person org names its biggest gap as culture: "a lack of accountability." Another: dropped two MSPs to save cost, now runs no threat detection, "we do carry insurance" and the C-suite is fine with that.</p></blockquote>
+      <p class="why">This is the champion persona in its own words: over-stretched, compliance-driven by contracts and insurers rather than by risk, and blocked by consultant-hour math and executive indifference. It is also the argument for the founder-led model: "in a SME you are very very unlikely to have the skill, scale, and bandwidth... a security MSP is an absolute must."</p>
+      <footer><span>Jan 2026</span><a href="https://www.reddit.com/r/ITManagers/comments/1qbum9f/what_are_small_and_midsize_it_teams_actually/">Open thread</a><span class="ver ok">Verified</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip rd">Reddit</span><span class="who">r/Compliance: "Lost a $95k deal because we don't have SOC2"</span></header>
+      <blockquote><p>A small consulting firm with a side software product: three months of demos, the customer's CEO loved it, then IT asked for a SOC 2 report and said no report, no deal. The replies are the buyer's side: a mid-size regulated company says the diligence needed for a non-SOC 2 vendor "is not worth it" for anything non-core; vendors who send their cloud provider's SOC 2 get blacklisted; scope the first audit to the Security criteria only over six months and use a local firm; qualify security requirements up front; a letter of intent or a trust page can sometimes unblock procurement. Several commenters suspect the post itself is compliance marketing.</p></blockquote>
+      <p class="why">The "lost deal" genre is real and partly manufactured by vendors. Use the buyer-side comments, which are unambiguous: at any meaningful contract size, procurement will not spend diligence hours on an unprovable vendor.</p>
+      <footer><span>Dec 2025</span><span>43 points · 70 comments</span><a href="https://www.reddit.com/r/Compliance/comments/1pavduq/lost_a_95k_deal_because_we_dont_have_soc2/">Open thread</a><span class="ver ok">Verified</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip rd">Reddit</span><span class="who">r/smallbusiness: "If you're a small business do you start directly with GDPR and SOC2 compliances while landing customers?"</span></header>
+      <blockquote><p>A three-founder software company with 25 customers keeps getting enterprise leads that send vendor questionnaires; their founders group split down the middle between "you HAVE to get SOC 2 before enterprise" and "do compliance when forced." The consensus answer: GDPR from day one, SOC 2 when a specific deal is stuck behind it, and expect a six-to-twelve-month clock once it is. A CPA warns against auditors bundled with automation tools and says a credible report rarely costs under $15K; a Type II observation window under six months is a red flag. One CEO in the thread had chosen Delve for its own SOC 2, four months before the scandal.</p></blockquote>
+      <footer><span>Nov 2025</span><span>113 points · 40 comments</span><a href="https://www.reddit.com/r/smallbusiness/comments/1oucdat/if_youre_a_small_business_do_you_start_directly/">Open thread</a><span class="ver ok">Verified</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip rd">Reddit</span><span class="who">r/msp: "vCISO" and "Those offering vCISO... how do you charge?"</span></header>
+      <blockquote><p>An MSP asks how to start a vCISO program. A former MSP CISO: make one person accountable, price it monthly and separately from user count, avoid blocks of hours, and understand that the first question the client is really asking is whether they can get away with doing nothing. SideChannel's CEO (about 50 vCISOs, hundreds of clients): bolting compliance checklists onto an MSP "doesn't hold up when a client has a real audit, a breach, or a board member who asks the hard questions"; NIST CSF 2.0 and CIS Controls v8.1 are the practical US standards; price tiered retainers by size, complexity and compliance burden, sell outcomes not hours, and lead with a formal assessment as the entry point. Many MSPs conclude they should white-label or partner rather than build. Vendors in the thread stress liability: MSAs that disclaim fiduciary responsibility, documented client ownership of risk decisions, and insurance.</p></blockquote>
+      <p class="why">Two things for 3HUE: the delivery model the market converges on is the one 3HUE already runs (assessment, retainer, founder advisory), and the MSPs deciding to partner rather than build are AiVRIC's channel, which is exactly what its MSP page sells.</p>
+      <footer><span>Mar–May 2026</span><span>16 pts · 19 comments; 4 pts · 13 comments</span><a href="https://www.reddit.com/r/msp/comments/1tdbfjy/vciso/">vCISO thread</a><a href="https://www.reddit.com/r/msp/comments/1rkcrb6/those_offering_vciso_or_similar_cyberadjacent/">Pricing thread</a><span class="ver ok">Verified</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip rd">Reddit</span><span class="who">r/sysadmin: "Cyber insurance query"</span></header>
+      <blockquote><p>A sysadmin asks whether people hedge their wording on insurance questionnaires. The answers: don't lie and don't shade; answering in bad faith is enough to deny a claim; insurers now cover only declared, conformant systems; "failing to adhere to your own policies is what will get claims denied"; management, not IT, owns the risk on the form; use a broker and in-house counsel. One respondent whose company sells cyber insurance: carriers are forgiving if you are honest about gaps and can show a remediation cadence.</p></blockquote>
+      <p class="why">Supports the "will your policy pay?" wedge with practitioner detail, and reframes it: the product is not "pass the questionnaire," it is "be able to demonstrate, at claim time, that what you attested is true."</p>
+      <footer><span>Jan 2026</span><span>11 points · 16 comments</span><a href="https://www.reddit.com/r/sysadmin/comments/1pyrgak/cyber_insurance_query/">Open thread</a><span class="ver ok">Verified</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip rd">Reddit</span><span class="who">r/ITManagers: "Nobody has a good answer yet for how to govern AI coding, which is becoming a real problem."</span></header>
+      <blockquote><p>IT lead at a 600-person company with 120 developers: every developer now uses AI tools and there is "zero governance": no inventory, no cost control (teams expensing Cursor seats outside procurement), no security review, and engineering leadership saying "we can't be the company that doesn't." The top replies: "AI isn't your issue. IT governance is." and "this is not a technology problem, this is an organizational one," fixable only with executive backing and an approved-tool policy that is actually enforced. One reply asks which governance frameworks to read; nobody answers with a name.</p></blockquote>
+      <p class="why">The AI-governance opening in one thread: mid-market IT leaders know it is a governance problem, do not know which framework applies, and have no one with authority to enforce it. That is the AI Risk &amp; Readiness Snapshot's buyer, and the only place ITIL/COBIT-style thinking is wanted, as long as nobody says the acronym.</p>
+      <footer><span>Mar 2026</span><a href="https://www.reddit.com/r/ITManagers/comments/1rjibp9/nobody_has_a_good_answer_yet_for_how_to_govern_ai/">Open thread</a><span class="ver ok">Verified</span></footer>
+    </article>
+  </div>
+
+  <div class="prose">
+    <h3>Hacker News: the founder, CTO and CISO forum</h3>
+    <p>Same population as the Reddit threads, skewed toward technical founders, with public upvotes and dates. These threads are where the cost, the racket accusation and the "customer forced us" story live side by side.</p>
+  </div>
+  <div class="exhibits">
+    <article class="exhibit">
+      <header><span class="chip hn">Hacker News</span><span class="who">Ask HN: How to be SOC2 Type 2 compliant as a solo-entrepreneur?</span></header>
+      <blockquote><p>OP: "Do you know success cases w/o spending 20+k $ on auditors?" ... "My customers bombards me with question about certification of my app."</p><p>"It's 100% a racket... It's a legal box-checking exercise." · "I doubt you could get it under $20k but that's the ballpark." · "As part of our own audit requirements it is non-negotiable that all of our vendors must themselves be SOC2 compliant." · "Vanta will ask you do a lot of engineering work that is absolutely not necessary for a SOC2 attestation."</p></blockquote>
+      <footer><span>May 15, 2026</span><span>173 points · 138 comments</span><a href="https://news.ycombinator.com/item?id=48145524">Open thread</a><span class="ver ok">Fetched</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip hn">Hacker News</span><span class="who">SOC2: The screenshots will continue until security improves (fly.io)</span></header>
+      <blockquote><p>"Alarm bells should go off in your head when you do engineering work specifically for SOC2." · "It's an indicator that you paid your protection money to the industry audit mafia." · "You can either treat the SOC 2 as an adversary to overcome, or leverage it to be better." · "Much of the skill involved in doing security compliance work is in managing (strangling) down the scope of the framework."</p></blockquote>
+      <p class="why">The canonical thread. "Strangling down the scope" is the vCISO's actual craft, and nobody markets it. "We tell you what you don't have to do" is a differentiated promise.</p>
+      <footer><span>Jul 7, 2022</span><span>546 points · 244 comments</span><a href="https://news.ycombinator.com/item?id=32018066">Open thread</a><span class="ver ok">Fetched</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip hn">Hacker News</span><span class="who">Ask HN: Is the ISO 27001 certification worth it?</span></header>
+      <blockquote><p>"The very first customer required us to get it before we could go live." · "When big clients require it then you get it." · "I have seen consulting costs range from £20k to £100k to get you through it." · "For a smaller supplier, particularly if you have a SaaS product, it is of immense value and can be used as a differentiator."</p></blockquote>
+      <footer><span>Nov 3, 2021</span><span>125 points · 103 comments</span><a href="https://news.ycombinator.com/item?id=29094889">Open thread</a><span class="ver ok">Fetched</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip hn">Hacker News</span><span class="who">Our Dumb Security Questionnaire · Launch HN: Stacksi</span></header>
+      <blockquote><p>"These are just paperwork that wastes everyone's time." · "Everybody lies on these." · "It's like an engineering DoS attack which serves neither the customer nor the vendor well." · "I get one almost every other week and yes, they are indeed 200+ questions." · "It costs more than $2 per question on average." · "We have customers who are filling out 5-10 of these per week."</p></blockquote>
+      <p class="why">The most quantified pain in the dataset: $2 a question, 200+ questions, 5–10 a week. A managed questionnaire-response service is a measurable land-and-expand wedge.</p>
+      <footer><span>Jan 2021 · Mar 2021</span><span>149 pts · 88 comments; 134 pts · 89 comments</span><a href="https://news.ycombinator.com/item?id=25793230">Thread 1</a><a href="https://news.ycombinator.com/item?id=26513040">Thread 2</a><span class="ver ok">Fetched</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip hn">Hacker News</span><span class="who">Excalidraw+ Is Now SOC 2 Certified</span></header>
+      <blockquote><p>"Customers specifically check that our scope clause includes all software systems that they are contracting for." · "Carrying a SOC 2 attestation won't save you from vendor questionnaires." · "Pay for the better auditors. These are rounding error expenses compared to doing extra engineering work." · "Vanta/Drata are big players and they're charging big time for their platform."</p></blockquote>
+      <footer><span>Jun 24, 2025</span><span>234 points · 79 comments</span><a href="https://news.ycombinator.com/item?id=44362165">Open thread</a><span class="ver ok">Fetched</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip hn">Hacker News</span><span class="who">Three CISOs walk into a startup · SEC charges SolarWinds and its CISO</span></header>
+      <blockquote><p>"In quite a few organizations, CISO stands for 'Chief Incident Scapegoat Officer'." · "The company sincerely believed that hiring the security person is all the resources required." · "A CISO can either be the sheriff who's there to reign in the wild west, or a coach that can help the team achieve goals safely." · "We can't afford MFA? No problem. I'm just going to note my dissenting opinion."</p></blockquote>
+      <p class="why">Why security leaders under-invest: they lack authority and budget and fear personal liability. Documented risk acceptance and board-ready reporting sell protection to the individual, not just the company.</p>
+      <footer><span>Mar 2022 · Oct 2023</span><span>75 pts · 61 comments; 248 pts · 98 comments</span><a href="https://news.ycombinator.com/item?id=30672761">Thread 1</a><a href="https://news.ycombinator.com/item?id=38076636">Thread 2</a><span class="ver ok">Fetched</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip hn">Hacker News</span><span class="who">Cyber insurance incident response · EuConform (EU AI Act tool) · Launch HN: Delve (HIPAA)</span></header>
+      <blockquote><p>Insurer: "Anytime you get a quote from us, we scan all your domains... your quote might come back contingent on certain actions." · "RDP ports must be closed, which is an auto-decline." · "I've even begun seeing a trend towards tying coverage to use of continuous monitoring platforms."</p><p>AI Act: "The interpretation of what the de facto requirements... entails still is in high flux and changing on a weekly basis."</p><p>HIPAA: "Basic technical compliance is not the hard part! It's everything else." · "The idea that HIPAA will be one click away and we never have to think about it again is silly."</p></blockquote>
+      <footer><span>Jul 2021 · Jan 2026 · Feb 2024</span><span>36/30 · 71/49 · 111/111</span><a href="https://news.ycombinator.com/item?id=27957814">Insurance</a><a href="https://news.ycombinator.com/item?id=46557823">AI Act</a><a href="https://news.ycombinator.com/item?id=39513054">HIPAA</a><span class="ver ok">Fetched</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip hn">Hacker News</span><span class="who">Ask HN: What does HN think of certifications like TOGAF, ITIL and CBAP?</span></header>
+      <blockquote><p>"My boss was big on TOGAF and ITIL... In 4 years of working for the company we never got farther than talk. Meanwhile we were able to get agile and scrum up and running in a few weeks." · "Never heard of them."</p></blockquote>
+      <p class="why">Five comments in total. The low engagement is the finding: for SMB, SaaS and PE-backed audiences, ITIL, COBIT and TOGAF read as stale or unknown. Keep them for enterprise and regulated RFP language where they are procurement requirements.</p>
+      <footer><span>2018</span><span>5 comments</span><a href="https://news.ycombinator.com/item?id=17721113">Open thread</a><span class="ver ok">Fetched</span></footer>
+    </article>
+  </div>
+
+  <div class="prose">
+    <h3>TikTok: content exists, engagement does not</h3>
+    <p>Searched logged in on Nate's account. "SOC 2 compliance" returns a first page led by paid partnerships (Rippling, Vanta) and a handful of creators; "vCISO" does return vendor and consultant videos, but the ones opened had one to three likes; "cyber insurance small business" is dominated by insurance agents and MSPs in single digits, with the only breakout a build-in-public founder story. The audience that engages on TikTok is job seekers and founders, not IT directors or CFOs. The one B2B format that works is the narrow-vertical compliance checklist with a call to action.</p>
+  </div>
+  <div class="exhibits">
+    <article class="exhibit">
+      <header><span class="chip tt">TikTok</span><span class="who">Search: "SOC 2 compliance" (logged in)</span></header>
+      <blockquote><p>NyxSentinel, "Security isn't just built, it's proven. SOC 2 shows customers they can trust you." — 93 likes · 15 comments · 30 saves (Dec 22, 2025) — <a href="https://www.tiktok.com/@nyxsentinel/video/7586838735979941151">video</a></p><p>@virtualciso, "How are you doing on the resilience aspect #soc2 #founder" — 1 like · 0 comments (Mar 2, 2026) — <a href="https://www.tiktok.com/@virtualciso/video/7612835148563893522">video</a></p><p>Also on the first page: Rippling paid partnership with a VC creator ("the hardest part of SOC 2 isn't the audit, it's stitching together disconnected systems, chasing evidence"), a Vanta paid partnership, Comp AI ("SOC 2 is just: 'hi, I'm a stable adult'"), Professor Simon ("Enterprise customers don't ask for SOC 2 to make your life harder"), and a NyxSentinel caption that reads like a 3HUE landing page: "no SOC 2, no deal... auditors and clients demand proof."</p></blockquote>
+      <footer><span>Sep 2, 2026</span><a href="https://www.tiktok.com/search?q=SOC%202%20compliance">Open search</a><span class="ver ok">Verified</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip tt">TikTok</span><span class="who">Search: "vCISO" (logged in)</span></header>
+      <blockquote><p>MaltekSolutions, "Can't afford a CISO? You still need one. Here's why virtual CISOs matter." — 3 likes · 0 comments (Nov 26, 2025) — <a href="https://www.tiktok.com/@malteksolutions/video/7577215172742221111">video</a></p><p>AQUILA C4I, "MSSPs: your vCISO is covering 12 clients who each think they're #1" — 1 like (Sep 1, 2026) — <a href="https://www.tiktok.com/@aquilac4i/video/7680389306124487950">video</a></p><p>Also surfaced: Trava ("When should you bring in a virtual CISO?"), intgr8r ("Why mid-market logistics and agribusinesses need board-level cyber advisors"), TheSecurityGator (promotional; "How I explain a vendor breach to a CEO who doesn't speak cyber: their breach is OUR breach"), MP Cybersecurity's "vCISO starter pack," and a Virtual CISO Moment podcast clip.</p></blockquote>
+      <p class="why">The vCISO category is present on TikTok and nobody is watching it. Skip it as a channel; if anything, borrow TheSecurityGator's CEO-translation framing for LinkedIn.</p>
+      <footer><span>Sep 2, 2026</span><a href="https://www.tiktok.com/search/video?q=vCISO">Open search</a><span class="ver ok">Verified</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip tt">TikTok</span><span class="who">Search: "cyber insurance small business" (logged in)</span></header>
+      <blockquote><p>Top result by likes: whitehatguardian, "Day 15 of turning nothing into a $1M cybersecurity company" — 344 likes. Next: techrug_, "4 cyber coverages EVERY business needs in 2025" — 89. Everything else on the page, from insurance agents and MSPs, sits between 0 and 26 likes, including Sun Life Tech's "Before you answer 'yes' on a cyber insurance questionnaire, make sure your business is actually ready" (16) and Confio Insurance's "Your small business doesn't need cyber insurance, unless…" (8).</p></blockquote>
+      <footer><span>Sep 2, 2026</span><a href="https://www.tiktok.com/search/video?q=cyber%20insurance%20small%20business">Open search</a><span class="ver ok">Verified</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip tt">TikTok</span><span class="who">@aestheticcomplianceco</span><span class="role">HIPAA compliance for med spas and clinics</span></header>
+      <blockquote><p>"Is your telehealth video platform actually HIPAA compliant? Just because you can video chat with a patient doesn't mean your telehealth process meets HIPAA requirements... Is there a Business Associate Agreement in place? Is the platform encrypted?... HIPAA compliance isn't just about the software you use — it's about your policies, procedures, training, documentation, and safeguards. Don't assume your telehealth setup is compliant. Verify it."</p></blockquote>
+      <p class="why">The template: narrow vertical, "are you actually compliant?", a five-item checklist, "don't assume, verify," book a call. A 3HUE analogue ("Is your SOC 2 actually covering your AI vendors?") is the only TikTok experiment worth running, and the same clip will do better on LinkedIn and YouTube Shorts.</p>
+      <footer><span>~Jun 2026</span><a href="https://www.tiktok.com/@aestheticcomplianceco/video/7647249303286713631">Open video</a><span class="ver snip">Snippet</span></footer>
+    </article>
+    <article class="exhibit">
+      <header><span class="chip tt">TikTok</span><span class="who">@andrenajee · @networkchuck</span></header>
+      <blockquote><p>"A common misconception about cybersecurity governance, risk, and compliance is that it's only about checking boxes... #cybersecurityanalyst #grc #techjobs" — <a href="https://www.tiktok.com/@andrenajee/video/7594254821654301982">video</a> (aimed at job seekers, not buyers)</p><p>NetworkChuck: "Small businesses need to make cybersecurity a priority. Take it seriously TODAY with BitDefender... #ad" — <a href="https://www.tiktok.com/@networkchuck/video/7410469403189415214">video</a> (the only large-creator SMB security content found, and it is a paid product ad)</p></blockquote>
+      <footer><span class="ver snip">Snippet</span></footer>
+    </article>
+  </div>
+
+  <div class="prose">
+    <h3>Long-form voices worth quoting</h3>
+    <ul>
+      <li><a href="https://edera.dev/stories/who-gives-a-soc-2-the-truth-about-soc-2-security-theater">Ann Wallace, Edera, "Who Gives a SOC 2"</a> (Mar 9, 2026): "When your goal is 'pass the audit,' you start optimizing for that. Not for being secure. For passing." "Compliance is a byproduct of good security engineering, not the goal."</li>
+      <li><a href="https://www.saastr.com/just-do-the-soc-2/">Jason Lemkin, SaaStr, "Just Do the SOC-2"</a> (Jul 2023): "You'll have to do it to close even slightly larger buyers... you'll be scrambling later to do it once you are forced to by a bigger customer." The pro-compliance counterweight from the most-read SaaS founder voice.</li>
+      <li><a href="https://www.isaca.org/resources/news-and-trends/isaca-now-blog/2026/five-questions-it-governance-professionals-will-need-to-answer-in-2026">Mark Thomas, ISACA, "Five Questions IT Governance Professionals Will Need to Answer in 2026"</a>: who is accountable for governing AI; can governance keep pace with compliance complexity; are boards equipped; supply-chain governance must move "beyond annual assessments."</li>
+      <li><a href="https://www.corporatecomplianceinsights.com/structural-barriers-cybersecurity-compliance-framework/">Steve Durbin, Information Security Forum</a> (Apr 30, 2026): five structural barriers to frameworks, including "the design and effectiveness gap: controls may exist on paper without functioning as intended."</li>
+      <li><a href="https://www.channelinsider.com/channel-business/vendor-leadership-and-partner-programs/cynomi-david-primor-vciso-demand/">David Primor, CEO Cynomi</a> (Dec 2025): MSPs offering vCISO tripled year over year; "a lot of MSPs and MSSPs want to differentiate themselves from others, and we think security is one way to do that." Read as a competitive warning: the vCISO label is commoditizing.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="language">
+  <div class="eyebrow">Voice of the buyer</div>
+  <h2>The words decision makers actually use</h2>
+  <div class="prose"><p>Pulled verbatim or near-verbatim from the exhibits above. Highlighted phrases are the ones that name a trigger or a buying moment; the rest are the mood music 3HUE's copy has to acknowledge before it can be believed.</p></div>
+  <h4 class="eyebrow">On the trigger</h4>
+  <div class="phrases">
+    <span class="h">"the very first customer required us to get it"</span><span class="h">"call us back when you have a SOC 2 in hand"</span><span class="h">"just lost a $500k deal because we didn't have SOC 2"</span><span class="h">"non-negotiable that all of our vendors must themselves be SOC2 compliant"</span><span class="h">"table stakes"</span><span class="h">"they were provable"</span><span class="h">"losing deals they don't even know they lost"</span><span class="h">"the policy gets voided"</span><span class="h">"but we pay for cyber insurance"</span><span class="h">"auto-decline"</span><span class="h">"contingent on certain actions"</span><span class="h">"NIS2 is coming. We don't have a CISO. We can't afford one."</span><span class="h">"we don't have an AI governance framework"</span><span class="h">"no SOC 2, no deal"</span><span class="h">"can we get away with doing nothing?"</span><span class="h">"AI isn't your issue. IT governance is."</span>
+  </div>
+  <h4 class="eyebrow">On the pain</h4>
+  <div class="phrases">
+    <span>"security is 'handled by IT' alongside 20 other jobs"</span><span>"vendor questionnaires create panic"</span><span>"200+ questions"</span><span>"everybody lies on these"</span><span>"hundreds of hours"</span><span>"a stack of disconnected tools"</span><span>"a longer to-do list"</span><span>"brutal rabbit hole"</span><span>"$50K–$100K and 6–9 months"</span><span>"scrambling later"</span><span>"target-rich, resource-poor"</span><span>"I'm a founder, not a compliance expert"</span><span>"we never got farther than talk" (ITIL/TOGAF)</span><span>"bailing out the Titanic with a teaspoon"</span><span>"70 consultant hours" at a 200-person company</span><span>"compliance is a way bigger driver than recognized risk"</span><span>"whoever is online" is the incident-response team</span><span>"nobody outside security knows what Level 3 maturity means"</span><span>"the watermelon effect": green dashboards, red inside</span><span>"we do carry insurance" (instead of detection)</span>
+  </div>
+  <h4 class="eyebrow">On the skepticism you must disarm</h4>
+  <div class="phrases">
+    <span>"expensive checkbox exercise"</span><span>"compliance theater"</span><span>"racket" / "audit mafia"</span><span>"box-checking"</span><span>"Compliance ≠ Security"</span><span>"paper compliance"</span><span>"nobody asked how"</span><span>"one click away" (the false promise)</span><span>"burdensome red tape-driven check-the-box"</span><span>"Chief Incident Scapegoat Officer"</span><span>"the board doesn't understand"</span><span>"management underestimates security risks"</span><span>"policy is not a control"</span>
+  </div>
+  <h4 class="eyebrow">What they say they want</h4>
+  <div class="phrases">
+    <span>"someone accountable"</span><span>"tell me what I don't have to do" (scope)</span><span>"a company that has done it before"</span><span>"transparent pricing"</span><span>"pay for the better auditors"</span><span>"it's execution that produces value"</span><span>"pragmatic about what we can tackle today"</span><span>"coach, not sheriff"</span><span>"make autonomy auditable"</span><span>"evidence that the controls actually work"</span><span>"time to low risk": months, cost, who, how measured</span><span>"sell outcomes, not hours"</span><span>"a security MSP is an absolute must"</span>
+  </div>
+</section>
+
+<section id="icp">
+  <div class="eyebrow">Who to anchor to</div>
+  <h2>Ideal customer profile</h2>
+  <div class="prose">
+    <p>The data and the conversation point to the same place: not "SMB" and not "enterprise," but the organization that has just been made <em>provable-or-else</em> by someone with leverage over it, that has no one to run the program, and that is sophisticated enough to distrust a certificate mill. Three profiles fit 3HUE's current offer and Andrew's background; one of them should be the anchor.</p>
+  </div>
+
+  <div class="icp">
+    <div class="row"><div class="k">Anchor ICP</div><div class="v"><p><strong>The provable vendor.</strong> US B2B software or tech-enabled services company, 50–500 employees, roughly $10M–$150M revenue, selling into enterprise, healthcare, financial-services or public-sector buyers. Multi-cloud or SaaS-heavy stack. Zero or one security FTE; security "handled by IT" or by the CTO. Often venture- or PE-backed.</p></div></div>
+    <div class="row"><div class="k">Live trigger</div><div class="v"><p>An enterprise deal or renewal stalled on SOC 2 Type II, ISO 27001 or a 200-question questionnaire; a cyber-insurance renewal with new conditions; investor or acquirer diligence; a customer asking about AI risk management (80% of AI-using companies already get that question). The trigger is what makes the budget appear, so marketing should be built to intercept it.</p></div></div>
+    <div class="row"><div class="k">Buying committee</div><div class="v"><p>Economic buyer: CEO or COO (sometimes CFO). Champion: CTO/VP Engineering, or the Head of Sales/RevOps whose deal is blocked. Influencers: outside counsel, the insurance broker, the board or lead investor. There is usually no CISO to sell to; the person who signs is the person losing the deal.</p></div></div>
+    <div class="row"><div class="k">Pain, in their words</div><div class="v"><p>"Call us back when you have a SOC 2 in hand." "Vendor questionnaires create panic." "The consultant quoted us $80,000 and 9 months." "Most compliance tools just hand you a longer to-do list." "I'm a founder, not a compliance expert."</p></div></div>
+    <div class="row"><div class="k">What they buy</div><div class="v"><p>A dated path to provable: a fast, framework-based assessment (the 10-day Snapshot, scoped to what the buyer actually requires), an operated readiness program with continuous evidence (AiVRIC underneath), auditor selection and scope negotiation, and questionnaire ownership. Priced against the deal, not against the tool.</p></div></div>
+    <div class="row"><div class="k">Why 3HUE wins here</div><div class="v"><p>Transit Technologies is already this story (no program to SOC 2 Type I with zero findings across a multi-entity portfolio). Founder delivery answers "nobody asked how." AiVRIC answers "provable" with timestamped, control-mapped evidence instead of screenshots.</p></div></div>
+  </div>
+
+  <div class="icp">
+    <div class="row"><div class="k">Second ICP</div><div class="v"><p><strong>The portfolio.</strong> Private-equity sponsors and family offices below $25B AUM with 5–30 lower-middle-market operating companies. Only 29% of these funds include cyber in deal diligence (versus 81% above $25B), while the average incident costs a deal $2.1M and 26% have seen valuations reduced. Buyer: operating partner or portfolio CFO; trigger: a new platform acquisition, an exit process, a portfolio-company incident, or a lender's insurance requirement. What they buy: a standard control set and evidence across entities, board-level reporting, and multi-tenant visibility, which is exactly AiVRIC's PE page. One sponsor relationship equals many logos.</p></div></div>
+    <div class="row"><div class="k">Third ICP</div><div class="v"><p><strong>The regulated operator.</strong> Community and regional banks, credit unions, lenders and fintechs (BSA, fair lending, GLBA, NYDFS, FFIEC), and OT-heavy transport, energy and utility operators with 200–2,000 employees. Governance exists on paper; examiners, MRAs and findings are the trigger. Buyer: CIO, CISO or Chief Risk Officer. This is the only ICP where NIST, ISO, COBIT and FFIEC belong in the headline, because they are the examiner's language, and it is where Andrew's FDA-483, MRA and large-bank remediation history is the proof.</p></div></div>
+    <div class="row"><div class="k">Not the ICP</div><div class="v"><p>Companies with no external forcing function (no enterprise buyers, regulator, insurer or investor pressure) will not buy maturity on principle; educate them cheaply, do not sell to them. Micro-businesses under ~20 staff are price-bound to the tool tier. Buyers shopping for "the fastest SOC 2" want a certificate, not a program; that is the Delve customer, and losing them is fine. Large enterprises come through Andrew's relationships, not through marketing spend.</p></div></div>
+  </div>
+
+  <div class="prose"><h3>The people in the room</h3></div>
+  <div class="personas">
+    <div class="persona">
+      <div class="t">Economic buyer</div>
+      <h4>The CEO/COO of a 50–500 person B2B company</h4>
+      <p>Hears about security when a deal, a renewal or a policy is at risk. Wants a number, a date and a name that is accountable.</p>
+      <ul><li>Says: "What does it cost, how long, and will it close the deal?"</li><li>Fears: paying $80K for paper; being the founder who "didn't take it seriously."</li><li>Converts on: revenue framing, a fixed-scope start, founder on the call.</li></ul>
+    </div>
+    <div class="persona">
+      <div class="t">Champion</div>
+      <h4>The CTO or IT Director wearing the security hat</h4>
+      <p>Owns 20 jobs, one of which is security. Skeptical of consultants and of tools that "hand you a longer to-do list."</p>
+      <ul><li>Says: "Tell me what we don't have to do." "Who is going to actually run this?"</li><li>Fears: engineering time consumed by audit theater; being blamed after an incident.</li><li>Converts on: scope negotiation, execution (not advice-only), evidence automation that removes screenshots.</li></ul>
+    </div>
+    <div class="persona">
+      <div class="t">Trigger owner</div>
+      <h4>The Head of Sales or RevOps with a blocked deal</h4>
+      <p>Has a procurement email that says "SOC 2 Type II required." Has never heard the phrase "System and Organization Controls."</p>
+      <ul><li>Says: "They just seemed more legit." "We're losing to a worse product."</li><li>Fears: the quarter.</li><li>Converts on: a trust page, a questionnaire-response service, a readiness letter with a date.</li></ul>
+    </div>
+    <div class="persona">
+      <div class="t">Portfolio buyer</div>
+      <h4>The PE operating partner or portfolio CFO</h4>
+      <p>Wants oversight across entities without hiring a CISO for each. Answers to an investment committee and a lender.</p>
+      <ul><li>Says: "What is our exposure across the portfolio?" "Will the policy pay out?"</li><li>Fears: a valuation haircut at exit; a voided policy after an incident.</li><li>Converts on: one control set for all companies, board-ready reporting, diligence-grade evidence.</li></ul>
+    </div>
+    <div class="persona">
+      <div class="t">Regulated buyer</div>
+      <h4>The CIO/CISO/CRO at a regulated operator</h4>
+      <p>Has frameworks, policies and a risk register. Has findings, an examiner and a deadline.</p>
+      <ul><li>Says: "Governance exists on paper." "Our risk register is disconnected from remediation."</li><li>Fears: an MRA that does not close; reporting to a board that asks surface-level questions.</li><li>Converts on: named framework crosswalks, continuous controls monitoring, remediation orchestration, a practitioner who has closed findings before.</li></ul>
+    </div>
+    <div class="persona">
+      <div class="t">Emerging buyer</div>
+      <h4>The executive who just got asked about AI</h4>
+      <p>Has an AI policy, or is writing one. Has no evidence that controls around AI agents work. 68% of breached firms lacked AI governance policies; the gap is widening.</p>
+      <ul><li>Says: "AI governance has a control problem, not a policy problem." "Who owns accountability when one gets it wrong?"</li><li>Fears: shadow AI; a customer questionnaire they cannot answer.</li><li>Converts on: a 10-day readiness snapshot, ISO 42001 / NIST AI RMF alignment, evidence of boundaries (what can it access, change, who approved, what proves it stayed inside).</li></ul>
+    </div>
+  </div>
+</section>
+
+<section id="marketing">
+  <div class="eyebrow">Implications</div>
+  <h2>What this means for 3HUE marketing</h2>
+  <div class="prose">
+    <h3>Positioning: sell the operated program, not the framework</h3>
+    <p>The market already believes two things 3HUE needs it to believe: that a certificate is not security, and that small organizations cannot secure themselves alone. The differentiated position is the sentence that comes <em>after</em> "compliance ≠ security," and Andrew has already written it: maturity is an operating capability, governance without operational authority is theater, tools don't reduce risk, decisions do. Put that thesis on the website, in his words, and make the 3HUE-plus-AiVRIC combination the proof: a founder who delivers the work and a platform that produces continuous, control-mapped evidence. Against Vanta/Drata-style tools the line is "the layer after the tool: someone who runs it." Against MSP vCISO offers (now 67% of MSPs) the line is "advisory bolted onto a help desk versus a program designed by someone who has closed FDA 483s and bank MRAs."</p>
+    <p>On the framework question specifically: keep NIST CSF, ISO 27001, SOC 2, CIS, the Secure Controls Framework, COBIT, ITIL, FFIEC and ISO 42001 <em>on the site</em>, because buyers in the regulated ICP and search engines look for those words and they are absent today. Keep them <em>out of the headline</em> for the anchor ICP, whose vocabulary is "SOC 2," "questionnaire," "insurance," "deal" and "AI." Never lead with ITIL, COBIT or TOGAF in demand generation; there is no live conversation about them on any platform. The one place governance-framework thinking is wanted is the AI-tooling chaos mid-market IT leaders are describing ("AI isn't your issue, IT governance is"), and even there the buyer wants the outcome, not the acronym.</p>
+    <p>The Reddit threads add a delivery lesson the vCISO market has converged on and that 3HUE should state out loud: a formal, framework-based assessment as the entry point; a monthly retainer tiered by size, complexity and compliance burden, sold as outcomes ("a program built on NIST CSF, quarterly board reporting, an incident-response plan") rather than hours; founder advisory on top; and a "sprint" project when a contract trigger arrives. Executive readouts should follow the "time to low risk" pattern the 667-point r/cybersecurity thread describes: how many months, how much, who does the work, how success is measured, with the technical findings in an appendix. Buyers "go straight to the cost breakdown"; put the number where they will find it.</p>
+
+    <h3>Message architecture, in the buyer's order</h3>
+    <ul>
+      <li><strong>Trigger line:</strong> "Your enterprise buyer is holding the contract until you're provable." (61% required a certification to win or renew; 47% delayed; 38% lost revenue.)</li>
+      <li><strong>Capacity line:</strong> "You already know what to do. You don't have anyone to do it." (68% have ≤1 security FTE; 93% call it a top priority.)</li>
+      <li><strong>Proof line:</strong> "Deployed is not operating. Policy is not a control." (MFA deployed 86.8%, required everywhere 51.1%; five of six AI governance controls declined year over year.)</li>
+      <li><strong>Insurance line:</strong> "Will your cyber policy actually pay?" (attestation-versus-reality; claims verified at post-mortem.)</li>
+      <li><strong>Founder line:</strong> "Nobody asked how. Ask us." (the Delve lesson; the same advisor scopes and delivers.)</li>
+      <li><strong>Portfolio line:</strong> "One control set, every entity, board-ready." (funds under $25B AUM do cyber diligence 29% of the time.)</li>
+    </ul>
+
+    <h3>Channel plan grounded in where the conversation is</h3>
+    <ul>
+      <li><strong>LinkedIn is the primary channel, and the founder is the medium.</strong> Rob Black's reach comes from years of one hashtag set and one point of view, not one viral post. Andrew has the point of view and 2,003 followers; what is missing is cadence and aim. Format the evidence shows works: a one-sentence heretical thesis as the first line ("SOC 2 has devolved..."); posts written in the objection's voice ("But we pay for cyber insurance..."); the anonymized present-tense failure story ("A firm files a claim..."); a hard number in the first line ("The $200K DIB compliance hurdle"); same-day reaction to news (Delve, the CMMC pause); long-form Pulse for search durability. Repurpose the three case studies this way. Activate the company pages (577 and 16 followers, no visible posts) as the archive, not the source.</li>
+      <li><strong>X is for reputation among founders and technical CISOs during news cycles.</strong> Sharp, short opinions in the Delve, CMMC and AI-agent-governance threads; not a lead channel.</li>
+      <li><strong>YouTube is search, and search wants basics.</strong> Beginner-level, framework-named, step-by-step content (ISO 27001, SOC 2 pricing, NIST 800-171 after the CMMC pause) draws six figures; "why compliance isn't security" draws eighteen views. Publish plain explainers and Shorts with price transparency; skip thought-leadership video.</li>
+      <li><strong>Practitioner forums are for credibility with the champion.</strong> The IT director reads r/ITManagers, r/sysadmin and r/msp; the CTO reads Hacker News. Engineering-grade content (scope strangling, what auditors actually accept, evidence automation without screenshots) is what earns a link there.</li>
+      <li><strong>TikTok: one experiment, no strategy.</strong> Test the vertical-checklist format ("Is your SOC 2 actually covering your AI vendors?"); expect the clip to perform better on LinkedIn and YouTube Shorts.</li>
+    </ul>
+
+    <h3>Campaigns tied to forcing functions</h3>
+    <ul>
+      <li><strong>Deal blocked by SOC 2.</strong> Landing page in sales language, a "readiness letter in 30 days" offer built on the Snapshot, a questionnaire-response service as the wedge ($2 a question, 5–10 a week is the ROI math buyers already do), and a public trust page template.</li>
+      <li><strong>Will your policy pay?</strong> A cyber-insurance attestation audit: compare what the application says to what can be demonstrated, before renewal. Co-market with brokers; the PE and family-office broker audience is already posting about this.</li>
+      <li><strong>Portfolio assurance.</strong> A sponsor-facing offer for sub-$25B funds: diligence-grade assessment per acquisition, one control set across entities, quarterly board reporting, AiVRIC multi-tenant underneath.</li>
+      <li><strong>AI governance has a control problem.</strong> Lead with the four questions (access, change, approval, evidence) and the 10-day AI Risk &amp; Readiness Snapshot; anchor to ISO 42001 and NIST AI RMF; cite that 80% of AI-using companies are already being asked by customers.</li>
+      <li><strong>800-171 still applies.</strong> For South Florida's defense and aerospace suppliers after the July 2026 CMMC Phase II pause: "the certification paused; the controls didn't." Position as the practical alternative to both panic and abandonment.</li>
+    </ul>
+
+    <h3>Website and proof fixes that cost little</h3>
+    <ul>
+      <li>Name the frameworks on the services and industries pages; add a crosswalk page (NIST CSF as the spine, mapped to ISO 27001, SOC 2, CIS, FFIEC, 800-171, ISO 42001).</li>
+      <li>Publish engagement bands and what each includes. Buyers explicitly reward "transparent pricing, something I haven't seen on any other platform."</li>
+      <li>Add client quotes, metrics with timeframes and named references to the three stories; add a "how we do it" page that answers "how" the way the Delve satire says nobody did.</li>
+      <li>State the 3HUE–AiVRIC relationship on 3hue.net: managed programs run on AiVRIC; AiVRIC was built by 3HUE practitioners.</li>
+      <li>Reconcile the descriptions on BBB, Crunchbase, LinkedIn and the site so diligence finds one company.</li>
+      <li>Retire the "compliance ≠ security" framing as a headline; use it only as the setup for "here is what operating it looks like."</li>
+    </ul>
+
+    <h3>Measures that will tell you it is working</h3>
+    <p>Founder-post cadence (target weekly) and comment-to-reaction ratio on trigger-themed posts; inbound that names a blocked deal, a renewal or a diligence request; Snapshot bookings by ICP; share of site traffic landing on framework-named pages; questionnaire hours reclaimed per client; and, for the portfolio motion, number of sponsors with more than one portfolio company under program.</p>
+  </div>
+</section>
+
+<section id="method">
+  <div class="eyebrow">Appendix</div>
+  <h2>Method, limits and sources</h2>
+  <div class="prose">
+    <p><strong>How this was built.</strong> Public company research (websites, BBB, Crunchbase, LinkedIn pages and Andrew's articles) on September 2, 2026; sixty-plus statistics from 2024–2026 reports, each confirmed on its source page; social listening across LinkedIn, X and TikTok in logged-in sessions in the Claude browser on Nate's Mac, Reddit through Nate's Chrome, YouTube watch pages, and Hacker News threads. Posts marked verified were opened and read today; snippet items were not opened and should be confirmed before quoting externally. Reddit content is paraphrased with short quotations; read the threads for the full text.</p>
+    <p><strong>Limits.</strong> Screenshots taken in the browser could not be saved as files, so the evidence trail is quote plus link. Engagement counts are as displayed on the day and will drift. Two frequently repeated numbers were left out because they could not be verified: the size of the vCISO market in dollars, and "40% of cyber insurance claims denied." Current adoption rates for TOGAF and COBIT do not exist in open sources.</p>
+    <p><strong>Where the raw material lives.</strong> The full data set, the agent research reports and this page are saved in the "3Hue +AiVRIC" project so the next session can pick up without redoing the work.</p>
+    <h3>Primary sources</h3>
+  </div>
+  <ol class="sources">
+    <li><a href="https://secureframe.com/newsroom/2026-cybersecurity-and-compliance-benchmark-report">Secureframe, 2026 Cybersecurity and Compliance Benchmark Report</a> (Dec 2025)</li>
+    <li><a href="https://www.prnewswire.com/news-releases/a-lign-releases-2026-compliance-benchmark-report-unveils-how-compliance-teams-can-navigate-evolving-governance-landscape-302671958.html">A-LIGN, 2026 Compliance Benchmark Report</a> (Jan 2026) and <a href="https://www.a-lign.com/articles/a-lign-releases-fifth-annual-compliance-benchmark-report">2025 edition</a></li>
+    <li><a href="https://www.isaca.org/about-us/newsroom/press-releases/2025/state-of-cybersecurity-2025-global-press-release">ISACA, State of Cybersecurity 2025</a>; <a href="https://www.isaca.org/about-us/newsroom/press-releases/2026/ai-use-accelerates-while-governance-and-roi-lag-says-new-isaca-research">ISACA 2026 AI Pulse Poll</a>; <a href="https://www.isaca.org/about-us/newsroom/press-releases/2025/new-isaca-research-identifies--what-will-keep-tech-pros-up-at-night-in-2026">ISACA Tech Trends 2026</a></li>
+    <li><a href="https://www.prnewswire.com/news-releases/isc2-study-finds-cybersecurity-budget-constraints-remain-but-do-not-worsen-while-skill-needs-grow-302632487.html">ISC2, 2025 Cybersecurity Workforce Study</a></li>
+    <li><a href="https://www.sophos.com/en-us/blog/2026-ciso-report">Cybersecurity Ventures with Sophos, 2026 CISO Report</a>; <a href="https://www.sophos.com/en-us/press/press-releases/2025/06/nearly-half-companies-opt-pay-ransom-sophos-report-finds">Sophos State of Ransomware 2025</a></li>
+    <li><a href="https://static.fortra.com/corporate/pdfs/guide/fta-2025-state-of-cybersecurity-survey-results-gd.pdf">Fortra, 2025 State of Cybersecurity Survey</a></li>
+    <li><a href="https://www.gov.uk/government/statistics/cyber-security-breaches-survey-20252026/cyber-security-breaches-survey-20252026">UK DSIT/Home Office, Cyber Security Breaches Survey 2025/2026</a></li>
+    <li><a href="https://www.weforum.org/publications/global-cybersecurity-outlook-2025/in-full/executive-summary-4e44b16c32/">World Economic Forum, Global Cybersecurity Outlook 2025</a>; coverage in <a href="https://www.cybersecuritydive.com/news/wef-cyber-risk-outlook/737430/">Cybersecurity Dive</a></li>
+    <li><a href="https://www.staysafeonline.org/articles/2026-small-business-cybersecurity-awareness-practices-survey">National Cybersecurity Alliance with CISA, 2026 Small Business Survey</a>; figures via <a href="https://www.secureworld.io/industry-news/top-cybersecurity-risks-challenges-smb">SecureWorld</a></li>
+    <li><a href="https://techaisle.com/blog/647-great-cybersecurity-paradox-why-skyrocketing-smb-spending-is-not-translating-to-readiness">Techaisle, The Great Cybersecurity Paradox</a> (Oct 2025)</li>
+    <li><a href="https://www.connectwise.com/company/press/releases/connectwise-research-finds-78-of-smbs-concerned-a-cyber-attack-could-put-their-organizations-out-of-business">ConnectWise, State of SMB Cybersecurity</a> (2024) and <a href="https://www.connectwise.com/blog/smb-cybersecurity-statistics-and-trends">2025 statistics</a></li>
+    <li><a href="https://www.infosecurity-magazine.com/news/verizon-dbir-smb-ransomware-attacks/">Verizon DBIR 2025 (SMB findings)</a>; <a href="https://www.helpnetsecurity.com/2026/05/25/lessons-from-verizon-dbir-2026-findings/">DBIR 2026 summary</a></li>
+    <li><a href="https://newsroom.ibm.com/2026-07-29-ibm-study-one-in-four-malicious-breaches-are-ai-enabled,-costing-companies-6-million-on-average">IBM, 2026 Cost of a Data Breach</a>; <a href="https://complexdiscovery.com/policy-without-control-the-ai-governance-gap-in-ibms-2026-cost-of-a-data-breach-report/">AI governance analysis</a>; <a href="https://www.cybersecuritydive.com/news/consolidation-security-tools/738912/">IBM IBV/Palo Alto tool sprawl study</a></li>
+    <li><a href="https://www.prnewswire.com/news-releases/private-equity-cybersecurity-a-significant-risk-to-deals-with-2-1m-financial-impact-on-average-kroll-finds-302685183.html">Kroll, Private Equity Cybersecurity</a> (Feb 2026)</li>
+    <li><a href="https://www.insurancejournal.com/magazines/mag-features/2026/05/18/869952.htm">Insurance Journal on Chubb cyber claim severity</a> (May 2026); <a href="https://www.coalitioninc.com/announcements/2025-cyber-claims-report">Coalition 2025 Cyber Claims Report</a></li>
+    <li><a href="https://www.helpnetsecurity.com/2025/07/31/vciso-services-adoption-2025/">Cynomi, 2025 State of the vCISO</a>; <a href="https://www.channelinsider.com/channel-business/vendor-leadership-and-partner-programs/cynomi-david-primor-vciso-demand/">Channel Insider interview</a></li>
+    <li><a href="https://www.gartner.com/en/newsroom/press-releases/2025-07-29-gartner-forecasts-worldwide-end-user-spending-on-information-security-to-total-213-billion-us-dollars-in-2025">Gartner security spend forecast</a> (Jul 2025); <a href="https://www.gartner.com/en/newsroom/press-releases/2026-02-17-gartner-global-ai-regulations-fuel-billion-dollar-market-for-ai-governance-platforms">Gartner AI governance platforms</a> (Feb 2026)</li>
+    <li><a href="https://drata.com/blog/key-takeaways-state-of-grc-2025">Drata, State of GRC 2025</a>; <a href="https://www.businesswire.com/news/home/20260120755843/en/2026-State-of-CCM-Report-Resource-Constraints-Drive-85-of-Organizations-to-Rethink-Traditional-GRC-Approaches">RegScale, 2026 State of Continuous Controls Monitoring</a></li>
+    <li><a href="https://www.prnewswire.com/news-releases/hyperproofs-6th-annual-it-risk-and-compliance-benchmark-report-reveals-an-increased-focus-on-grc-maturity-302356797.html">Hyperproof, 6th Annual Benchmark</a>; <a href="https://hyperproof.io/resource/6-key-findings-2025-benchmark-report/">Summer 2025 Benchmark</a></li>
+    <li><a href="https://www.businesswire.com/news/home/20241023116758/en/Vanta-State-of-Trust-Report-2024-Increasing-Risks-Require-Going-Beyond-the-Standard">Vanta, State of Trust 2024</a>; <a href="https://www.businesswire.com/news/home/20250709100315/en/Vanta-Unveils-Trust-Maturity-Report-Benchmarking-Security-Programs-Across-11000-Organizations">Vanta Trust Maturity Report 2025</a></li>
+    <li><a href="https://cpl.thalesgroup.com/blog/data-security/ai-quantum-and-the-evolving-threat-landscape-key-findings-from-the-thales-2025-data-threat-report">Thales, 2025 Data Threat Report</a></li>
+    <li><a href="https://clsbluesky.law.columbia.edu/2025/08/13/the-gap-between-cybersecurity-oversight-and-boardroom-expertise">Lowry, Vance &amp; Vance via Columbia Law School Blue Sky Blog</a> (Aug 2025)</li>
+    <li><a href="https://www.globenewswire.com/news-release/2026/03/24/3261322/0/en/new-pax8-research-reveals-small-businesses-are-adopting-ai-faster-than-they-re-building-strategies-to-manage-it.html">Pax8 SMB AI research</a> (Mar 2026); <a href="https://www.secureworld.io/industry-news/smb-ai-governance-security">Pax8 Q2 2026 SMB AI Pulse</a></li>
+    <li><a href="https://www.hiscoxgroup.com/news/press-releases/2025/29-09-25">Hiscox Cyber Readiness Report 2025</a>; <a href="https://www.hiscox.com/documents/Hiscox-Cyber-Readiness-Report-2026.pdf">2026 US edition</a></li>
+    <li><a href="https://www.preveil.com/blog/cmmc-final-rule-published/">PreVeil on the CMMC final rule</a>; <a href="https://defensescoop.com/2023/12/28/cmmc-implementation-cost-estimates/">DefenseScoop CMMC cost estimates</a>; <a href="https://x.com/DoW_CIO/status/2076755127764160615">DoW CIO Phase II suspension</a> (Jul 2026)</li>
+    <li><a href="https://www.itsecurityguru.org/2026/04/15/only-16-of-businesses-are-fully-compliant-with-nis2-despite-2024-compliance-deadline/">CyberSmart NIS2 survey</a> (Apr 2026); <a href="https://www.helpnetsecurity.com/2025/07/25/dora-compliance-challenges-financial-firms/">DORA readiness survey</a> (Jul 2025)</li>
+    <li><a href="https://www.corporatecomplianceinsights.com/structural-barriers-cybersecurity-compliance-framework/">Steve Durbin, Corporate Compliance Insights</a> (Apr 2026); <a href="https://www.isaca.org/resources/news-and-trends/isaca-now-blog/2026/five-questions-it-governance-professionals-will-need-to-answer-in-2026">Mark Thomas, ISACA</a> (Jan 2026)</li>
+    <li><a href="https://edera.dev/stories/who-gives-a-soc-2-the-truth-about-soc-2-security-theater">Edera, "Who Gives a SOC 2"</a> (Mar 2026); <a href="https://www.saastr.com/just-do-the-soc-2/">SaaStr, "Just Do the SOC-2"</a> (Jul 2023)</li>
+    <li>3HUE and AiVRIC: <a href="https://3hue.net/">3hue.net</a>, <a href="https://aivric.com/">aivric.com</a>, <a href="https://www.bbb.org/us/fl/plantation/profile/business-consultant/3hue-executive-consulting-llc-0633-90570181">BBB</a>, <a href="https://www.crunchbase.com/organization/3hue-executive-consulting">Crunchbase</a>, <a href="https://www.linkedin.com/in/aramirez-it/">Andrew Ramirez on LinkedIn</a>, <a href="https://www.linkedin.com/pulse/founder-thesis-why-aivric-exists-andrew-ramirez-wplwe">Founder Thesis</a>, <a href="https://www.linkedin.com/pulse/stop-blaming-frameworks-how-security-architecture-risk-andrew-ramirez-rtade">Stop Blaming Frameworks</a>, <a href="https://www.linkedin.com/pulse/from-execution-enablement-lessons-learned-2025-what-leaders-ramirez-nwgte">Lessons Learned in 2025</a></li>
+  </ol>
+</section>
+    </main>
+  </div>
+</div>

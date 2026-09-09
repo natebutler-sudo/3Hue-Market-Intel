@@ -1,0 +1,531 @@
+<meta charset="utf-8">
+<title>The Marketing Folder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --brand:#44a8d9; --brand-700:#2f86b3;
+  --ink-strong:#0f172a; --ink:#1f2937; --ink-muted:#4b5563; --ink-subtle:#6b7280;
+  --s0:#f6f7f9; --s1:#ffffff; --s2:#f0f2f6;
+  --bdr:rgba(15,23,42,.12);
+  --ok:#0f7a52; --ok-soft:#dcf5ea; --warn:#9a5b06; --warn-soft:#fbedd8; --stop:#a3271c; --stop-soft:#f8ddd9;
+  --code-bg:#fbfcfd; --code-bdr:rgba(68,168,217,.32);
+  --shadow:0 18px 36px rgba(15,23,42,.07);
+  --display:Sora,"IBM Plex Sans",sans-serif;
+  --body:"IBM Plex Sans","Helvetica Neue",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ink-strong:#f8fafc; --ink:#e2e8f0; --ink-muted:#cbd5f5; --ink-subtle:#94a3b8;
+  --s0:#0b1118; --s1:#0f172a; --s2:#111827; --bdr:rgba(148,163,184,.25);
+  --ok:#2ee59d; --ok-soft:#0d2f24; --warn:#ffc46b; --warn-soft:#33260f; --stop:#ff8b7a; --stop-soft:#3a1a16;
+  --code-bg:#0d1622; --code-bdr:rgba(68,168,217,.33);
+  --shadow:0 18px 36px rgba(3,7,18,.45); color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --ink-strong:#f8fafc; --ink:#e2e8f0; --ink-muted:#cbd5f5; --ink-subtle:#94a3b8;
+  --s0:#0b1118; --s1:#0f172a; --s2:#111827; --bdr:rgba(148,163,184,.25);
+  --ok:#2ee59d; --ok-soft:#0d2f24; --warn:#ffc46b; --warn-soft:#33260f; --stop:#ff8b7a; --stop-soft:#3a1a16;
+  --code-bg:#0d1622; --code-bdr:rgba(68,168,217,.33);
+  --shadow:0 18px 36px rgba(3,7,18,.45); color-scheme:dark;}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--s0);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+a{color:var(--brand-700)}
+:root[data-theme="dark"] a{color:var(--brand)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) a{color:var(--brand)}}
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:4px}
+h1,h2,h3,h4{margin:0;font-family:var(--display);font-weight:700;color:var(--ink-strong);text-wrap:balance;letter-spacing:-.012em}
+h1{font-size:clamp(2.1rem,4.8vw,3.3rem);line-height:1.03;font-weight:800}
+h2{font-size:clamp(1.3rem,2.4vw,1.66rem);line-height:1.15}
+h3{font-size:1.04rem}
+p{margin:0 0 .85rem}
+ul,ol{margin:0 0 .85rem;padding-left:1.15rem}li{margin-bottom:.36rem}
+.wrap{max-width:1080px;margin:0 auto;padding:0 clamp(16px,3.5vw,34px)}
+.lab{font-family:var(--mono);font-size:.66rem;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-subtle)}
+.mono{font-family:var(--mono)}
+.note{font-size:.85rem;color:var(--ink-subtle);line-height:1.55;max-width:82ch}
+
+.mast{padding:clamp(28px,5vw,54px) 0 26px}
+.mastgrid{display:grid;gap:24px}
+@media(min-width:900px){.mastgrid{grid-template-columns:1.05fr .95fr;gap:44px;align-items:end}}
+.mast .lead{font-family:var(--display);font-size:clamp(1.08rem,2.1vw,1.34rem);line-height:1.4;max-width:33ch;margin:18px 0 0;font-weight:400;color:var(--ink)}
+.mastmeta{display:grid;gap:12px;font-size:.88rem;color:var(--ink-muted)}
+.mastmeta .lab{display:block;margin-bottom:3px}
+
+section{padding:44px 0 6px;border-top:1px solid var(--bdr)}
+.shead{display:flex;align-items:baseline;gap:13px;flex-wrap:wrap;margin-bottom:6px}
+.shead .n{font-family:var(--mono);font-size:.7rem;color:var(--ink-subtle);letter-spacing:.1em}
+.sintro{max-width:66ch;color:var(--ink-muted);margin:9px 0 22px;font-size:.97rem}
+
+.fld{background:var(--s1);border:1px solid var(--bdr);border-radius:12px;margin-bottom:13px;overflow:hidden}
+.fh{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:14px 17px 8px}
+.fh .fi{font-size:1rem;line-height:1}
+.fh h3{font-family:var(--mono);font-size:.98rem;font-weight:500;letter-spacing:0;flex:1 1 auto;min-width:170px}
+.d1,.dl{font-family:var(--mono);font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:5px;white-space:nowrap}
+.d1{background:var(--ok-soft);color:var(--ok)}
+.dl{background:var(--warn-soft);color:var(--warn)}
+.fn{margin:0;padding:0 17px 12px;font-size:.88rem;color:var(--ink-muted)}
+.subs{border-top:1px solid var(--bdr);background:var(--s2)}
+.sub{display:grid;grid-template-columns:1fr;gap:2px;padding:9px 17px;border-bottom:1px solid var(--bdr)}
+@media(min-width:720px){.sub{grid-template-columns:262px 1fr;gap:18px;align-items:baseline}}
+.sub:last-child{border-bottom:0}
+.sn{font-family:var(--mono);font-size:.82rem;color:var(--ink-strong)}
+.sn .par{color:var(--ink-subtle)}
+.sd{font-size:.85rem;color:var(--ink-muted)}
+
+.tw{overflow-x:auto;border:1px solid var(--bdr);border-radius:12px;background:var(--s1);margin-bottom:18px}
+table{border-collapse:collapse;width:100%;min-width:620px;font-size:.87rem}
+th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--bdr);vertical-align:top}
+th{font-family:var(--mono);font-size:.66rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-subtle);font-weight:500;background:var(--s2);white-space:nowrap}
+tbody tr:last-child td{border-bottom:0}
+td strong{color:var(--ink-strong)}
+td code,.ic{font-family:var(--mono);font-size:.8rem;background:var(--s2);padding:2px 6px;border-radius:4px;display:inline-block;word-break:break-word}
+
+.code{background:var(--code-bg);border:1px solid var(--code-bdr);border-radius:11px;margin:0 0 16px;overflow:hidden}
+.code .ch{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:8px 13px;background:rgba(68,168,217,.07);border-bottom:1px solid var(--code-bdr)}
+.code .ch .lab{color:var(--brand-700)}
+:root[data-theme="dark"] .code .ch .lab{color:var(--brand)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .code .ch .lab{color:var(--brand)}}
+.cbtn{font-family:var(--mono);font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;background:transparent;border:1px solid var(--code-bdr);color:var(--ink-muted);border-radius:5px;padding:4px 9px;cursor:pointer;white-space:nowrap}
+.cbtn:hover{border-color:var(--brand);color:var(--ink-strong)}
+.code pre{margin:0;padding:14px 16px;overflow-x:auto;font-family:var(--mono);font-size:.79rem;line-height:1.55;color:var(--ink);max-height:460px}
+
+.chk{display:grid;gap:0;border-top:1px solid var(--bdr)}
+.ck{display:grid;grid-template-columns:1fr;gap:3px;padding:12px 0;border-bottom:1px solid var(--bdr)}
+@media(min-width:760px){.ck{grid-template-columns:1fr 1.25fr;gap:22px;align-items:baseline}}
+.ck .what{font-weight:600;color:var(--ink-strong);font-size:.93rem}
+.ck .where{font-family:var(--mono);font-size:.8rem;color:var(--brand-700)}
+:root[data-theme="dark"] .ck .where{color:var(--brand)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .ck .where{color:var(--brand)}}
+.warnbox{background:var(--s1);border:1px solid var(--bdr);border-left:4px solid var(--warn);border-radius:0 12px 12px 0;padding:17px 20px;margin-bottom:16px;box-shadow:var(--shadow)}
+.warnbox h3{margin-bottom:7px;font-size:1rem}
+.warnbox p:last-child{margin:0}
+footer{padding:30px 0 66px;border-top:1px solid var(--bdr);margin-top:38px;color:var(--ink-subtle);font-size:.82rem}
+</style>
+
+<div class="wrap">
+<header class="mast">
+  <div class="lab" style="margin-bottom:15px">3HUE · SharePoint marketing library · v1 · September 2, 2026</div>
+  <div class="mastgrid">
+    <div>
+      <h1>The Marketing<br>Folder</h1>
+      <p class="lead">12 parents, 86 folders, three levels deep — shallow enough that OneDrive sync never breaks.</p>
+    </div>
+    <div class="mastmeta">
+      <div><span class="lab">Design rules</span>Numbered parents so sort order is deliberate. Maximum three levels. Hyphens, never spaces. Nothing named "Misc," "New folder" or anyone's initials.</div>
+      <div><span class="lab">Create now vs later</span>Build every parent immediately — empty parents prevent people inventing their own. Only populate subfolders where something exists to put in them.</div>
+      <div><span class="lab">The one rule</span>If you cannot decide where a file goes in ten seconds, the structure is wrong and should be fixed. Do not create a new top-level folder to resolve it.</div>
+    </div>
+  </div>
+</header>
+
+<main>
+<section style="border-top:0;padding-top:26px">
+  <div class="shead"><span class="n">01</span><h2>The structure</h2></div>
+  <p class="sintro">Each parent has one job. Where a folder maps to something already built, the note says so; where it is empty on purpose, the note says what belongs there when it exists.</p>
+  <div class="fld"><div class="fh"><span class="fi">&#128193;</span><h3>00_Start-Here</h3><span class="d1">Create now</span></div><p class="fn">The map, the rules, and who owns what. First thing a new person opens.</p><div class="subs">
+<div class="sub"><div class="sn">Folder-Map-and-Conventions</div><div class="sd">This document, plus the file-naming standard.</div></div>
+<div class="sub"><div class="sn">Who-Owns-What</div><div class="sd">One page: which folder has an owner, and who approves what.</div></div>
+<div class="sub"><div class="sn">Onboarding</div><div class="sd">How to get access, which tools, where to start reading.</div></div>
+</div></div>
+<div class="fld"><div class="fh"><span class="fi">&#128193;</span><h3>01_Strategy</h3><span class="d1">Create now</span></div><p class="fn">Why we do what we do. Changes quarterly, not weekly.</p><div class="subs">
+<div class="sub"><div class="sn"><span class="par">Research /</span> Market-Research</div><div class="sd">The Maturity Gap and the underlying 2024-2026 report data.</div></div>
+<div class="sub"><div class="sn"><span class="par">Research /</span> Social-Listening</div><div class="sd">Verified posts, quotes, engagement counts and links.</div></div>
+<div class="sub"><div class="sn"><span class="par">Research /</span> Voice-of-Customer</div><div class="sd">Client interview notes. Empty today, and it should not stay that way.</div></div>
+<div class="sub"><div class="sn">ICP-and-Segmentation</div><div class="sd">The Forcing Function. The fit model is the qualification standard.</div></div>
+<div class="sub"><div class="sn">Capability-Map-and-Roadmap</div><div class="sd">The Capability Map. Re-scored quarterly.</div></div>
+<div class="sub"><div class="sn">Plans-and-OKRs</div><div class="sd">Quarterly plan and objectives.</div></div>
+<div class="sub"><div class="sn">Budget</div><div class="sd">Spend plan and actuals.</div></div>
+<div class="sub"><div class="sn">Win-Loss</div><div class="sd">Closed deals scored against the fit model. The most valuable empty folder here.</div></div>
+</div></div>
+<div class="fld"><div class="fh"><span class="fi">&#128193;</span><h3>02_Brand</h3><span class="d1">Create now</span></div><p class="fn">Identity and the files everyone asks for. Read-only for most of the team.</p><div class="subs">
+<div class="sub"><div class="sn"><span class="par">Logos /</span> 3HUE-Master</div><div class="sd">Full lockup, plus the vector master and variants once commissioned.</div></div>
+<div class="sub"><div class="sn"><span class="par">Logos /</span> Service-Marks</div><div class="sd">ISG, OPS and ITG. Never used as the company logo.</div></div>
+<div class="sub"><div class="sn"><span class="par">Logos /</span> AiVRIC</div><div class="sd">AiVRIC SVG and footer variants.</div></div>
+<div class="sub"><div class="sn"><span class="par">Logos /</span> Favicons-and-Avatars</div><div class="sd">Small-scale marks for browser tabs and social profiles.</div></div>
+<div class="sub"><div class="sn">Guidelines</div><div class="sd">The Brand Sheet: colour, type, usage rules, verbal identity, naming.</div></div>
+<div class="sub"><div class="sn"><span class="par">Templates /</span> Slides</div><div class="sd">The deck template. Highest-frequency branded surface you own.</div></div>
+<div class="sub"><div class="sn"><span class="par">Templates /</span> Documents</div><div class="sd">Letterhead, report and memo templates.</div></div>
+<div class="sub"><div class="sn"><span class="par">Templates /</span> Proposals-and-SOW</div><div class="sd">Proposal shell with boilerplate and standing scope language.</div></div>
+<div class="sub"><div class="sn"><span class="par">Templates /</span> Email-Signatures</div><div class="sd">One approved signature block, one logo file.</div></div>
+<div class="sub"><div class="sn"><span class="par">Templates /</span> Social-Frames</div><div class="sd">LinkedIn single-image and carousel frames.</div></div>
+<div class="sub"><div class="sn">Fonts</div><div class="sd">Sora and IBM Plex Sans. Both open licence, so they can be shared freely.</div></div>
+<div class="sub"><div class="sn"><span class="par">Imagery /</span> Approved</div><div class="sd">Images cleared for use, named by where they are licensed for.</div></div>
+<div class="sub"><div class="sn"><span class="par">Imagery /</span> Stock-and-Licences</div><div class="sd">Licence receipts. Keep these; stock audits do happen.</div></div>
+<div class="sub"><div class="sn"><span class="par">Imagery /</span> Headshots</div><div class="sd">Team photography at print and web resolution.</div></div>
+</div></div>
+<div class="fld"><div class="fh"><span class="fi">&#128193;</span><h3>03_Messaging</h3><span class="d1">Create now</span></div><p class="fn">What we say. If copy anywhere disagrees with this folder, this folder wins.</p><div class="subs">
+<div class="sub"><div class="sn">Message-Stack</div><div class="sd">Narrative, positioning, pillars, per-segment messaging.</div></div>
+<div class="sub"><div class="sn">Claims-Library-and-Evidence</div><div class="sd">The claims table plus the source PDFs behind each statistic.</div></div>
+<div class="sub"><div class="sn">Battlecards</div><div class="sd">Four competitors including doing nothing.</div></div>
+<div class="sub"><div class="sn">Objection-Handling</div><div class="sd">The eight objections and the approved responses.</div></div>
+<div class="sub"><div class="sn">Boilerplate-and-Bios</div><div class="sd">25, 50 and 100-word descriptions. Founder bio at two lengths.</div></div>
+</div></div>
+<div class="fld"><div class="fh"><span class="fi">&#128193;</span><h3>04_Campaigns</h3><span class="d1">Create now</span></div><p class="fn">Time-bound executions. One folder per campaign, copied from the template.</p><div class="subs">
+<div class="sub"><div class="sn"><span class="par">_Campaign-Template /</span> 1-Brief</div><div class="sd">Objective, segment, trigger, offer, measures. Copy the whole _Campaign-Template folder to start a new campaign.</div></div>
+<div class="sub"><div class="sn"><span class="par">_Campaign-Template /</span> 2-Copy</div><div class="sd">Approved copy blocks.</div></div>
+<div class="sub"><div class="sn"><span class="par">_Campaign-Template /</span> 3-Creative</div><div class="sd">Images, video, layouts.</div></div>
+<div class="sub"><div class="sn"><span class="par">_Campaign-Template /</span> 4-Landing-Page</div><div class="sd">Page copy, wireframe, published URL.</div></div>
+<div class="sub"><div class="sn"><span class="par">_Campaign-Template /</span> 5-Sequences</div><div class="sd">Email and outreach steps.</div></div>
+<div class="sub"><div class="sn"><span class="par">_Campaign-Template /</span> 6-Paid</div><div class="sd">Ad copy, targeting, spend.</div></div>
+<div class="sub"><div class="sn"><span class="par">_Campaign-Template /</span> 7-Results</div><div class="sd">What happened, and what to do differently.</div></div>
+<div class="sub"><div class="sn">Active</div><div class="sd">One subfolder per live campaign, named YYYY-QN-Campaign-Name.</div></div>
+<div class="sub"><div class="sn">Completed</div><div class="sd">Move here when the campaign ends. Keep the results file.</div></div>
+</div></div>
+<div class="fld"><div class="fh"><span class="fi">&#128193;</span><h3>05_Content</h3><span class="d1">Create now</span></div><p class="fn">Reusable assets with a life beyond one campaign.</p><div class="subs">
+<div class="sub"><div class="sn"><span class="par">Website /</span> Page-Copy</div><div class="sd">Live copy for each page, so changes are reviewable.</div></div>
+<div class="sub"><div class="sn"><span class="par">Website /</span> SEO-Keyword-Map</div><div class="sd">Keyword to page assignments. Currently the biggest unbuilt demand channel.</div></div>
+<div class="sub"><div class="sn"><span class="par">Website /</span> Trust-Page</div><div class="sd">Security posture page. Marketing asset and proof point at once.</div></div>
+<div class="sub"><div class="sn">Articles-and-Thought-Leadership</div><div class="sd">Long-form drafts and published pieces.</div></div>
+<div class="sub"><div class="sn"><span class="par">Social /</span> LinkedIn-Founder</div><div class="sd">Andrew's posts. The primary distribution channel.</div></div>
+<div class="sub"><div class="sn"><span class="par">Social /</span> LinkedIn-Company</div><div class="sd">Company page content.</div></div>
+<div class="sub"><div class="sn"><span class="par">Social /</span> Video-and-Shorts</div><div class="sd">Clips, captions, thumbnails.</div></div>
+<div class="sub"><div class="sn">Lead-Magnets</div><div class="sd">The questionnaire teardown and anything that follows it.</div></div>
+<div class="sub"><div class="sn"><span class="par">Case-Studies /</span> Published</div><div class="sd">Live case studies. Consent lives in 10_Legal.</div></div>
+<div class="sub"><div class="sn"><span class="par">Case-Studies /</span> In-Progress</div><div class="sd">Drafts awaiting client sign-off.</div></div>
+<div class="sub"><div class="sn">Webinars-and-Events</div><div class="sd">Decks, recordings, registration copy.</div></div>
+</div></div>
+<div class="fld"><div class="fh"><span class="fi">&#128193;</span><h3>06_Sales-Enablement</h3><span class="d1">Create now</span></div><p class="fn">What a seller opens before a call. Keep it small enough that they can find things.</p><div class="subs">
+<div class="sub"><div class="sn">Pitch-Decks</div><div class="sd">The narrative deck and audience variants. Currently missing entirely.</div></div>
+<div class="sub"><div class="sn">One-Pagers</div><div class="sd">One per offer: Snapshot, SOC 2 Readiness, Managed Programme, Portfolio Assurance.</div></div>
+<div class="sub"><div class="sn">Discovery-and-Scripts</div><div class="sd">The eleven-question discovery script and qualify-out language.</div></div>
+<div class="sub"><div class="sn">ROI-and-Business-Case</div><div class="sd">The arithmetic a buyer shows their CFO.</div></div>
+<div class="sub"><div class="sn">References-and-Testimonials</div><div class="sd">Who will take a call, and what they have agreed to say.</div></div>
+<div class="sub"><div class="sn">Competitive-Responses</div><div class="sd">Prepared answers when a named competitor comes up in a deal.</div></div>
+</div></div>
+<div class="fld"><div class="fh"><span class="fi">&#128193;</span><h3>07_Demand-Engine</h3><span class="dl">Later</span></div><p class="fn">The always-on machinery, as distinct from campaigns. Mostly unbuilt today.</p><div class="subs">
+<div class="sub"><div class="sn">Target-Lists</div><div class="sd">The ICP list by segment, with trigger status.</div></div>
+<div class="sub"><div class="sn">Trigger-Signals</div><div class="sd">What is monitored, how alerts arrive, who acts. The structural gap.</div></div>
+<div class="sub"><div class="sn">Nurture-Programmes</div><div class="sd">What keeps non-triggered prospects warm until their trigger fires.</div></div>
+<div class="sub"><div class="sn">Outreach-Sequences</div><div class="sd">Reusable sequences, separate from any one campaign.</div></div>
+<div class="sub"><div class="sn">Paid-Media</div><div class="sd">Accounts, audiences, creative, spend.</div></div>
+<div class="sub"><div class="sn">Events-and-Speaking</div><div class="sd">Target events, submitted abstracts, talk decks.</div></div>
+</div></div>
+<div class="fld"><div class="fh"><span class="fi">&#128193;</span><h3>08_Partners-and-Channel</h3><span class="dl">Later</span></div><p class="fn">The MSP motion. An entire revenue line with no marketing behind it today.</p><div class="subs">
+<div class="sub"><div class="sn">MSP-Partner-Program</div><div class="sd">Tiers, terms, onboarding.</div></div>
+<div class="sub"><div class="sn">Partner-Enablement-Kit</div><div class="sd">What a partner needs to sell it: deck, one-pager, objections.</div></div>
+<div class="sub"><div class="sn">Co-Marketing</div><div class="sd">Joint campaigns, shared assets, logo permissions in both directions.</div></div>
+</div></div>
+<div class="fld"><div class="fh"><span class="fi">&#128193;</span><h3>09_Measurement</h3><span class="dl">Later</span></div><p class="fn">Numbers and where they come from. Blocked until analytics access exists.</p><div class="subs">
+<div class="sub"><div class="sn">Dashboards-and-Reports</div><div class="sd">The six measures, reported on a fixed cadence.</div></div>
+<div class="sub"><div class="sn">Analytics-Config</div><div class="sd">Property IDs, tracking plan, who has access.</div></div>
+<div class="sub"><div class="sn">Source-Data</div><div class="sd">Raw exports, so a number can always be traced back.</div></div>
+</div></div>
+<div class="fld"><div class="fh"><span class="fi">&#128193;</span><h3>10_Legal-and-Compliance</h3><span class="d1">Create now</span></div><p class="fn">Restricted permissions. Small folder, high consequence.</p><div class="subs">
+<div class="sub"><div class="sn">Claim-Approvals</div><div class="sd">Sign-off records for anything quantified in public.</div></div>
+<div class="sub"><div class="sn">Client-Consents</div><div class="sd">Written permission to name a client or publish a quote. Consent is the long pole on every case study.</div></div>
+<div class="sub"><div class="sn">Trademarks</div><div class="sd">Registration status for 3HUE, AiVRIC and the product names carrying a trademark symbol.</div></div>
+<div class="sub"><div class="sn">Email-and-Privacy</div><div class="sd">CAN-SPAM, GDPR and CASL handling for outreach. Suppression lists.</div></div>
+<div class="sub"><div class="sn">Vendor-Contracts</div><div class="sd">Agency, freelance and tool agreements.</div></div>
+</div></div>
+<div class="fld"><div class="fh"><span class="fi">&#128193;</span><h3>11_Archive</h3><span class="dl">Later</span></div><p class="fn">Anything superseded. Organised by year so nothing is deleted in anger.</p><div class="subs">
+<div class="sub"><div class="sn">YYYY</div><div class="sd">One folder per year. Move, do not delete.</div></div>
+</div></div>
+</section>
+
+<section>
+  <div class="shead"><span class="n">02</span><h2>Naming files</h2></div>
+  <p class="sintro">Four rules. They exist so that sorting works, search works, and nobody opens a folder containing <span class="mono">final-FINAL-v2-USE-THIS.pptx</span>.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Rule</th><th>Do</th><th>Not</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Dates first, ISO format</strong><br><span style="color:var(--ink-subtle);font-size:.83rem">For anything time-bound: campaigns, reports, decks for a specific meeting.</span></td><td><code>2026-09-02-blocked-deal-brief.docx</code></td><td><code>Sept 2 brief.docx</code><br><code>09-02-26 brief.docx</code></td></tr>
+        <tr><td><strong>Hyphens, not spaces</strong><br><span style="color:var(--ink-subtle);font-size:.83rem">Spaces become %20 in URLs and eat the path budget.</span></td><td><code>message-stack-v1.html</code></td><td><code>Message Stack v1.html</code></td></tr>
+        <tr><td><strong>Let SharePoint version it</strong><br><span style="color:var(--ink-subtle);font-size:.83rem">Version history is built in. Only version in the filename when the versions are genuinely different artifacts.</span></td><td><code>pitch-deck-regulated.pptx</code><br><code>pitch-deck-saas.pptx</code></td><td><code>pitch-deck-v7-final.pptx</code></td></tr>
+        <tr><td><strong>No client names without consent</strong><br><span style="color:var(--ink-subtle);font-size:.83rem">Filenames are visible in search and link previews. Consent lives in 10_Legal.</span></td><td><code>case-study-transit-technologies.docx</code> <em>(consented)</em></td><td><code>case-study-large-bank-DO-NOT-SHARE.docx</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="note"><strong>Characters SharePoint will reject or mangle:</strong> <span class="mono">" * : &lt; &gt; ? / \ |</span> and leading or trailing spaces. <span class="mono">#</span> and <span class="mono">%</span> work now but still break older integrations. Ampersands survive but complicate links. Stick to letters, numbers and hyphens.</p>
+</section>
+
+<section>
+  <div class="shead"><span class="n">03</span><h2>Where does this go?</h2></div>
+  <p class="sintro">The questions that actually cause hesitation, answered once so the structure holds after the first month.</p>
+  <div class="tw">
+    <table>
+      <thead><tr><th>If it is…</th><th>It goes in</th><th>Because</th></tr></thead>
+      <tbody>
+        <tr><td>Approved copy used across many places</td><td><code>03_Messaging</code></td><td>Messaging is the source; campaigns borrow from it, never the reverse.</td></tr>
+        <tr><td>Copy written for one campaign only</td><td><code>04_Campaigns/Active/…/2-Copy</code></td><td>It dies with the campaign. Keeping it central creates conflicting versions.</td></tr>
+        <tr><td>An asset a seller opens during a call</td><td><code>06_Sales-Enablement</code></td><td>If a seller has to think about which folder, they will improvise instead.</td></tr>
+        <tr><td>A logo, template or font</td><td><code>02_Brand</code></td><td>One place, read-only for most people.</td></tr>
+        <tr><td>A statistic or its source PDF</td><td><code>03_Messaging/Claims-Library-and-Evidence</code></td><td>Claim and evidence live together, or the evidence is gone when you need it.</td></tr>
+        <tr><td>A signed client permission</td><td><code>10_Legal-and-Compliance/Client-Consents</code></td><td>Restricted, and findable in one place when someone asks whether you can publish.</td></tr>
+        <tr><td>A prospect list or target account file</td><td><code>07_Demand-Engine/Target-Lists</code></td><td>Personal data. Keep it out of general-access folders and mind retention.</td></tr>
+        <tr><td>Something superseded but not worthless</td><td><code>11_Archive/YYYY</code></td><td>Move, do not delete. Deleting in anger is how institutional memory disappears.</td></tr>
+        <tr><td>Genuinely none of the above</td><td>Ask, then fix the structure</td><td>A new top-level folder is almost never the answer. Two people inventing folders is how this collapses.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="n">04</span><h2>Seed it today</h2></div>
+  <p class="sintro">What already exists and where it belongs, so the library is useful on day one rather than an empty shell nobody adopts.</p>
+  <div class="chk">
+    <div class="ck"><div class="what">The Maturity Gap — research dossier</div><div class="where">01_Strategy / Research / Market-Research</div></div>
+    <div class="ck"><div class="what">Social listening notes, market data notes, company profile</div><div class="where">01_Strategy / Research / Social-Listening &amp; Market-Research</div></div>
+    <div class="ck"><div class="what">The Forcing Function — ICP and fit model</div><div class="where">01_Strategy / ICP-and-Segmentation</div></div>
+    <div class="ck"><div class="what">The Capability Map</div><div class="where">01_Strategy / Capability-Map-and-Roadmap</div></div>
+    <div class="ck"><div class="what">The Brand Sheet</div><div class="where">02_Brand / Guidelines</div></div>
+    <div class="ck"><div class="what">Logo-FULL-v1.avif, the three service marks, AiVRIC SVG</div><div class="where">02_Brand / Logos / …</div></div>
+    <div class="ck"><div class="what">The Message Stack</div><div class="where">03_Messaging / Message-Stack</div></div>
+    <div class="ck"><div class="what">Source PDFs behind every cited statistic</div><div class="where">03_Messaging / Claims-Library-and-Evidence</div></div>
+    <div class="ck"><div class="what">The Ship List — campaign kit and enablement</div><div class="where">04_Campaigns / _Campaign-Template / 1-Brief</div></div>
+    <div class="ck"><div class="what">Discovery script, extracted as a standalone file</div><div class="where">06_Sales-Enablement / Discovery-and-Scripts</div></div>
+    <div class="ck"><div class="what">Existing published case studies</div><div class="where">05_Content / Case-Studies / Published</div></div>
+    <div class="ck"><div class="what">This document</div><div class="where">00_Start-Here / Folder-Map-and-Conventions</div></div>
+  </div>
+  <p class="note" style="margin-top:16px"><strong>Three folders to fill before anything else, because they are blocking work elsewhere:</strong> <span class="mono">01_Strategy/Win-Loss</span> (start scoring closed deals against the fit model — this is free and it validates the whole ICP), <span class="mono">10_Legal/Client-Consents</span> (every case study is blocked until consent exists), and <span class="mono">02_Brand/Templates/Slides</span> (there is no deck template and it is the most-used surface you own).</p>
+</section>
+
+<section>
+  <div class="shead"><span class="n">05</span><h2>SharePoint specifics</h2></div>
+  <div class="warnbox">
+    <h3>Path length is the failure mode that catches everyone</h3>
+    <p>SharePoint allows about 400 characters for the full encoded URL, and OneDrive sync starts failing well before that. This structure is deliberately three levels deep, with the longest folder path at 47 characters — leaving roughly 250 for the site URL, the campaign subfolder and the filename. That headroom is the reason not to add a fourth level later.</p>
+  </div>
+  <div class="tw">
+    <table>
+      <thead><tr><th>Setting</th><th>Recommendation</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Permissions</strong></td><td>Everyone: read on all, write on 03 through 07. Restrict <code>10_Legal-and-Compliance</code> to Andrew plus one. Make <code>02_Brand</code> read-only for most.</td><td>Brand files get "improved" by well-meaning people. Legal files should not be browsable.</td></tr>
+        <tr><td><strong>Versioning</strong></td><td>On, major versions, keep 50.</td><td>Removes the need for version numbers in filenames and makes "who changed this" answerable.</td></tr>
+        <tr><td><strong>Sync vs browser</strong></td><td>Sync <code>02_Brand</code> and the active campaign only.</td><td>Syncing everything is how people hit path limits and fill laptops.</td></tr>
+        <tr><td><strong>Metadata columns</strong></td><td>Skip for now. Revisit only if search starts failing.</td><td>Purists prefer metadata to folders. Small teams reliably ignore metadata and use folders anyway. Build what people will use.</td></tr>
+        <tr><td><strong>Retention on target lists</strong></td><td>Set a review date on <code>07_Demand-Engine/Target-Lists</code>.</td><td>Those files hold personal data. Keeping prospect lists indefinitely is a GDPR problem for a firm that sells compliance.</td></tr>
+        <tr><td><strong>External sharing</strong></td><td>Off by default. Share individual files, never folders.</td><td>A shared folder link grants access to everything added later, which is rarely what anyone intended.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><span class="n">06</span><h2>Create it</h2></div>
+  <p class="sintro">Two ways. The script is faster and gets the numbering right; the plain tree is for creating by hand or handing to whoever administers the site.</p>
+
+  <div class="code">
+    <div class="ch"><span class="lab">PowerShell — run inside the synced Marketing library</span><button class="cbtn" type="button" data-src="ps">Copy</button></div>
+    <pre id="ps"># Run from inside your synced SharePoint Marketing library
+$folders = @(
+  &quot;00_Start-Here&quot;,
+  &quot;00_Start-Here\Folder-Map-and-Conventions&quot;,
+  &quot;00_Start-Here\Who-Owns-What&quot;,
+  &quot;00_Start-Here\Onboarding&quot;,
+  &quot;01_Strategy&quot;,
+  &quot;01_Strategy\Research\Market-Research&quot;,
+  &quot;01_Strategy\Research\Social-Listening&quot;,
+  &quot;01_Strategy\Research\Voice-of-Customer&quot;,
+  &quot;01_Strategy\ICP-and-Segmentation&quot;,
+  &quot;01_Strategy\Capability-Map-and-Roadmap&quot;,
+  &quot;01_Strategy\Plans-and-OKRs&quot;,
+  &quot;01_Strategy\Budget&quot;,
+  &quot;01_Strategy\Win-Loss&quot;,
+  &quot;02_Brand&quot;,
+  &quot;02_Brand\Logos\3HUE-Master&quot;,
+  &quot;02_Brand\Logos\Service-Marks&quot;,
+  &quot;02_Brand\Logos\AiVRIC&quot;,
+  &quot;02_Brand\Logos\Favicons-and-Avatars&quot;,
+  &quot;02_Brand\Guidelines&quot;,
+  &quot;02_Brand\Templates\Slides&quot;,
+  &quot;02_Brand\Templates\Documents&quot;,
+  &quot;02_Brand\Templates\Proposals-and-SOW&quot;,
+  &quot;02_Brand\Templates\Email-Signatures&quot;,
+  &quot;02_Brand\Templates\Social-Frames&quot;,
+  &quot;02_Brand\Fonts&quot;,
+  &quot;02_Brand\Imagery\Approved&quot;,
+  &quot;02_Brand\Imagery\Stock-and-Licences&quot;,
+  &quot;02_Brand\Imagery\Headshots&quot;,
+  &quot;03_Messaging&quot;,
+  &quot;03_Messaging\Message-Stack&quot;,
+  &quot;03_Messaging\Claims-Library-and-Evidence&quot;,
+  &quot;03_Messaging\Battlecards&quot;,
+  &quot;03_Messaging\Objection-Handling&quot;,
+  &quot;03_Messaging\Boilerplate-and-Bios&quot;,
+  &quot;04_Campaigns&quot;,
+  &quot;04_Campaigns\_Campaign-Template\1-Brief&quot;,
+  &quot;04_Campaigns\_Campaign-Template\2-Copy&quot;,
+  &quot;04_Campaigns\_Campaign-Template\3-Creative&quot;,
+  &quot;04_Campaigns\_Campaign-Template\4-Landing-Page&quot;,
+  &quot;04_Campaigns\_Campaign-Template\5-Sequences&quot;,
+  &quot;04_Campaigns\_Campaign-Template\6-Paid&quot;,
+  &quot;04_Campaigns\_Campaign-Template\7-Results&quot;,
+  &quot;04_Campaigns\Active&quot;,
+  &quot;04_Campaigns\Completed&quot;,
+  &quot;05_Content&quot;,
+  &quot;05_Content\Website\Page-Copy&quot;,
+  &quot;05_Content\Website\SEO-Keyword-Map&quot;,
+  &quot;05_Content\Website\Trust-Page&quot;,
+  &quot;05_Content\Articles-and-Thought-Leadership&quot;,
+  &quot;05_Content\Social\LinkedIn-Founder&quot;,
+  &quot;05_Content\Social\LinkedIn-Company&quot;,
+  &quot;05_Content\Social\Video-and-Shorts&quot;,
+  &quot;05_Content\Lead-Magnets&quot;,
+  &quot;05_Content\Case-Studies\Published&quot;,
+  &quot;05_Content\Case-Studies\In-Progress&quot;,
+  &quot;05_Content\Webinars-and-Events&quot;,
+  &quot;06_Sales-Enablement&quot;,
+  &quot;06_Sales-Enablement\Pitch-Decks&quot;,
+  &quot;06_Sales-Enablement\One-Pagers&quot;,
+  &quot;06_Sales-Enablement\Discovery-and-Scripts&quot;,
+  &quot;06_Sales-Enablement\ROI-and-Business-Case&quot;,
+  &quot;06_Sales-Enablement\References-and-Testimonials&quot;,
+  &quot;06_Sales-Enablement\Competitive-Responses&quot;,
+  &quot;07_Demand-Engine&quot;,
+  &quot;07_Demand-Engine\Target-Lists&quot;,
+  &quot;07_Demand-Engine\Trigger-Signals&quot;,
+  &quot;07_Demand-Engine\Nurture-Programmes&quot;,
+  &quot;07_Demand-Engine\Outreach-Sequences&quot;,
+  &quot;07_Demand-Engine\Paid-Media&quot;,
+  &quot;07_Demand-Engine\Events-and-Speaking&quot;,
+  &quot;08_Partners-and-Channel&quot;,
+  &quot;08_Partners-and-Channel\MSP-Partner-Program&quot;,
+  &quot;08_Partners-and-Channel\Partner-Enablement-Kit&quot;,
+  &quot;08_Partners-and-Channel\Co-Marketing&quot;,
+  &quot;09_Measurement&quot;,
+  &quot;09_Measurement\Dashboards-and-Reports&quot;,
+  &quot;09_Measurement\Analytics-Config&quot;,
+  &quot;09_Measurement\Source-Data&quot;,
+  &quot;10_Legal-and-Compliance&quot;,
+  &quot;10_Legal-and-Compliance\Claim-Approvals&quot;,
+  &quot;10_Legal-and-Compliance\Client-Consents&quot;,
+  &quot;10_Legal-and-Compliance\Trademarks&quot;,
+  &quot;10_Legal-and-Compliance\Email-and-Privacy&quot;,
+  &quot;10_Legal-and-Compliance\Vendor-Contracts&quot;,
+  &quot;11_Archive&quot;,
+  &quot;11_Archive\YYYY&quot;
+)
+foreach ($f in $folders) { New-Item -ItemType Directory -Path $f -Force | Out-Null }
+Write-Host &quot;Created $($folders.Count) folders.&quot;</pre>
+  </div>
+
+  <div class="code">
+    <div class="ch"><span class="lab">Plain tree — for manual creation or documentation</span><button class="cbtn" type="button" data-src="plain">Copy</button></div>
+    <pre id="plain">Marketing/
+    00_Start-Here/
+        Folder-Map-and-Conventions/
+        Who-Owns-What/
+        Onboarding/
+    01_Strategy/
+        Research/
+            Market-Research/
+            Social-Listening/
+            Voice-of-Customer/
+        ICP-and-Segmentation/
+        Capability-Map-and-Roadmap/
+        Plans-and-OKRs/
+        Budget/
+        Win-Loss/
+    02_Brand/
+        Logos/
+            3HUE-Master/
+            Service-Marks/
+            AiVRIC/
+            Favicons-and-Avatars/
+        Guidelines/
+        Templates/
+            Slides/
+            Documents/
+            Proposals-and-SOW/
+            Email-Signatures/
+            Social-Frames/
+        Fonts/
+        Imagery/
+            Approved/
+            Stock-and-Licences/
+            Headshots/
+    03_Messaging/
+        Message-Stack/
+        Claims-Library-and-Evidence/
+        Battlecards/
+        Objection-Handling/
+        Boilerplate-and-Bios/
+    04_Campaigns/
+        _Campaign-Template/
+            1-Brief/
+            2-Copy/
+            3-Creative/
+            4-Landing-Page/
+            5-Sequences/
+            6-Paid/
+            7-Results/
+        Active/
+        Completed/
+    05_Content/
+        Website/
+            Page-Copy/
+            SEO-Keyword-Map/
+            Trust-Page/
+        Articles-and-Thought-Leadership/
+        Social/
+            LinkedIn-Founder/
+            LinkedIn-Company/
+            Video-and-Shorts/
+        Lead-Magnets/
+        Case-Studies/
+            Published/
+            In-Progress/
+        Webinars-and-Events/
+    06_Sales-Enablement/
+        Pitch-Decks/
+        One-Pagers/
+        Discovery-and-Scripts/
+        ROI-and-Business-Case/
+        References-and-Testimonials/
+        Competitive-Responses/
+    07_Demand-Engine/
+        Target-Lists/
+        Trigger-Signals/
+        Nurture-Programmes/
+        Outreach-Sequences/
+        Paid-Media/
+        Events-and-Speaking/
+    08_Partners-and-Channel/
+        MSP-Partner-Program/
+        Partner-Enablement-Kit/
+        Co-Marketing/
+    09_Measurement/
+        Dashboards-and-Reports/
+        Analytics-Config/
+        Source-Data/
+    10_Legal-and-Compliance/
+        Claim-Approvals/
+        Client-Consents/
+        Trademarks/
+        Email-and-Privacy/
+        Vendor-Contracts/
+    11_Archive/
+        YYYY/</pre>
+  </div>
+  <p class="note"><strong>Before running the script:</strong> sync the Marketing document library to your machine, open PowerShell in that synced folder, and confirm the working directory is right — <span class="mono">Get-Location</span> — because <span class="mono">-Force</span> will happily create this tree wherever you happen to be standing.</p>
+</section>
+</main>
+<footer>
+  3HUE marketing library structure · version 1 · September 2, 2026. Companion to <em>The Capability Map</em>. Revisit the structure only when a file genuinely has no home — not every time someone cannot find something.
+</footer>
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.cbtn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var el=document.getElementById(btn.getAttribute('data-src'));
+      if(!el) return;
+      var txt=el.textContent;
+      var done=function(ok){
+        btn.textContent = ok ? 'Copied' : 'Select manually';
+        setTimeout(function(){ btn.textContent='Copy'; }, 2000);
+      };
+      try{
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(txt).then(function(){done(true);}, function(){done(false);});
+        } else { done(false); }
+      }catch(e){ done(false); }
+    });
+  });
+})();
+</script>

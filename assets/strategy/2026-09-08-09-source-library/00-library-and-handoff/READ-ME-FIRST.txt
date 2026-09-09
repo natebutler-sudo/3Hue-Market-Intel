@@ -1,0 +1,20 @@
+3HUE MARKETING LIBRARY
+18 documents. Offline. No install, no internet, no server.
+
+  ->  Open  index.html  by double-clicking it.
+
+That is the whole instruction. index.html is the contents page and links
+to everything else. Keep the files in this folder together.
+
+Works in any browser on Windows, macOS, Linux, iOS or Android, from a hard
+drive, a USB stick or a shared drive, with or without an internet connection.
+
+Every document is also a single self-contained file - fonts are embedded -
+so you can email one document on its own and it will still look right.
+
+pdf/   Finished PDFs of all 18 documents, if you would rather print or
+       forward those. You can also print or "Save as PDF" from the browser
+       on any page; each one has a print stylesheet.
+
+Start with index.html, or with 00-README-research-status.html if you want
+the status summary first.

@@ -1,0 +1,247 @@
+{
+  "source_directory": "C:\\Users\\ai-gu\\Downloads\\Sources\\3HUE-resources-Sep-8-9-2026\\3HUE-resources-Sep-8-9-2026",
+  "imported_on": "2026-09-09",
+  "method": "Byte-identical copies; originals retained in Downloads",
+  "files": [
+    {
+      "source_filename": "00-README-research-status.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/00-library-and-handoff/00-README-research-status.pdf",
+      "bytes": 93217,
+      "sha256": "4a07408be9c22b8e495c5adf90a3449d3118651f8a8a7daf6eace06f4d82f0af"
+    },
+    {
+      "source_filename": "01-company-profile.html",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/01-company-and-brand/01-company-profile.html",
+      "bytes": 130778,
+      "sha256": "054e03f0041c5f534da3f13bb17cb5914d710922652683cf93df78e10013b2f6"
+    },
+    {
+      "source_filename": "01-company-profile.md",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/01-company-and-brand/01-company-profile.md",
+      "bytes": 7365,
+      "sha256": "1a10a0a1efa92054bd42513018a195aecef66eb2dfbd581a490fa94bc26f3769"
+    },
+    {
+      "source_filename": "01-company-profile.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/01-company-and-brand/01-company-profile.pdf",
+      "bytes": 58111,
+      "sha256": "49ac1129676ddc0f04af35936ef40e9b1f9579c4fb93f2e9b9dae47751dbe162"
+    },
+    {
+      "source_filename": "02-market-data.html",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/02-market-and-icp/02-market-data.html",
+      "bytes": 144400,
+      "sha256": "64b69e107eef64a58d00b2f938c8ae595b9e53aaec659068ee0b777bdf0e93e5"
+    },
+    {
+      "source_filename": "03-social-listening.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/04-search-and-social/03-social-listening.pdf",
+      "bytes": 97727,
+      "sha256": "7377973a82cfbf7d9d5faf1ec6a996261d3929018458937ffd0efc8a39de535d"
+    },
+    {
+      "source_filename": "04-youtube-channel-plan.html",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/05-youtube/04-youtube-channel-plan.html",
+      "bytes": 132595,
+      "sha256": "a4daf71b1f12168954b6eb1329bd4a87a69dd786117703c5de3d81f1d1a87062"
+    },
+    {
+      "source_filename": "04-youtube-channel-plan.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/05-youtube/04-youtube-channel-plan.pdf",
+      "bytes": 66688,
+      "sha256": "95be60e828e283355cedce43e7aa7c4fe1d293000112f8de0cf8cd39f00dac08"
+    },
+    {
+      "source_filename": "05-youtube-keyword-competitor-data.html",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/05-youtube/05-youtube-keyword-competitor-data.html",
+      "bytes": 147621,
+      "sha256": "7bdee451d493f1b72b030c97afaccede31ef1b94935a802b6bdd310f98b6d526"
+    },
+    {
+      "source_filename": "05-youtube-keyword-competitor-data.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/05-youtube/05-youtube-keyword-competitor-data.pdf",
+      "bytes": 129941,
+      "sha256": "05cc1b290e1aae7b5a3f3a3240df6f8e0a28f16c51a0e370ce8357c6525754f0"
+    },
+    {
+      "source_filename": "06-inherited-docs-reconciliation.html",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/00-library-and-handoff/06-inherited-docs-reconciliation.html",
+      "bytes": 133846,
+      "sha256": "c4a1925f3aebc99f14a653d1e8f32556bd83a6580e02d32437ee9ce33226f650"
+    },
+    {
+      "source_filename": "07-founder-call-2026-09-03-name-origin.md",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/01-company-and-brand/07-founder-call-2026-09-03-name-origin.md",
+      "bytes": 9354,
+      "sha256": "bbb4fce9580e78e63e97573759e9c19b4bc4117bc4d73ea4a9fdab6d5493f9a0"
+    },
+    {
+      "source_filename": "3hue-handoff-reconciliation.html",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/00-library-and-handoff/3hue-handoff-reconciliation.html",
+      "bytes": 34814,
+      "sha256": "24c745ac433f421d7c75401fadc3acda0e53ddc3a5d1d333784a49c74d9f0b21"
+    },
+    {
+      "source_filename": "3hue-marketing-folder-structure.html",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/00-library-and-handoff/3hue-marketing-folder-structure.html",
+      "bytes": 40203,
+      "sha256": "b56ba4f254cda69b3e868499fd705a7a57dfbd694f741cd4f7380c5b1a71f4f1"
+    },
+    {
+      "source_filename": "3HUE-Marketing-Intelligence-Report-2026.docx",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/02-market-and-icp/3HUE-Marketing-Intelligence-Report-2026.docx",
+      "bytes": 147871,
+      "sha256": "9d50d83fd8a5780ffef9077ce1aabe97410c1e9f87ef9f3d6a34e5903697616a"
+    },
+    {
+      "source_filename": "3hue-maturity-gap-report.html",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/02-market-and-icp/3hue-maturity-gap-report.html",
+      "bytes": 135572,
+      "sha256": "dd8cfe91a282cacf4be6ec7dc4813a4a70dbf7ebea89f486f5abacac3ad742e2"
+    },
+    {
+      "source_filename": "3HUE-YouTube-Data-Book.html",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/05-youtube/3HUE-YouTube-Data-Book.html",
+      "bytes": 241985,
+      "sha256": "cb0b2a43709f7c26bf41c0015367be740815eb48f6686ab4052d3b72a2536180"
+    },
+    {
+      "source_filename": "3HUE-YouTube-Data-Book.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/05-youtube/3HUE-YouTube-Data-Book.pdf",
+      "bytes": 353590,
+      "sha256": "03387181e95e648652d420d4ade3c408b6057498465db58513f3cb56b09ce843"
+    },
+    {
+      "source_filename": "3hue-youtube-rollout.html",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/05-youtube/3hue-youtube-rollout.html",
+      "bytes": 76856,
+      "sha256": "9fa483993179e764751b0ca4e88a5591127f42954eb9be7fd5e9bf00a2592835"
+    },
+    {
+      "source_filename": "brand-sheet.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/01-company-and-brand/brand-sheet.pdf",
+      "bytes": 441255,
+      "sha256": "4da3fc56fd546e27d66f0f1b521e0242cdd1db9c047cf27790663d19609fe236"
+    },
+    {
+      "source_filename": "capability-map.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/01-company-and-brand/capability-map.pdf",
+      "bytes": 314537,
+      "sha256": "fc36c7eaa9ea53185e79a51d8e87245afd25c21d338c3c89ec2e72c8ba29480c"
+    },
+    {
+      "source_filename": "Chart.csv",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/06-analytics/google-search-console/Chart.csv",
+      "bytes": 1600,
+      "sha256": "5db9e2830560505ac9e72d4d8e32919727f4221be8b1ee62bf4b800ab78484bf"
+    },
+    {
+      "source_filename": "Countries.csv",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/06-analytics/google-search-console/Countries.csv",
+      "bytes": 39,
+      "sha256": "a704f12c6996f3a65a82d8e0f8fb2cd038c02ba6a0ac3e73bdd655e04f36f148"
+    },
+    {
+      "source_filename": "Devices.csv",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/06-analytics/google-search-console/Devices.csv",
+      "bytes": 38,
+      "sha256": "91d4fc1f3ef9426ee00ce39bffdb9ebbcd25304e4fe1a7e6e8b2411c2a42dac8"
+    },
+    {
+      "source_filename": "Filters.csv",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/06-analytics/google-search-console/Filters.csv",
+      "bytes": 47,
+      "sha256": "163c07d6839b411e21df0e69bc8ae8a86013b42179da00682150503d1400951f"
+    },
+    {
+      "source_filename": "forcing-function.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/02-market-and-icp/forcing-function.pdf",
+      "bytes": 234455,
+      "sha256": "66e1bb1d15c04bdbde084c401020b84c4519e285e50f5d6c5c9d8e8ef47229a3"
+    },
+    {
+      "source_filename": "handoff.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/00-library-and-handoff/handoff.pdf",
+      "bytes": 192893,
+      "sha256": "b2961b19dc2070826e49d2582c26cb40e6f94e515afe0d0e2a3e9d5fd6da0edc"
+    },
+    {
+      "source_filename": "index.html",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/00-library-and-handoff/index.html",
+      "bytes": 113923,
+      "sha256": "fb95bf2c15f64932a37feaac490453a330a4f6d6fed3eee39f7f02141b89ed72"
+    },
+    {
+      "source_filename": "index.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/00-library-and-handoff/index.pdf",
+      "bytes": 73536,
+      "sha256": "b4a73489765ad82099668529dc62590f9f9c821f8dfee6095f7ea1c6e07c98cb"
+    },
+    {
+      "source_filename": "keyword-map.html",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/04-search-and-social/keyword-map.html",
+      "bytes": 148640,
+      "sha256": "2bc1e511c7fdbb4d202f35d66e909a3e3df4ff24cafd515d9769fec1962c8293"
+    },
+    {
+      "source_filename": "message-stack.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/03-messaging-and-campaigns/message-stack.pdf",
+      "bytes": 253199,
+      "sha256": "b9a326e327575b1e6b9d279a497093d7600dabfe68b94efe5b67464aa36b229d"
+    },
+    {
+      "source_filename": "Pages.csv",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/06-analytics/google-search-console/Pages.csv",
+      "bytes": 41,
+      "sha256": "fbad860049b3d6e7e2b3c68c4e9854fa5506a64453205d8db47567ea98342a78"
+    },
+    {
+      "source_filename": "Queries.csv",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/06-analytics/google-search-console/Queries.csv",
+      "bytes": 43,
+      "sha256": "3fd0862b0938e4bffe0f9c12dc8c0cbc3f307383cf1daa97188176e597eeb596"
+    },
+    {
+      "source_filename": "READ-ME-FIRST.txt",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/00-library-and-handoff/READ-ME-FIRST.txt",
+      "bytes": 866,
+      "sha256": "a89fc4cde926413e49cb3a2a69d3a85e2c4b02351ed71ea410d7744ffc1ec862"
+    },
+    {
+      "source_filename": "README-research-status.md",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/00-library-and-handoff/README-research-status.md",
+      "bytes": 6335,
+      "sha256": "cb500566e718b0ffffe9bd3206913f6cd928994c9413957f2aacc24855023dc4"
+    },
+    {
+      "source_filename": "Reports_snapshot.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/06-analytics/google-analytics/Reports_snapshot.pdf",
+      "bytes": 172973,
+      "sha256": "51b3f22f01939d3208849dfd0b4fea8036e1252378cda8563fbdc3d142a3057b"
+    },
+    {
+      "source_filename": "Search appearance.csv",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/06-analytics/google-search-console/Search appearance.csv",
+      "bytes": 49,
+      "sha256": "eed9ceafb9193e5e3d034f5897ad992bc851f1998204cd98f0b0f6873fbfc8b2"
+    },
+    {
+      "source_filename": "ship-list.html",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/03-messaging-and-campaigns/ship-list.html",
+      "bytes": 163566,
+      "sha256": "bdbf1acf6147dbe23a748e592f5aff5db48380766d39a2867d7901ce54106baf"
+    },
+    {
+      "source_filename": "youtube-data-book.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/05-youtube/youtube-data-book.pdf",
+      "bytes": 351534,
+      "sha256": "8d9503e481aeab78bad1256069aee5932def4345a57269fe69e54ad3cd5c08a1"
+    },
+    {
+      "source_filename": "youtube-rollout.pdf",
+      "repository_path": "assets/strategy/2026-09-08-09-source-library/05-youtube/youtube-rollout.pdf",
+      "bytes": 398827,
+      "sha256": "dbde6044f26f622f48047b48225a4d44d206c89730b67adb8ab26ad4d5f16eb4"
+    }
+  ]
+}
