@@ -34,6 +34,26 @@ import {
 } from 'lucide-react';
 
 type View = 'Analyst' | 'Director' | 'C-suite';
+type ViewSection = 'evidence' | 'signals' | 'coverage' | 'content' | 'performance' | 'hubspot' | 'impact' | 'watchlist';
+type ViewAction = 'research' | 'review' | 'tag' | 'save' | 'brief' | 'approve' | 'hold' | 'schedule' | 'acknowledge' | 'present' | 'drilldown';
+type ViewMetric = { id: string; label: string; detail: string; tone: 'cyan' | 'orange' | 'navy' };
+type ViewProfile = {
+  eyebrow: string;
+  title: string;
+  subtitle: string;
+  density: 'dense' | 'standard' | 'compact';
+  metrics: ViewMetric[];
+  sections: ViewSection[];
+  actions: ViewAction[];
+  defaultWidgets: string[];
+};
+type FindingWorkflow = {
+  reviewState: 'Unreviewed' | 'Reviewed';
+  decisionState: 'Pending' | 'Approved' | 'Held';
+  saved: boolean;
+  tags: string[];
+  lastAction?: string;
+};
 type AdminTab = 'overview' | 'sources' | 'watchlists' | 'runs';
 type SourceStatus = 'Connected' | 'Partially ready' | 'Connector pending' | 'Manual import' | 'Not connected';
 
@@ -102,6 +122,59 @@ const findings: Finding[] = [
   },
 ];
 
+const viewProfiles: Record<View, ViewProfile> = {
+  Analyst: {
+    eyebrow: 'Evidence workbench',
+    title: 'Evidence workbench',
+    subtitle: 'Investigate, validate, and prepare intelligence before it becomes a decision.',
+    density: 'dense',
+    metrics: [
+      { id: 'new-findings', label: 'New findings', detail: '+6 since yesterday', tone: 'cyan' },
+      { id: 'unreviewed', label: 'Unreviewed', detail: 'Needs evidence review', tone: 'orange' },
+      { id: 'coverage', label: 'Evidence coverage', detail: '2 blocked sources', tone: 'cyan' },
+      { id: 'queue', label: 'Research queue', detail: 'Shared briefing items', tone: 'navy' },
+    ],
+    sections: ['evidence', 'signals', 'coverage', 'content'],
+    actions: ['research', 'review', 'tag', 'save', 'brief'],
+    defaultWidgets: ['briefing', 'signals', 'coverage', 'content'],
+  },
+  Director: {
+    eyebrow: 'Operating scorecard',
+    title: 'Market intelligence',
+    subtitle: 'Prioritize movement, coordinate action, and prepare approved executive briefs.',
+    density: 'standard',
+    metrics: [
+      { id: 'priority', label: 'Priority signals', detail: '2 need review', tone: 'orange' },
+      { id: 'icp-movement', label: 'ICP movement', detail: '3 watched segments', tone: 'cyan' },
+      { id: 'pipeline', label: '3HUE pipeline', detail: '12 open opportunities', tone: 'navy' },
+      { id: 'coverage', label: 'Source coverage', detail: '2 blocked sources', tone: 'cyan' },
+    ],
+    sections: ['evidence', 'signals', 'performance', 'hubspot', 'content', 'coverage'],
+    actions: ['research', 'review', 'approve', 'hold', 'brief', 'schedule'],
+    defaultWidgets: ['briefing', 'signals', 'performance', 'coverage', 'content', 'hubspot'],
+  },
+  'C-suite': {
+    eyebrow: 'Decision brief',
+    title: 'Executive decision brief',
+    subtitle: 'Understand validated movement, business impact, risks, and recommended decisions quickly.',
+    density: 'compact',
+    metrics: [
+      { id: 'market-shifts', label: 'Market shifts', detail: '3 validated today', tone: 'cyan' },
+      { id: 'business-impact', label: 'Business impact', detail: '2 signals to decide', tone: 'orange' },
+      { id: 'pipeline-exposure', label: 'Pipeline exposure', detail: '$184k open pipeline', tone: 'navy' },
+      { id: 'confidence', label: 'Evidence confidence', detail: 'Healthy with gaps', tone: 'cyan' },
+    ],
+    sections: ['impact', 'watchlist', 'hubspot', 'coverage'],
+    actions: ['drilldown', 'acknowledge', 'save', 'present'],
+    defaultWidgets: ['briefing', 'performance', 'hubspot', 'coverage'],
+  },
+};
+
+const initialWorkflowByFindingId: Record<string, FindingWorkflow> = findings.reduce((workflow, finding) => {
+  workflow[finding.id] = { reviewState: finding.status, decisionState: 'Pending', saved: false, tags: [] };
+  return workflow;
+}, {} as Record<string, FindingWorkflow>);
+
 const widgets = [
   { id: 'briefing', label: "Today's briefing", description: 'Fresh findings and actions', icon: Sparkles },
   { id: 'signals', label: 'Priority signals', description: 'Accounts and competitors', icon: Activity },
@@ -165,9 +238,17 @@ export default function Home() {
   const [search, setSearch] = useState('');
   const [segment, setSegment] = useState('All segments');
   const [lens, setLens] = useState('All lenses');
-  const [visibleWidgets, setVisibleWidgets] = useState(['briefing', 'signals', 'performance', 'coverage', 'content', 'hubspot']);
+  const [visibleWidgetsByView, setVisibleWidgetsByView] = useState<Record<View, string[]>>({
+    Analyst: viewProfiles.Analyst.defaultWidgets,
+    Director: viewProfiles.Director.defaultWidgets,
+    'C-suite': viewProfiles['C-suite'].defaultWidgets,
+  });
+  const [workflowByFindingId, setWorkflowByFindingId] = useState(initialWorkflowByFindingId);
   const [briefQueue, setBriefQueue] = useState<string[]>([]);
   const [notice, setNotice] = useState('');
+
+  const activeProfile = viewProfiles[activeView];
+  const visibleWidgets = visibleWidgetsByView[activeView];
 
   const filteredFindings = useMemo(() => findings.filter((finding) => {
     const searchMatch = !search || `${finding.title} ${finding.summary} ${finding.source}`.toLowerCase().includes(search.toLowerCase());
@@ -181,8 +262,31 @@ export default function Home() {
     return queued.length > 0 ? queued : filteredFindings.slice(0, 3);
   }, [briefQueue, filteredFindings]);
 
-  const toggleWidget = (id: string) => setVisibleWidgets((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
+  const toggleWidget = (id: string) => setVisibleWidgetsByView((current) => ({
+    ...current,
+    [activeView]: current[activeView].includes(id) ? current[activeView].filter((item) => item !== id) : [...current[activeView], id],
+  }));
   const announce = (message: string) => { setNotice(message); window.setTimeout(() => setNotice(''), 2600); };
+  const workflowFor = (finding: Finding) => workflowByFindingId[finding.id] ?? { reviewState: finding.status, decisionState: 'Pending' as const, saved: false, tags: [] };
+  const updateWorkflow = (finding: Finding, patch: Partial<FindingWorkflow>, message: string) => {
+    setWorkflowByFindingId((current) => ({ ...current, [finding.id]: { ...workflowFor(finding), ...patch, lastAction: message } }));
+    announce(message);
+  };
+  const hasAction = (action: ViewAction) => activeProfile.actions.includes(action);
+  const hasSection = (section: ViewSection) => activeProfile.sections.includes(section);
+  const metricValue = (metricId: string) => {
+    if (metricId === 'new-findings') return String(filteredFindings.length + 14);
+    if (metricId === 'unreviewed') return String(Object.values(workflowByFindingId).filter((item) => item.reviewState === 'Unreviewed').length);
+    if (metricId === 'queue') return String(briefQueue.length);
+    if (metricId === 'market-shifts') return String(filteredFindings.filter((finding) => finding.category === 'Market shift' || finding.category === 'Competitor').length);
+    if (metricId === 'business-impact') return String(filteredFindings.filter((finding) => finding.importance === 'High').length);
+    if (metricId === 'confidence') return '86%';
+    if (metricId === 'icp-movement') return '3';
+    if (metricId === 'pipeline' || metricId === 'pipeline-exposure') return '$184k';
+    if (metricId === 'priority') return String(filteredFindings.filter((finding) => finding.importance === 'High').length);
+    if (metricId === 'coverage') return '86%';
+    return '—';
+  };
   const openAdmin = (tab: AdminTab = 'overview') => { setAdminTab(tab); setShowSettings(true); };
   const filteredSources = sourceConnections.filter((source) => sourceFilter === 'All sources' || source.category === sourceFilter);
   const statusClass = (status: SourceStatus) => status === 'Connected' ? 'connected' : status === 'Partially ready' ? 'partial' : status === 'Manual import' ? 'manual' : status === 'Connector pending' ? 'pending' : 'offline';
@@ -204,6 +308,7 @@ export default function Home() {
     setBriefQueue((current) => alreadyQueued ? current : [...current, finding.id]);
     announce(alreadyQueued ? 'This finding is already in your brief queue.' : 'Added to the shared briefing queue.');
   };
+  const selectedWorkflow = selectedFinding ? workflowFor(selectedFinding) : null;
 
   return (
     <main className="app-shell">
@@ -224,16 +329,19 @@ export default function Home() {
 
       <div className="builder-main">
         <section className="content-area">
-          <div className="content-heading"><div><p className="eyebrow accent-eyebrow">{activeView} view · Wednesday, September 10, 2026</p><h1>Market intelligence</h1><p className="heading-subtitle">Evidence worth acting on across the markets 3HUE supports.</p><span className="preview-badge"><Activity size={13} /> Review mode · representative data</span></div><div className="heading-actions"><button className="secondary-button" onClick={() => setShowCustomize(true)}><SlidersHorizontal size={15} /> Customize</button><button className="primary-button" onClick={() => announce('Research request started. We will report source coverage when it completes.')}><Sparkles size={15} /> Ask for research</button></div></div>
+          <div className="content-heading"><div><p className="eyebrow accent-eyebrow">{activeProfile.eyebrow} · {activeView} view · Wednesday, September 10, 2026</p><h1>{activeProfile.title}</h1><p className="heading-subtitle">{activeProfile.subtitle}</p><span className="preview-badge"><Activity size={13} /> Review mode · representative data</span></div><div className="heading-actions"><button className="secondary-button" onClick={() => setShowCustomize(true)}><SlidersHorizontal size={15} /> Customize</button>{hasAction('research') && <button className="primary-button" onClick={() => announce('Research request started. We will report source coverage when it completes.')}><Sparkles size={15} /> Ask for research</button>}{hasAction('schedule') && <button className="primary-button" onClick={() => openAdmin('runs')}><Clock3 size={15} /> Schedule collection</button>}{hasAction('present') && <button className="primary-button" onClick={() => setShowPresent(true)}><ArrowUpRight size={15} /> Present brief</button>}</div></div>
 
           <div className="filter-row"><div className="search-box"><Search size={15} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search findings, accounts, sources" aria-label="Search findings, accounts, sources" /></div><label className="select-wrap"><Filter size={14} /><select value={segment} onChange={(event) => setSegment(event.target.value)} aria-label="Filter by customer segment"><option>All segments</option><option>Provable Vendor</option><option>Portfolio</option><option>Regulated Operator</option></select><ChevronDown size={13} /></label><span className="filter-note"><Clock3 size={14} /> Next collection in 3h 42m</span></div>
           <div className="chip-row"><span className="chip-label">Market lenses</span>{lensOptions.map((option) => <button key={option} className={`filter-chip ${lens === option ? 'active' : ''}`} onClick={() => setLens(option)}>{option}</button>)}</div>
 
-          <div className="metric-grid"><Metric label="New findings" value="18" detail="+6 since yesterday" tone="cyan" /><Metric label="Priority signals" value="4" detail="2 need review" tone="orange" /><Metric label="3HUE pipeline" value="$184k" detail="12 open opportunities" tone="navy" /><Metric label="Source coverage" value="86%" detail="2 blocked sources" tone="cyan" /></div>
+          <div className={`view-workspace view-workspace-${activeView.toLowerCase().replace('-', '')} density-${activeProfile.density}`}>
+          <div className="metric-grid">{activeProfile.metrics.map((metric) => <Metric key={metric.id} label={metric.label} value={metricValue(metric.id)} detail={metric.detail} tone={metric.tone} />)}</div>
+
+          {activeView === 'Director' && <>
 
           {visibleWidgets.includes('briefing') && <section className="builder-section"><div className="section-heading"><div><p className="eyebrow orange-eyebrow">Curated intelligence</p><h2>What matters today</h2></div><span className="section-count">{filteredFindings.length} findings</span></div><div className="curated-rail">{filteredFindings.slice(0, 3).map((finding, index) => <button key={finding.id} className={`curated-card ${index === 1 ? 'accent-orange' : ''}`} onClick={() => setSelectedFinding(finding)}><span className="card-accent" /><p className="eyebrow">{finding.category}</p><h3>{finding.title}</h3><p className="card-summary">{finding.summary}</p><div className="card-footer"><span>{finding.source}</span><span className="card-link">View <ArrowUpRight size={13} /></span></div></button>)}{filteredFindings.length === 0 && <div className="empty-state"><Search size={20} /><strong>No findings match those filters.</strong><span>Try another market lens or segment.</span></div>}</div></section>}
 
-          {visibleWidgets.includes('signals') && <section className="builder-section"><div className="section-heading"><div><p className="eyebrow accent-eyebrow">Signal catalog</p><h2>Priority signals</h2></div><button className="text-button" onClick={() => announce('The full signal catalog is ready for review.')}>View all <ArrowUpRight size={14} /></button></div><div className="signal-grid">{filteredFindings.map((finding) => <button key={finding.id} className="signal-card" onClick={() => setSelectedFinding(finding)}><div className="signal-card-top"><span className="eyebrow">{finding.category}</span><span className={`status-tag ${finding.status === 'Unreviewed' ? 'unreviewed' : 'reviewed'}`}>{finding.status}</span></div><h3>{finding.title}</h3><p>{finding.summary}</p><div className="signal-card-footer"><span>{finding.collected}</span><span className="signal-card-action">Details <ArrowUpRight size={13} /></span></div></button>)}</div></section>}
+          {visibleWidgets.includes('signals') && <section className="builder-section"><div className="section-heading"><div><p className="eyebrow accent-eyebrow">Signal catalog</p><h2>Priority signals</h2></div><button className="text-button" onClick={() => announce('The full signal catalog is ready for review.')}>View all <ArrowUpRight size={14} /></button></div><div className="signal-grid">{filteredFindings.map((finding) => { const workflow = workflowFor(finding); return <button key={finding.id} className="signal-card" onClick={() => setSelectedFinding(finding)}><div className="signal-card-top"><span className="eyebrow">{finding.category}</span><span className={`status-tag ${workflow.reviewState === 'Unreviewed' ? 'unreviewed' : 'reviewed'}`}>{workflow.reviewState}</span></div><h3>{finding.title}</h3><p>{finding.summary}</p><div className="signal-card-footer"><span>{finding.collected}</span><span className="signal-card-action">Details <ArrowUpRight size={13} /></span></div></button>; })}</div></section>}
 
           <div className="builder-columns">
             {visibleWidgets.includes('performance') && <section className="panel performance-panel"><div className="panel-heading"><div><p className="eyebrow">3HUE performance</p><h2>Marketing signals</h2></div><span className="connected-pill"><span className="status-dot" /> Supplied snapshot</span></div><div className="performance-layout"><div className="performance-number"><p className="big-number">443</p><p className="metric-detail">active users · supplied 30-day snapshot</p><span className="trend-up"><TrendingUp size={14} /> 12.4%</span></div><Sparkline values={[18, 20, 18, 24, 31, 29, 42, 47, 51]} /></div><div className="performance-bars"><div><span>Organic sessions</span><strong>29</strong><div className="bar-track"><span style={{ width: '38%' }} /></div></div><div><span>New contacts</span><strong>18</strong><div className="bar-track orange-bar"><span style={{ width: '25%' }} /></div></div><div><span>Open pipeline</span><strong>$184k</strong><div className="bar-track navy-bar"><span style={{ width: '64%' }} /></div></div></div><button className="text-button" onClick={() => announce('Performance detail will open after the GA4 and HubSpot connections are verified.')}>Open performance detail <ArrowUpRight size={14} /></button></section>}
@@ -246,12 +354,28 @@ export default function Home() {
 
             {visibleWidgets.includes('hubspot') && <section className="panel hubspot-panel"><div className="panel-heading"><div><p className="eyebrow">HubSpot funnel</p><h2>Commercial pulse</h2></div><span className="read-only-pill"><LockKeyhole size={12} /> Read-only</span></div><div className="funnel"><div className="funnel-row"><span>Contacts</span><strong>126</strong><div className="funnel-bar" style={{ width: '100%' }} /></div><div className="funnel-row"><span>Qualified leads</span><strong>31</strong><div className="funnel-bar" style={{ width: '68%' }} /></div><div className="funnel-row"><span>Open opportunities</span><strong>12</strong><div className="funnel-bar" style={{ width: '42%' }} /></div><div className="funnel-row"><span>Closed won</span><strong>$64k</strong><div className="funnel-bar orange-funnel" style={{ width: '24%' }} /></div></div><p className="data-note"><Database size={13} /> Deal value shown · not accounting revenue</p><button className="text-button" onClick={() => announce('Opening HubSpot is available once the connection is verified.')}>Open HubSpot <ExternalLink size={14} /></button></section>}
           </div>
+          </>}
+
+          {activeView === 'Analyst' && <div className="role-view analyst-view">
+            {visibleWidgets.includes('briefing') && <section className="builder-section analyst-evidence-section"><div className="section-heading"><div><p className="eyebrow orange-eyebrow">Fresh evidence</p><h2>Investigate before you publish</h2></div><span className="section-count">{filteredFindings.length} findings</span></div><div className="curated-rail">{filteredFindings.slice(0, 3).map((finding, index) => { const workflow = workflowFor(finding); return <button key={finding.id} className={`curated-card analyst-card ${index === 1 ? 'accent-orange' : ''}`} onClick={() => setSelectedFinding(finding)}><span className="card-accent" /><div className="analyst-card-meta"><span className="eyebrow">{finding.category}</span><span className={`status-tag ${workflow.reviewState === 'Unreviewed' ? 'unreviewed' : 'reviewed'}`}>{workflow.reviewState}</span></div><h3>{finding.title}</h3><p className="card-summary">{finding.summary}</p><div className="analyst-evidence-meta"><span>{finding.source}</span><span>{finding.collected}</span><span>{workflow.decisionState}</span></div></button>; })}{filteredFindings.length === 0 && <div className="empty-state"><Search size={20} /><strong>No findings match those filters.</strong><span>Try another market lens or segment.</span></div>}</div></section>}
+            {visibleWidgets.includes('signals') && <section className="builder-section"><div className="section-heading"><div><p className="eyebrow accent-eyebrow">Signal catalog</p><h2>Evidence to review</h2></div><button className="text-button" onClick={() => announce('The full evidence catalog is ready for review.')}>View all <ArrowUpRight size={14} /></button></div><div className="signal-grid">{filteredFindings.map((finding) => { const workflow = workflowFor(finding); return <button key={finding.id} className="signal-card analyst-signal-card" onClick={() => setSelectedFinding(finding)}><div className="signal-card-top"><span className="eyebrow">{finding.category}</span><span className={`status-tag ${workflow.reviewState === 'Unreviewed' ? 'unreviewed' : 'reviewed'}`}>{workflow.reviewState}</span></div><h3>{finding.title}</h3><p>{finding.summary}</p><div className="signal-card-footer"><span>{finding.source}</span><span className="signal-card-action">Review <ArrowUpRight size={13} /></span></div></button>; })}</div></section>}
+            <div className="builder-columns analyst-columns">{visibleWidgets.includes('coverage') && <section className="panel coverage-panel"><div className="panel-heading"><div><p className="eyebrow">Source and coverage health</p><h2>Can we trust today’s view?</h2></div><ShieldCheck size={20} className="cyan-icon" /></div><div className="coverage-score"><div className="score-ring"><span>86</span><small>%</small></div><div><strong>Healthy with gaps</strong><p>Most monitored sources refreshed successfully.</p></div></div><div className="coverage-list"><div className="coverage-row"><span className="status-dot" /> HubSpot CRM <em>Connected</em></div><div className="coverage-row"><span className="status-dot" /> GA4 <em>Connected</em></div><div className="coverage-row warning"><span className="warning-dot" /> Search Console <em>Historical export only</em></div><div className="coverage-row warning"><span className="warning-dot" /> 2 sources <em>Blocked by sign-in</em></div></div><button className="text-button" onClick={() => openAdmin('sources')}>Review coverage gaps <ArrowUpRight size={14} /></button></section>}{visibleWidgets.includes('content') && <section className="panel content-panel"><div className="panel-heading"><div><p className="eyebrow">Content opportunities</p><h2>Questions worth answering</h2></div><FileText size={20} className="orange-icon" /></div><div className="content-opportunity"><span className="opportunity-rank">01</span><div><strong>Who owns AI evidence after deployment?</strong><p>Buyer question · Regulated Operator · recurring</p></div><button className="small-circle-button" aria-label="Create brief" onClick={() => announce('Brief draft started from this opportunity.')}><Plus size={16} /></button></div><div className="content-opportunity"><span className="opportunity-rank">02</span><div><strong>What does operated readiness change?</strong><p>Message gap · Provable Vendor · rising</p></div><button className="small-circle-button" aria-label="Create brief" onClick={() => announce('Brief draft started from this opportunity.')}><Plus size={16} /></button></div><button className="text-button" onClick={() => announce('Content queue is ready for review.')}>Open content queue <ArrowUpRight size={14} /></button></section>}</div>
+          </div>}
+
+          {activeView === 'C-suite' && <div className="role-view csuite-view">
+            {visibleWidgets.includes('briefing') && <section className="builder-section decision-section"><div className="section-heading"><div><p className="eyebrow orange-eyebrow">Decision signals</p><h2>What deserves an executive decision</h2></div><button className="text-button" onClick={() => setShowPresent(true)}>Open presentation <ArrowUpRight size={14} /></button></div><div className="decision-grid">{filteredFindings.slice(0, 3).map((finding) => { const workflow = workflowFor(finding); return <button className="decision-card" key={finding.id} onClick={() => setSelectedFinding(finding)}><div className="decision-card-top"><span className="eyebrow">{finding.category}</span><span className={`admin-status ${workflow.decisionState === 'Approved' ? 'connected' : workflow.decisionState === 'Held' ? 'manual' : 'pending'}`}>{workflow.decisionState}</span></div><h3>{finding.title}</h3><p>{finding.implication}</p><div className="decision-card-footer"><span>{finding.source}</span><span>Open evidence <ArrowUpRight size={13} /></span></div></button>; })}</div></section>}
+            {visibleWidgets.includes('briefing') && <section className="panel impact-panel"><div className="panel-heading"><div><p className="eyebrow accent-eyebrow">Business impact</p><h2>Risks and opportunities</h2></div><Sparkles size={20} className="cyan-icon" /></div><div className="impact-list"><div><span className="impact-label">Opportunity</span><strong>Lead the evidence ownership conversation</strong><p>Turn the buyer question into an executive education angle for regulated operators.</p></div><div><span className="impact-label risk">Risk</span><strong>Competitors are teaching agent governance expectations</strong><p>Maintain differentiation around operated readiness and evidence ownership.</p></div><div><span className="impact-label">Recommended decision</span><strong>Approve a focused executive brief</strong><p>Use the approved findings as the basis for the next customer-facing conversation.</p></div></div></section>}
+            {visibleWidgets.includes('briefing') && <section className="panel watchlist-panel"><div className="panel-heading"><div><p className="eyebrow">Watchlist movement</p><h2>ICP signals by segment</h2></div><span className="connected-pill"><span className="status-dot" /> 3 active lenses</span></div><div className="watchlist-movement"><div><strong>Provable Vendor</strong><span className="movement-up">Rising</span><p>AI governance and customer assurance language increasing.</p></div><div><strong>Portfolio</strong><span className="movement-steady">Steady</span><p>Security leadership movement remains a timing signal.</p></div><div><strong>Regulated Operator</strong><span className="movement-up">Rising</span><p>Buyer questions focus on evidence after deployment.</p></div></div></section>}
+            <div className="builder-columns csuite-columns">{visibleWidgets.includes('performance') && <section className="panel performance-panel"><div className="panel-heading"><div><p className="eyebrow">Executive scorecard</p><h2>Marketing signals</h2></div><span className="connected-pill"><span className="status-dot" /> Supplied snapshot</span></div><div className="performance-layout"><div className="performance-number"><p className="big-number">443</p><p className="metric-detail">active users · supplied 30-day snapshot</p><span className="trend-up"><TrendingUp size={14} /> 12.4%</span></div><Sparkline values={[18, 20, 18, 24, 31, 29, 42, 47, 51]} /></div><div className="performance-bars"><div><span>Organic sessions</span><strong>29</strong><div className="bar-track"><span style={{ width: '38%' }} /></div></div><div><span>New contacts</span><strong>18</strong><div className="bar-track orange-bar"><span style={{ width: '25%' }} /></div></div><div><span>Open pipeline</span><strong>$184k</strong><div className="bar-track navy-bar"><span style={{ width: '64%' }} /></div></div></div></section>}{visibleWidgets.includes('hubspot') && <section className="panel hubspot-panel"><div className="panel-heading"><div><p className="eyebrow">Pipeline exposure</p><h2>Commercial pulse</h2></div><span className="read-only-pill"><LockKeyhole size={12} /> Read-only</span></div><div className="funnel"><div className="funnel-row"><span>Contacts</span><strong>126</strong><div className="funnel-bar" style={{ width: '100%' }} /></div><div className="funnel-row"><span>Qualified leads</span><strong>31</strong><div className="funnel-bar" style={{ width: '68%' }} /></div><div className="funnel-row"><span>Open opportunities</span><strong>12</strong><div className="funnel-bar" style={{ width: '42%' }} /></div><div className="funnel-row"><span>Closed won</span><strong>$64k</strong><div className="funnel-bar orange-funnel" style={{ width: '24%' }} /></div></div><p className="data-note"><Database size={13} /> Deal value shown · not accounting revenue</p></section>}</div>
+            {visibleWidgets.includes('coverage') && <section className="panel coverage-panel"><div className="panel-heading"><div><p className="eyebrow">Source confidence</p><h2>Can we trust this brief?</h2></div><ShieldCheck size={20} className="cyan-icon" /></div><div className="coverage-score"><div className="score-ring"><span>86</span><small>%</small></div><div><strong>Healthy with gaps</strong><p>Open the evidence trail before publishing a claim.</p></div></div><div className="coverage-list"><div className="coverage-row"><span className="status-dot" /> HubSpot CRM <em>Connected</em></div><div className="coverage-row"><span className="status-dot" /> GA4 <em>Connected</em></div><div className="coverage-row warning"><span className="warning-dot" /> Search Console <em>Historical export only</em></div></div><button className="text-button" onClick={() => openAdmin('sources')}>Review source confidence <ArrowUpRight size={14} /></button></section>}
+          </div>}
+          </div>
         </section>
 
         <aside className="brief-rail" aria-label="Research queue"><div className="rail-header"><div><p className="eyebrow">Research queue</p><h2>Shared briefing</h2></div><span className="rail-code">3HUE-MI</span></div><div className="rail-body">{briefQueue.length > 0 ? briefQueue.map((id) => { const finding = findings.find((item) => item.id === id); return finding ? <button key={id} className="rail-item" onClick={() => setSelectedFinding(finding)}><span className="rail-item-dot" /><span><strong>{finding.title}</strong><small>{finding.category} · ready to brief</small></span><ArrowUpRight size={14} /></button> : null; }) : <div className="rail-empty"><FileText size={27} /><strong>Your brief is empty.</strong><span>Add intelligence cards to build a focused briefing.</span></div>}<div className="rail-divider" /><div className="rail-help"><CircleHelp size={15} /><span>Sources and interpretations stay separate until reviewed.</span></div></div><div className="rail-footer"><button className="primary-button rail-primary" onClick={() => announce(briefQueue.length ? 'Brief draft opened with selected findings.' : 'Add a finding before opening a brief draft.')}>Open brief</button><button className="secondary-button rail-secondary" onClick={() => announce('Brief queue saved to your private workspace.')}>Save queue</button></div></aside>
       </div>
 
-      {selectedFinding && <div className="drawer-backdrop"><aside className="detail-drawer" aria-label="Finding details"><div className="drawer-hero"><div><p className="eyebrow">{selectedFinding.category} · {selectedFinding.segment}</p><h2>{selectedFinding.title}</h2><p className="drawer-code">{selectedFinding.source} · {selectedFinding.collected}</p></div><button className="drawer-close" onClick={() => setSelectedFinding(null)} aria-label="Close finding details"><X size={19} /></button></div><div className="drawer-body"><p className="drawer-summary">{selectedFinding.summary}</p><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">What’s included</p></div><ul className="drawer-checklist"><li><Check size={16} />Reported fact and source context</li><li><Check size={16} />Implication for {selectedFinding.segment.toLowerCase()} buyers</li><li><Check size={16} />Recommended marketing response</li><li><Check size={16} />Freshness and confidence markers</li></ul></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Why it matters</p></div><p className="drawer-copy">{selectedFinding.implication}</p></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Market context</p></div><div className="drawer-chips"><span>{selectedFinding.lens}</span><span>{selectedFinding.segment}</span><span>{selectedFinding.importance} priority</span></div></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Evidence</p></div><div className="evidence-card"><ShieldCheck size={17} /><div><strong>{selectedFinding.source}</strong><p>Reported fact and interpretation are separated. Open the original source before publishing.</p><button className="inline-link" onClick={() => announce('Source link is ready for the connected source.')}>View source <ExternalLink size={13} /></button></div></div></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Suggested action</p></div><button className="action-card" onClick={() => announce(`${selectedFinding.action} started.`)}><Sparkles size={16} /><span>{selectedFinding.action}</span><ArrowUpRight size={15} /></button></div><div className="drawer-actions"><button className="secondary-button" onClick={() => announce('Finding saved to your private research.')}>Save finding</button><button className="primary-button" onClick={() => addToBrief(selectedFinding)}>Add to brief</button></div></div></aside></div>}
+      {selectedFinding && selectedWorkflow && <div className="drawer-backdrop"><aside className="detail-drawer" aria-label="Finding details"><div className="drawer-hero"><div><p className="eyebrow">{selectedFinding.category} · {selectedFinding.segment}</p><h2>{selectedFinding.title}</h2><p className="drawer-code">{selectedFinding.source} · {selectedFinding.collected}</p></div><button className="drawer-close" onClick={() => setSelectedFinding(null)} aria-label="Close finding details"><X size={19} /></button></div><div className="drawer-body"><p className="drawer-summary">{selectedFinding.summary}</p><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Workflow state</p></div><div className="drawer-chips"><span>{selectedWorkflow.reviewState}</span><span>{selectedWorkflow.decisionState}</span>{selectedWorkflow.saved && <span>Saved</span>}{selectedWorkflow.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">What’s included</p></div><ul className="drawer-checklist"><li><Check size={16} />Reported fact and source context</li><li><Check size={16} />Implication for {selectedFinding.segment.toLowerCase()} buyers</li><li><Check size={16} />Recommended marketing response</li><li><Check size={16} />Freshness and confidence markers</li></ul></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Why it matters</p></div><p className="drawer-copy">{selectedFinding.implication}</p></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Market context</p></div><div className="drawer-chips"><span>{selectedFinding.lens}</span><span>{selectedFinding.segment}</span><span>{selectedFinding.importance} priority</span></div></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Evidence</p></div><div className="evidence-card"><ShieldCheck size={17} /><div><strong>{selectedFinding.source}</strong><p>Reported fact and interpretation are separated. Open the original source before publishing.</p><button className="inline-link" onClick={() => announce('Source link is ready for the connected source.')}>View source <ExternalLink size={13} /></button></div></div></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Suggested action</p></div><button className="action-card" onClick={() => announce(`${selectedFinding.action} started.`)}><Sparkles size={16} /><span>{selectedFinding.action}</span><ArrowUpRight size={15} /></button></div><div className="drawer-actions">{hasAction('review') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { reviewState: 'Reviewed' }, 'Finding marked reviewed across all views.')}><Check size={15} /> Mark reviewed</button>}{hasAction('approve') && <button className="primary-button" onClick={() => updateWorkflow(selectedFinding, { decisionState: 'Approved', reviewState: 'Reviewed' }, 'Finding approved for executive view.')}><Check size={15} /> Approve</button>}{hasAction('hold') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { decisionState: 'Held' }, 'Finding held for more evidence.')}><Clock3 size={15} /> Hold</button>}{hasAction('tag') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { tags: [...selectedWorkflow.tags, 'Analyst review'] }, 'Analyst review tag added.')}><Plus size={15} /> Tag</button>}{hasAction('save') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { saved: true }, 'Finding saved to the shared workspace.')}><Check size={15} /> Save</button>}{hasAction('brief') && <button className="primary-button" onClick={() => addToBrief(selectedFinding)}>Add to brief</button>}{hasAction('acknowledge') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { lastAction: 'Acknowledged by C-suite' }, 'Signal acknowledged for the executive view.')}><Check size={15} /> Acknowledge</button>}</div></div></aside></div>}
 
       {showCustomize && <div className="modal-backdrop"><section className="modal-card customize-modal"><div className="modal-heading"><div><p className="eyebrow accent-eyebrow">{activeView} view</p><h2>Customize dashboard</h2></div><button className="icon-button" onClick={() => setShowCustomize(false)} aria-label="Close customize dialog"><X size={18} /></button></div><p className="modal-copy">Choose the intelligence panels visible in this view. Your layout is personal until an admin publishes a shared dashboard.</p><div className="widget-options">{widgets.map(({ id, label, description, icon: Icon }) => <button key={id} className={`widget-option ${visibleWidgets.includes(id) ? 'enabled' : ''}`} onClick={() => toggleWidget(id)}><span className="widget-icon"><Icon size={17} /></span><span><strong>{label}</strong><small>{description}</small></span><span className={`toggle ${visibleWidgets.includes(id) ? 'on' : ''}`}><span /></span></button>)}</div><div className="modal-footer"><span><LockKeyhole size={14} /> Personal layout</span><button className="primary-button" onClick={() => { setShowCustomize(false); announce('Dashboard layout saved.'); }}><Check size={16} /> Save layout</button></div></section></div>}
 
