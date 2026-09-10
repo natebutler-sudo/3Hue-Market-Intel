@@ -15,7 +15,7 @@
     "Not run"
   ],
   "currentPhase": "1",
-  "phaseStatus": "Stopped: mandatory native-size failure",
+  "phaseStatus": "Stopped: candidate 02 retains prohibited header band",
   "acceptanceBulletCount": 43,
   "sourceManifest": [
     {
@@ -3757,12 +3757,14 @@
       "sourceClaimsVerified": null,
       "viewports": [],
       "overrideIds": [],
-      "status": "Not run",
-      "measuredResult": "Phase not yet accepted or implemented.",
-      "evidence": [],
+      "status": "Fail",
+      "measuredResult": "Candidate 02 passes removal of painted words, but retains a broad blank navy header-shaped band with a sharp lower boundary around y=63–66 at the 1672px reference width (native y≈109–114). The ceiling/glazing does not continue through it. Guardian rejected this residual UI geometry.",
+      "evidence": [
+        "reviews/phase-1-candidate-02.md"
+      ],
       "acceptanceId": "P1-D01",
       "countAsSeparateAcceptance": false,
-      "candidateReview": "Not run",
+      "candidateReview": "Fail",
       "publishedReview": "Not run"
     },
     {
@@ -3779,8 +3781,10 @@
       "viewports": [],
       "overrideIds": [],
       "status": "Not run",
-      "measuredResult": "Phase not yet accepted or implemented.",
-      "evidence": [],
+      "measuredResult": "Full acceptance is not run because complete clean-plate clearance is outstanding. Guardian sampled 35 landmarks: 33 matched at 0–1px; two were inconclusive around the repaired stair and dark foreground chair.",
+      "evidence": [
+        "reviews/phase-1-candidate-02.md"
+      ],
       "acceptanceId": "P1-D02",
       "countAsSeparateAcceptance": false,
       "candidateReview": "Not run",
@@ -3799,12 +3803,14 @@
       "sourceClaimsVerified": null,
       "viewports": [],
       "overrideIds": [],
-      "status": "Not run",
-      "measuredResult": "Phase not yet accepted or implemented.",
-      "evidence": [],
+      "status": "Pass",
+      "measuredResult": "Guardian visual inspection confirms the three sign panels, kiosk screen and four tower ring bands/base line remain illuminated and empty.",
+      "evidence": [
+        "reviews/phase-1-candidate-02.md"
+      ],
       "acceptanceId": "P1-D03",
       "countAsSeparateAcceptance": false,
-      "candidateReview": "Not run",
+      "candidateReview": "Pass",
       "publishedReview": "Not run"
     },
     {
@@ -3822,14 +3828,15 @@
         "1920×1080"
       ],
       "overrideIds": [],
-      "status": "Fail",
-      "measuredResult": "Candidate 1:1672×941, 2,154,762 bytes; height deviation +0.5px. Aspect ratio passes but minimum dimensions fail (248px too narrow;139px too short). Implementer stopped as required. This is not an accepted plate.",
+      "status": "Pass",
+      "measuredResult": "Candidate 02 is 2880×1621, 4,679,649 bytes, with +1px height deviation from 16:9. It meets the at-least-1920×1080 native-size rule. Candidate 01 remains historically rejected at 1672×941; see its separate review.",
       "evidence": [
+        "reviews/phase-1-candidate-02.md",
         "reviews/phase-1-candidate-01.md"
       ],
       "acceptanceId": "P1-D04",
       "countAsSeparateAcceptance": false,
-      "candidateReview": "Fail",
+      "candidateReview": "Pass",
       "publishedReview": "Not run"
     },
     {
@@ -3846,7 +3853,7 @@
       "viewports": [],
       "overrideIds": [],
       "status": "Not run",
-      "measuredResult": "Phase not yet accepted or implemented.",
+      "measuredResult": "User artwork-OK gate has not been reached; responsive derivatives, HTTP 200 checks and live old-image verification are not run.",
       "evidence": [],
       "acceptanceId": "P1-D05",
       "countAsSeparateAcceptance": false,
@@ -5715,10 +5722,12 @@
       "target": "Clean image, approval gate and responsive assets",
       "viewports": [],
       "overrideIds": [],
-      "status": "Not run",
-      "measuredResult": "Phase not yet accepted or implemented.",
-      "evidence": [],
-      "candidateReview": "Not run",
+      "status": "Fail",
+      "measuredResult": "Candidate 02 passes removal of painted words, but retains a broad blank navy header-shaped band with a sharp lower boundary around y=63–66 at the 1672px reference width (native y≈109–114). The ceiling/glazing does not continue through it. Guardian rejected this residual UI geometry.",
+      "evidence": [
+        "reviews/phase-1-candidate-02.md"
+      ],
+      "candidateReview": "Fail",
       "publishedReview": "Not run",
       "subconditionsPolicy": "Every clause in sourceInstruction is mandatory; listed viewports are additive, not a substitute for the full instruction."
     },
@@ -5734,8 +5743,10 @@
       "viewports": [],
       "overrideIds": [],
       "status": "Not run",
-      "measuredResult": "Phase not yet accepted or implemented.",
-      "evidence": [],
+      "measuredResult": "Full acceptance is not run because complete clean-plate clearance is outstanding. Guardian sampled 35 landmarks: 33 matched at 0–1px; two were inconclusive around the repaired stair and dark foreground chair.",
+      "evidence": [
+        "reviews/phase-1-candidate-02.md"
+      ],
       "candidateReview": "Not run",
       "publishedReview": "Not run",
       "subconditionsPolicy": "Every clause in sourceInstruction is mandatory; listed viewports are additive, not a substitute for the full instruction."
@@ -5751,10 +5762,12 @@
       "target": "Clean image, approval gate and responsive assets",
       "viewports": [],
       "overrideIds": [],
-      "status": "Not run",
-      "measuredResult": "Phase not yet accepted or implemented.",
-      "evidence": [],
-      "candidateReview": "Not run",
+      "status": "Pass",
+      "measuredResult": "Guardian visual inspection confirms the three sign panels, kiosk screen and four tower ring bands/base line remain illuminated and empty.",
+      "evidence": [
+        "reviews/phase-1-candidate-02.md"
+      ],
+      "candidateReview": "Pass",
       "publishedReview": "Not run",
       "subconditionsPolicy": "Every clause in sourceInstruction is mandatory; listed viewports are additive, not a substitute for the full instruction."
     },
@@ -5771,12 +5784,13 @@
         "1920×1080"
       ],
       "overrideIds": [],
-      "status": "Fail",
-      "measuredResult": "Candidate 1:1672×941, 2,154,762 bytes; height deviation +0.5px. Aspect ratio passes but minimum dimensions fail (248px too narrow;139px too short). Implementer stopped as required. This is not an accepted plate.",
+      "status": "Pass",
+      "measuredResult": "Candidate 02 is 2880×1621, 4,679,649 bytes, with +1px height deviation from 16:9. It meets the at-least-1920×1080 native-size rule. Candidate 01 remains historically rejected at 1672×941; see its separate review.",
       "evidence": [
+        "reviews/phase-1-candidate-02.md",
         "reviews/phase-1-candidate-01.md"
       ],
-      "candidateReview": "Fail",
+      "candidateReview": "Pass",
       "publishedReview": "Not run",
       "subconditionsPolicy": "Every clause in sourceInstruction is mandatory; listed viewports are additive, not a substitute for the full instruction."
     },
@@ -5792,7 +5806,7 @@
       "viewports": [],
       "overrideIds": [],
       "status": "Not run",
-      "measuredResult": "Phase not yet accepted or implemented.",
+      "measuredResult": "User artwork-OK gate has not been reached; responsive derivatives, HTTP 200 checks and live old-image verification are not run.",
       "evidence": [],
       "candidateReview": "Not run",
       "publishedReview": "Not run",

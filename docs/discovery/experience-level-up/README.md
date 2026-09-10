@@ -1,6 +1,6 @@
 # 3HUE Experience — document-led implementation
 
-Current phase: **1 — stopped on the clean image's minimum-size requirement**. The image edit returned **1672×941**; the required minimum is **1920×1080**. The independent guardian rejected it. No application code or deployed artwork has changed in this phase.
+Current phase: **1 — stopped on the clean image's residual header band**. The supplied plate now passes the native-size check at **2880×1621**, but the independent guardian rejected the remaining header-shaped navy band and sharp lower edge. No application code or deployed artwork has changed in this phase.
 
 The eight user-supplied Markdown files are preserved byte-for-byte in [source](source/), with SHA-256 hashes in [source-manifest.json](source-manifest.json). Source audit findings remain claims until independently measured. The [override ledger](overrides.md) contains the three confirmed changes to the documents' defaults.
 
@@ -34,14 +34,15 @@ The implementation agent is the primary agent. `/root/experience_guardian` indep
 
 ## Current evidence and outstanding work
 
-- [Phase 1 candidate 01 rejection](reviews/phase-1-candidate-01.md): exact dimensions independently verified; artwork not accepted.
+- [Phase 1 candidate 01 rejection](reviews/phase-1-candidate-01.md): built-in edit was undersized at 1672×941; artwork not accepted.
+- [Phase 1 candidate 02 rejection](reviews/phase-1-candidate-02.md): supplied 2880×1621 plate passes size, but retains the prohibited header band; artwork not accepted.
 - [Documentation guardian review and correction](reviews/documentation-checkpoint.md): archive/register accepted for GitHub; this is not artwork or live-site acceptance.
-- **1 acceptance item Fail; 42 Not run.** No phase marked complete.
-- Full removal, geometry/illumination, comparisons and user image approval remain outstanding. No responsive derivatives or asset publication occurred.
+- **1 acceptance item Fail; 2 Pass; 40 Not run.** No phase marked complete.
+- Header-band removal, full geometry acceptance, comparisons after correction and user image approval remain outstanding. No responsive derivatives or asset publication occurred.
 - Phases 2a–6 are **Not run**, blocked by the sequential phase-1 gate.
-- To resume under the current requirements, supply a compliant retouched 16:9 plate at least 1920×1080. It must still pass guardian checks and the user artwork gate. An explicit user change to the size rule would be a new override, not something the agents can assume.
+- To resume under the current requirements, supply a corrected retouched 16:9 plate with the header band removed, at least 1920×1080. It must still pass guardian checks and the user artwork gate. An explicit user change to the removal or geometry rule would be a new override, not something the agents can assume.
 
-The rejected image stays in the local generation output, outside application assets. No undersized master is adopted, upscaled, cropped or padded. The currently published Experience remains as before this execution phase.
+Both rejected candidates stay outside application assets. The undersized built-in result was not adopted, upscaled, cropped or padded; the supplied candidate was not adopted because of the residual band. The currently published Experience remains as before this execution phase.
 
 ## Register verification
 

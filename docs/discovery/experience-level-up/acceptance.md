@@ -8,15 +8,17 @@ A failed image requirement is recorded as Fail even though stopping complies wit
 
 Target: Clean image, approval gate and responsive assets.
 
-### P1-D01 — Not run
+### P1-D01 — Fail
 
 Source: [1-clean-plate.md, line 23](source/1-clean-plate.md#L23).
 
 - At 2× zoom the plate shows no legible letter or number and no UI shape (pill, arrow circle, header band).
 
-Measured result: Phase not yet accepted or implemented.
+Measured result: Candidate 02 passes removal of painted words, but retains a broad blank navy header-shaped band with a sharp lower boundary around y=63–66 at the 1672px reference width (native y≈109–114). The ceiling/glazing does not continue through it. Guardian rejected this residual UI geometry.
 
-Candidate guardian: Not run. Published guardian: Not run.
+Candidate guardian: Fail. Published guardian: Not run.
+
+Evidence: [reviews/phase-1-candidate-02.md](reviews/phase-1-candidate-02.md)
 
 ### P1-D02 — Not run
 
@@ -24,31 +26,33 @@ Source: [1-clean-plate.md, line 24](source/1-clean-plate.md#L24).
 
 - Laid over the original at 50% opacity, scaled to 1672 wide, the doorways, stair, tower rings, table, bust and kiosk line up within 6 px, including the doorway centres 333,537, 748,535 and 1357,540.
 
-Measured result: Phase not yet accepted or implemented.
+Measured result: Full acceptance is not run because complete clean-plate clearance is outstanding. Guardian sampled 35 landmarks: 33 matched at 0–1px; two were inconclusive around the repaired stair and dark foreground chair.
 
-Candidate guardian: Not run. Published guardian: Not run.
+Candidate guardian: Not run — blocked by P1-D01. Published guardian: Not run.
 
-### P1-D03 — Not run
+### P1-D03 — Pass
 
 Source: [1-clean-plate.md, line 25](source/1-clean-plate.md#L25).
 
 - The sign panels, kiosk screen and ring bands are still lit, just empty.
 
-Measured result: Phase not yet accepted or implemented.
+Measured result: Guardian visual inspection confirms the three sign panels, kiosk screen and four tower ring bands/base line remain illuminated and empty.
 
-Candidate guardian: Not run. Published guardian: Not run.
+Candidate guardian: Pass. Published guardian: Not run.
 
-### P1-D04 — Fail
+Evidence: [reviews/phase-1-candidate-02.md](reviews/phase-1-candidate-02.md)
+
+### P1-D04 — Pass
 
 Source: [1-clean-plate.md, line 26](source/1-clean-plate.md#L26).
 
 - You reported the plate's exact size, and it is at least 1920×1080 at 16:9 (±1 px), or you stopped.
 
-Measured result: Candidate 1:1672×941, 2,154,762 bytes; height deviation +0.5px. Aspect ratio passes but minimum dimensions fail (248px too narrow;139px too short). Implementer stopped as required. This is not an accepted plate.
+Measured result: Candidate 02 is 2880×1621, 4,679,649 bytes, with +1px height deviation from 16:9. It meets the at-least-1920×1080 native-size rule. Candidate 01 remains historically rejected at 1672×941; see its separate review.
 
 Candidate guardian: Fail. Published guardian: Not run.
 
-Evidence: [reviews/phase-1-candidate-01.md](reviews/phase-1-candidate-01.md)
+Evidence: [reviews/phase-1-candidate-02.md](reviews/phase-1-candidate-02.md), [reviews/phase-1-candidate-01.md](reviews/phase-1-candidate-01.md)
 
 ### P1-D05 — Not run
 
@@ -56,7 +60,7 @@ Source: [1-clean-plate.md, line 27](source/1-clean-plate.md#L27).
 
 - After my OK: every saved file returns 200, each AVIF and WebP copy is 500 KB or less, and the live lobby still shows the old image.
 
-Measured result: Phase not yet accepted or implemented.
+Measured result: User artwork-OK gate has not been reached; responsive derivatives, HTTP 200 checks and live old-image verification are not run.
 
 Candidate guardian: Not run. Published guardian: Not run.
 
