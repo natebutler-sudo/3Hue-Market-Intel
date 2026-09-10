@@ -150,7 +150,7 @@ export default function Home() {
       <div className="mobile-nav-row"><button className="icon-button" aria-label="Open navigation"><Menu size={19} /></button><span>{activeNav}</span><button className="icon-button" aria-label="Open settings" onClick={() => setShowSettings(true)}><Settings2 size={18} /></button></div>
 
       <section className="context-bar" aria-label="Intelligence scope">
-        <div className="context-title"><p className="eyebrow">Intelligence scope</p><strong>Markets 3HUE supports</strong></div>
+        <div className="context-title"><div className="context-title-line"><p className="eyebrow">Intelligence scope</p><div className="view-switcher" role="tablist" aria-label="Dashboard view">{(['Analyst', 'Director', 'C-suite'] as View[]).map((view) => <button key={view} className={`view-tab ${activeView === view ? 'active' : ''}`} onClick={() => setActiveView(view)} role="tab" aria-selected={activeView === view}>{view}</button>)}</div></div><strong>Markets 3HUE supports</strong></div>
         <div className="context-field"><span>ICP</span><strong>Loaded strategy</strong></div>
         <div className="context-field"><span>Last collection</span><strong>Today · 05:42 CT</strong></div>
         <div className="context-field"><span>Source health</span><strong><span className="status-dot" /> 6 healthy</strong></div>
