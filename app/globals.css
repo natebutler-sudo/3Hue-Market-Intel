@@ -585,3 +585,13 @@ button { cursor: pointer; }
 @media (max-width: 600px) {
   .creator-header h1 { font-size: 24px; }.creator-brand { align-items: start; }.creator-brand img { width: 90px; }.creator-brand > div { padding-left: 13px; }.creator-view-heading { align-items: start; flex-direction: column; }.creator-view-heading h2 { font-size: 24px; }.creator-output-grid, .creator-record-grid, .brand-kit-grid, .campaign-board, .template-grid { grid-template-columns: 1fr; }.creator-output-card:last-child { grid-column: auto; }.creator-form-grid { grid-template-columns: 1fr; }.creator-form-wide { grid-column: auto; }.creator-composer-footer { align-items: start; flex-direction: column; }.creator-library-toolbar { align-items: stretch; flex-direction: column; }.creator-search { width: 100%; }.creator-upload-button { align-self: flex-start; }.icp-card { min-height: 300px; }.icp-carousel { min-height: 343px; }.icp-track { min-height: 296px; }.icp-profile-panel { position: fixed; top: 120px; right: 16px; bottom: 16px; left: 16px; max-height: none; }.creator-asset-detail { top: auto; right: 16px; bottom: 16px; left: 16px; width: auto; }
 }
+/* Creator library refinement: keep identity rules separate from draft work. */
+.brand-kit-assets-heading { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
+.brand-kit-assets-heading p { margin: 5px 0 0; color: #758798; font-size: 11px; line-height: 1.45; }
+.brand-kit-assets-heading > span { color: #8293a1; font-family: var(--font-geist-mono), ui-monospace, monospace; font-size: 9px; font-weight: 800; text-transform: uppercase; white-space: nowrap; }
+.brand-kit-assets { margin-top: 12px; }
+.creator-template-empty { margin-top: 24px; }
+@media (max-width: 560px) {
+  .brand-kit-assets-heading { align-items: start; flex-direction: column; gap: 7px; }
+  .brand-kit-assets-heading > span { white-space: normal; }
+}
