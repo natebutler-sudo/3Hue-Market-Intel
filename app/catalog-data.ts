@@ -1,7 +1,7 @@
 import sourceCatalog from '../docs/discovery/solution-builder-catalog-2026-09-09/catalog.json';
+import { LOBBY_CONTENT, type ExperienceDoorId, type MaturityStage } from './experience-data';
 
-export type ExperienceDoorId = 'win-trust' | 'gain-control' | 'stay-ready';
-export type MaturityStage = 'Assess' | 'Strengthen' | 'Operate' | 'Advance';
+export type { ExperienceDoorId, MaturityStage } from './experience-data';
 export type CatalogFamily = 'ISG' | 'ITG' | 'ITC Staff Aug' | 'Professional Services';
 export type CatalogEvidenceLabel = 'Observed Builder record' | 'Draft catalog record' | 'Confirm price';
 
@@ -126,11 +126,7 @@ export const catalogPackages: CatalogPackage[] = [
 ];
 
 export const catalogFamilies: Array<CatalogFamily | 'Packages'> = ['ISG', 'ITG', 'ITC Staff Aug', 'Professional Services', 'Packages'];
-export const catalogDoors: Array<{ id: ExperienceDoorId; label: string }> = [
-  { id: 'win-trust', label: 'Win Trust' },
-  { id: 'gain-control', label: 'Gain Control' },
-  { id: 'stay-ready', label: 'Stay Ready' },
-];
+export const catalogDoors: Array<{ id: ExperienceDoorId; label: string }> = LOBBY_CONTENT.doors.map(({ id, title }) => ({ id, label: title }));
 export const catalogStages: MaturityStage[] = ['Assess', 'Strengthen', 'Operate', 'Advance'];
 export const catalogPersonas = ['Provable Vendor', 'Portfolio', 'Regulated Operator'];
 export const catalogFrameworks = frameworkNames;

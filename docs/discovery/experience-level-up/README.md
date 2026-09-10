@@ -1,6 +1,6 @@
 # 3HUE Experience — document-led implementation
 
-Current phase: **2a — ready to implement**. Phase 1 is complete under the user's O4 design override: the supplied plate passes native-size, removal, geometry and illumination checks, the user approved it, responsive derivatives are published, every saved asset returns HTTP 200, and the independent guardian confirmed the loaded page module still references the old scene. No application code or deployed artwork has been wired to the new plate in Phase 1.
+Current phase: **2a — candidate accepted; publish gate pending**. Phase 1 is complete under the user's O4 design override: the supplied plate passes native-size, removal, geometry and illumination checks, the user approved it, responsive derivatives are published, every saved asset returns HTTP 200, and the independent guardian confirmed the loaded page module still references the old scene. The Step 2a candidate now renders the approved plate with typed content, native geometry, live labels, pinned controls, and decode-aware loading; its published performance and WebKit checks remain explicitly Not run until deployment.
 
 The eight user-supplied Markdown files are preserved byte-for-byte in [source](source/), with SHA-256 hashes in [source-manifest.json](source-manifest.json). Source audit findings remain claims until independently measured. The [override ledger](overrides.md) contains the four confirmed changes to the documents' defaults.
 
@@ -40,10 +40,12 @@ The implementation agent is the primary agent. `/root/experience_guardian` indep
 - [Phase 1 responsive asset preparation](reviews/phase-1-assets.md): master and AVIF/WebP/JPEG variants are locally measured.
 - [Phase 1 published asset review](reviews/phase-1-assets-live.md): all saved assets returned HTTP 200 and the published page module still references the old scene.
 - [Phase 1 published guardian review](reviews/phase-1-assets-live-guardian.md): independent guardian Pass for P1-D05 with no required check left unrun.
+- [Phase 2a candidate review](reviews/phase-2a-candidate.md): implementation checks and independent matrix results for the native stage candidate.
+- [Phase 2a candidate guardian review](reviews/phase-2a-candidate-guardian.md): independent guardian Pass for candidate checks; live publish checks remain Not run.
 - [Documentation guardian review and correction](reviews/documentation-checkpoint.md): archive/register accepted for GitHub; this is not artwork or live-site acceptance.
-- **0 acceptance items Fail; 5 Pass; 38 Not run.** Phase 1 is complete under O4; Step 2a is the active phase.
+- **0 acceptance items Fail; 9 Pass; 34 Not run.** Phase 1 is complete under O4; Step 2a candidate checks are accepted and the publish gate is the next required step.
 - Derivative size limits and HTTP 200 checks pass locally and on the published Site. The old scene remains active; the new assets are staged for Step 2a.
-- Phases 2a–6 are **Not run**, blocked by the sequential phase-1 gate.
+- Phase 2a's live review is **Not run** pending publication; phases 2b–6 remain **Not run** by the governing sequence.
 - O4 is the explicit approved exception for the retained upper band; no other clean-plate requirement is waived. Step 2a now owns the next implementation and guardian gate.
 
 The undersized built-in result stays outside application assets. The supplied candidate is approved as the Phase 1 master under O4 but is not yet wired into the Experience; the currently published Experience remains as before this execution phase until Step 2a.

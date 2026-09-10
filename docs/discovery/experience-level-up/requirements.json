@@ -15,7 +15,7 @@
     "Not run"
   ],
   "currentPhase": "2a",
-  "phaseStatus": "Ready to implement; Phase 1 complete under O4",
+  "phaseStatus": "Candidate accepted by guardian; awaiting Phase 2a publish",
   "acceptanceBulletCount": 43,
   "sourceManifest": [
     {
@@ -5844,10 +5844,13 @@
         "2560×1440"
       ],
       "overrideIds": [],
-      "status": "Not run",
-      "measuredResult": "Phase not yet accepted or implemented.",
-      "evidence": [],
-      "candidateReview": "Not run",
+      "status": "Pass",
+      "measuredResult": "Guardian matrix: all 13 required debug sizes passed ring placement, hit testing, focus/hover behavior, and Assess as lowest stage. Max ring error 0.050px.",
+      "evidence": [
+        "reviews/phase-2a-candidate-guardian.md",
+        "reviews/phase-2a-candidate.md"
+      ],
+      "candidateReview": "Pass",
       "publishedReview": "Not run",
       "subconditionsPolicy": "Every clause in sourceInstruction is mandatory; listed viewports are additive, not a substitute for the full instruction."
     },
@@ -5872,10 +5875,13 @@
         "1920×902"
       ],
       "overrideIds": [],
-      "status": "Not run",
-      "measuredResult": "Phase not yet accepted or implemented.",
-      "evidence": [],
-      "candidateReview": "Not run",
+      "status": "Pass",
+      "measuredResult": "Guardian matrix: all heading viewports are visible, two-line, and clear; 1200×630 clearance 8.984px and 1440×900 clearance 22.078px; 1440×900 h1 53.56px.",
+      "evidence": [
+        "reviews/phase-2a-candidate-guardian.md",
+        "reviews/phase-2a-candidate.md"
+      ],
+      "candidateReview": "Pass",
       "publishedReview": "Not run",
       "subconditionsPolicy": "Every clause in sourceInstruction is mandatory; listed viewports are additive, not a substitute for the full instruction."
     },
@@ -5890,10 +5896,13 @@
       "target": "LOBBY_CONTENT, LOBBY_GEOMETRY, stage, labels and image loading",
       "viewports": [],
       "overrideIds": [],
-      "status": "Not run",
-      "measuredResult": "Phase not yet accepted or implemented.",
-      "evidence": [],
-      "candidateReview": "Not run",
+      "status": "Pass",
+      "measuredResult": "Guardian source/runtime review confirms shared LOBBY_CONTENT names feed lobby labels and catalog Door options; visible 3HUE logo.",
+      "evidence": [
+        "reviews/phase-2a-candidate-guardian.md",
+        "reviews/phase-2a-candidate.md"
+      ],
+      "candidateReview": "Pass",
       "publishedReview": "Not run",
       "subconditionsPolicy": "Every clause in sourceInstruction is mandatory; listed viewports are additive, not a substitute for the full instruction."
     },
@@ -5908,10 +5917,13 @@
       "target": "LOBBY_CONTENT, LOBBY_GEOMETRY, stage, labels and image loading",
       "viewports": [],
       "overrideIds": [],
-      "status": "Not run",
-      "measuredResult": "Phase not yet accepted or implemented.",
-      "evidence": [],
-      "candidateReview": "Not run",
+      "status": "Pass",
+      "measuredResult": "Guardian verified reduced-motion transition duration is exactly 0s; candidate image/label presentation remains usable.",
+      "evidence": [
+        "reviews/phase-2a-candidate-guardian.md",
+        "reviews/phase-2a-candidate.md"
+      ],
+      "candidateReview": "Pass",
       "publishedReview": "Not run",
       "subconditionsPolicy": "Every clause in sourceInstruction is mandatory; listed viewports are additive, not a substitute for the full instruction."
     },
@@ -5929,8 +5941,11 @@
       ],
       "overrideIds": [],
       "status": "Not run",
-      "measuredResult": "Phase not yet accepted or implemented.",
-      "evidence": [],
+      "measuredResult": "Published WebKit, Fast 4G cold-cache timing, ≤350ms placeholder/plate, single-download/warm-open, and CLS checks remain pending the publish gate.",
+      "evidence": [
+        "reviews/phase-2a-candidate-guardian.md",
+        "reviews/phase-2a-candidate.md"
+      ],
       "candidateReview": "Not run",
       "publishedReview": "Not run",
       "subconditionsPolicy": "Every clause in sourceInstruction is mandatory; listed viewports are additive, not a substitute for the full instruction."

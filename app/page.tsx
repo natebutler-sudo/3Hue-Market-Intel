@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState, type ChangeEvent, type Dispatch, type SetStateAction } from 'react';
+import { useEffect, useMemo, useRef, useState, type ChangeEvent, type CSSProperties, type Dispatch, type SetStateAction } from 'react';
 import { logoData } from './logo-data';
 import {
   catalogDoors,
@@ -13,9 +13,9 @@ import {
   catalogTriggers,
   type CatalogFamily,
   type CatalogService,
-  type ExperienceDoorId,
   type MaturityStage,
 } from './catalog-data';
+import { LOBBY_CONTENT, LOBBY_GEOMETRY, LOBBY_IMAGE_SOURCES, LOBBY_PLACEHOLDER_DATA_URI, type ExperienceDoorId, type LobbyDoor, type MaturityStage as LobbyMaturityStage } from './experience-data';
 import {
   brandKitRecords,
   creatorAssets,
@@ -109,19 +109,6 @@ type IcpProfile = {
   messageAngle: string;
   disqualifiers: string[];
   evidence: string;
-};
-type ExperienceDoor = {
-  id: ExperienceDoorId;
-  title: string;
-  promise: string;
-  audience: string;
-  triggers: string[];
-  tension: string;
-  gap: string;
-  serviceFamilies: string[];
-  decision: string;
-  maturityEmphasis: MaturityStage[];
-  color: 'cyan' | 'orange' | 'navy';
 };
 type AdminTab = 'overview' | 'sources' | 'watchlists' | 'runs';
 type SourceStatus = 'Connected' | 'Partially ready' | 'Connector pending' | 'Manual import' | 'Not connected';
@@ -300,37 +287,149 @@ const icpProfiles: IcpProfile[] = [
   { id: 'regulated-operator', hue: 'HUE 03', name: 'Regulated Operator', tagline: 'Evidence creates confidence', description: 'Regulated and operationally complex organizations that need defensible decisions, ownership, resilience, response, and evidence.', signal: 'Buyer questions recurring', color: 'navy', segmentShare: '~15% of ranked segment mix', situation: 'An operator must keep its control environment defensible while AI, privacy, resilience, incident, or regulatory pressure crosses organizational boundaries.', forcingFunction: 'An examination, audit finding, incident, continuity concern, or remediation deadline exposes the cost of discovering gaps late.', triggerSignals: ['Regulatory examination or remediation deadline', 'Security incident or continuity concern', 'AI, privacy, or customer assurance pressure crossing operational teams'], buyingCommittee: 'Executive sponsor with security, risk, compliance, privacy, technology, operations, or audit owners.', serviceFit: ['Cyber incident response', 'Business continuity and operational resilience', 'Managed detection and response', 'Privacy and AI governance'], messageAngle: 'Make readiness continuous so the organization can operate defensibly when conditions change.', disqualifiers: ['No operational or regulatory trigger', 'Seeking a point tool without accountable operating ownership'], evidence: 'Supplied forcing-function research and public markets/regulated-operator dossier; priority share is directional.' },
 ];
 
-const experienceDoors: ExperienceDoor[] = [
-  { id: 'win-trust', title: 'Win Trust', promise: 'Prove you are ready.', audience: 'For teams that need customer assurance, readiness evidence, or a faster path through diligence.', triggers: ['An enterprise deal or renewal is blocked by assurance requirements.', 'A customer, insurer, or investor is asking for evidence you cannot assemble quickly.', 'AI adoption is creating new customer questions about ownership and control.'], tension: 'The business is ready to grow, but proof is scattered across policies, systems, and people.', gap: 'The gap is between having good intentions and being able to show repeatable evidence when the buyer asks.', serviceFamilies: ['Risk assessment and risk management', 'Information security program and governance', 'Privacy management and data protection', 'ISMS, SSPP, and statement of applicability'], decision: 'Choose the evidence and operating work that turns readiness into buyer confidence.', maturityEmphasis: ['Assess', 'Strengthen', 'Advance'], color: 'cyan' },
-  { id: 'gain-control', title: 'Gain Control', promise: 'See and govern what matters.', audience: 'For ownership and operating teams that need shared visibility, leverage, and governance across multiple companies.', triggers: ['A new platform acquisition or portfolio review needs a common view.', 'Board, lender, or investor reporting is inconsistent across holdings.', 'The portfolio needs more control without adding a full internal team.'], tension: 'Important risk and technology decisions are being made company by company without a shared operating picture.', gap: 'The gap is between local activity and portfolio-level oversight that can guide investment, sequencing, and accountability.', serviceFamilies: ['Digital maturity paradigm assessments', 'Managed enterprise architecture programs', 'Vendor and third-party risk management', 'Board and investor performance reporting'], decision: 'Create a repeatable governance rhythm that gives leaders visibility without slowing operators down.', maturityEmphasis: ['Assess', 'Operate', 'Advance'], color: 'orange' },
-  { id: 'stay-ready', title: 'Stay Ready', promise: 'Operate defensibly.', audience: 'For regulated and risk-heavy operators that need clear ownership, resilience, response, and evidence that survives scrutiny.', triggers: ['An examiner request, audit finding, or remediation deadline is active.', 'An incident or continuity concern exposes a readiness gap.', 'Regulatory, privacy, or AI adoption pressure is crossing operational boundaries.'], tension: 'The organization cannot afford to discover ownership or evidence gaps during an examination or incident.', gap: 'The gap is between documented plans and an operating model that stays ready when conditions change.', serviceFamilies: ['Cyber incident response programs', 'Business continuity and operational resilience', 'Managed detection and response', 'Privacy management and data protection'], decision: 'Establish the accountable programs and managed practices that make readiness continuous.', maturityEmphasis: ['Strengthen', 'Operate', 'Advance'], color: 'navy' },
-];
+const experienceDoors: LobbyDoor[] = LOBBY_CONTENT.doors;
+
+let lobbyDecoded = false;
+let lobbyPrewarmPromise: Promise<void> | null = null;
+
+function prewarmLobbyImage(): Promise<void> {
+  if (typeof window === 'undefined') return Promise.resolve();
+  if (lobbyDecoded) return Promise.resolve();
+  if (lobbyPrewarmPromise) return lobbyPrewarmPromise;
+  lobbyPrewarmPromise = new Promise((resolve) => {
+    const picture = document.createElement('picture');
+    picture.setAttribute('aria-hidden', 'true');
+    picture.style.position = 'absolute';
+    picture.style.width = '1px';
+    picture.style.height = '1px';
+    picture.style.overflow = 'hidden';
+    picture.style.opacity = '0';
+    const avif = document.createElement('source');
+    avif.type = 'image/avif';
+    avif.srcset = LOBBY_IMAGE_SOURCES.avif;
+    avif.sizes = LOBBY_IMAGE_SOURCES.sizes;
+    const webp = document.createElement('source');
+    webp.type = 'image/webp';
+    webp.srcset = LOBBY_IMAGE_SOURCES.webp;
+    webp.sizes = LOBBY_IMAGE_SOURCES.sizes;
+    const image = document.createElement('img');
+    image.src = '/lobby-plate-1920.jpg';
+    image.srcset = LOBBY_IMAGE_SOURCES.jpeg;
+    image.sizes = LOBBY_IMAGE_SOURCES.sizes;
+    image.width = LOBBY_GEOMETRY.width;
+    image.height = LOBBY_GEOMETRY.height;
+    picture.append(avif, webp, image);
+    document.body.appendChild(picture);
+    let settled = false;
+    const finish = (success: boolean) => {
+      if (settled) return;
+      settled = true;
+      if (success) lobbyDecoded = true;
+      else lobbyPrewarmPromise = null;
+      picture.remove();
+      resolve();
+    };
+    image.addEventListener('error', () => finish(false), { once: true });
+    image.addEventListener('load', () => {
+      const decoded = typeof image.decode === 'function' ? image.decode() : Promise.resolve();
+      decoded.then(() => finish(true)).catch(() => finish(false));
+    }, { once: true });
+    if (image.complete) {
+      const decoded = typeof image.decode === 'function' ? image.decode() : Promise.resolve();
+      decoded.then(() => finish(true)).catch(() => finish(false));
+    }
+  });
+  return lobbyPrewarmPromise;
+}
 
 function ExperienceOverlay({ activeDoorId, onSelectDoor, onClose, onOpenCatalog, onTalkToTeam }: { activeDoorId: ExperienceDoorId; onSelectDoor: (id: ExperienceDoorId) => void; onClose: () => void; onOpenCatalog: () => void; onTalkToTeam: () => void }) {
   const activeDoor = experienceDoors.find((door) => door.id === activeDoorId) ?? experienceDoors[0];
-  const maturityStages: MaturityStage[] = ['Assess', 'Strengthen', 'Operate', 'Advance'];
   const [exploring, setExploring] = useState(false);
+  const [imageReady, setImageReady] = useState(lobbyDecoded);
+  const [debug, setDebug] = useState(false);
+  const [viewport, setViewport] = useState(() => typeof window === 'undefined' ? { width: 1440, height: 900 } : { width: window.innerWidth, height: window.innerHeight });
+  const backdropRef = useRef<HTMLImageElement>(null);
   const chooseDoor = (id: ExperienceDoorId) => { onSelectDoor(id); setExploring(true); };
+  const scale = Math.max(viewport.width / LOBBY_GEOMETRY.width, viewport.height / LOBBY_GEOMETRY.height);
+  const tx = (viewport.width - LOBBY_GEOMETRY.width * scale) / 2;
+  const k = scale * LOBBY_GEOMETRY.width / 1672;
+  const ty = Math.max(viewport.height - LOBBY_GEOMETRY.height * scale, Math.min(0, 78 - 118 * k));
+  const counterScale = 1 / scale;
+  const labelFont = Math.max(12 / scale, 11 * LOBBY_GEOMETRY.width / 1672);
+  const doorFont = Math.max(12 / scale, 17 * LOBBY_GEOMETRY.width / 1672);
+  const introTop = 118 * k + ty;
+  const firstDoorTop = LOBBY_GEOMETRY.doorways['win-trust'].frame.top * scale + ty;
+  const introSublineFont = Math.max(15, 17 * k);
+  const introH1Font = Math.max(30, Math.min(56 * k, (firstDoorTop - introTop - (12 + 16 + introSublineFont * 2 * 1.4) - 9) / 2));
+
+  useEffect(() => {
+    const syncViewport = () => setViewport({ width: window.innerWidth, height: window.innerHeight });
+    syncViewport();
+    window.addEventListener('resize', syncViewport);
+    const params = new URLSearchParams(window.location.search);
+    setDebug(params.get('debug') === '1');
+    void prewarmLobbyImage().then(() => { if (lobbyDecoded) setImageReady(true); });
+    return () => window.removeEventListener('resize', syncViewport);
+  }, []);
+
+  const revealImage = () => {
+    const image = backdropRef.current;
+    if (!image) { setImageReady(true); return; }
+    const decoded = typeof image.decode === 'function' ? image.decode() : Promise.resolve();
+    decoded.then(() => { lobbyDecoded = true; setImageReady(true); }).catch(() => undefined);
+  };
+
+  const stageStyle = { width: LOBBY_GEOMETRY.width, height: LOBBY_GEOMETRY.height, transform: `translate(${tx}px, ${ty}px) scale(${scale})`, transformOrigin: '0 0' };
+  const introStyle = { left: Math.max(24, 120 * k + tx), top: 118 * k + ty };
+  const stageLabels = LOBBY_CONTENT.stages.map((stage, index) => ({ stage, point: LOBBY_GEOMETRY.rings[LOBBY_GEOMETRY.rings.length - 1 - index] }));
 
   return <div className="experience-shell" role="dialog" aria-modal="true" aria-label="3HUE customer experience">
     <header className="experience-header">
-      <div className="experience-brand"><img src={logoData} alt="3HUE Executive Consulting" /><span>MATURITY PARTNER</span></div>
+      <div className="experience-brand"><img src={logoData} alt="3HUE Executive Consulting" /></div>
       <nav className="experience-nav" aria-label="Experience sections"><button className="experience-nav-item active">Approach</button><button className="experience-nav-item" onClick={onOpenCatalog}>Customer paths</button><button className="experience-nav-item">Insights</button><button className="experience-nav-item">About</button></nav>
       <div className="experience-header-actions"><button className="experience-ghost-button" onClick={onClose}><ArrowLeft size={14} /> Return to intelligence</button><button className="experience-outline-button" onClick={onTalkToTeam}>Talk to our team <ArrowUpRight size={14} /></button></div>
     </header>
-    <main className={`experience-floor ${exploring ? 'with-panel' : ''}`}>
-      <img className="experience-backdrop" src="/three-doors-concept.png" alt="3HUE maturity partner concept: three doors leading to one path to maturity" />
-      <div className="experience-backdrop-shade" aria-hidden="true" />
-      <div className="experience-hotspot-intro"><span>Three doors. One path to maturity.</span><small>Select a path to explore how 3HUE helps teams move from uncertainty to operational confidence.</small></div>
-      <div className="experience-hotspots" aria-label="Customer paths">
-        {experienceDoors.map((door) => <button key={door.id} className={`experience-hotspot experience-hotspot-${door.id} ${activeDoor.id === door.id ? 'selected' : ''}`} onClick={() => chooseDoor(door.id)} aria-label={`Explore ${door.title}: ${door.promise}`}><span>{door.title}</span><small>{door.promise}</small></button>)}
-        <button className="experience-hotspot experience-hotspot-route" onClick={() => setExploring(true)} aria-label="Explore the shared maturity path"><span>See the maturity path</span></button>
+    <main className="experience-lobby">
+      <div className="experience-stage-viewport">
+        {!imageReady && <div className="experience-backdrop-placeholder" style={{ backgroundImage: `url(${LOBBY_PLACEHOLDER_DATA_URI})` }} aria-hidden="true" />}
+        <div className="experience-stage" style={stageStyle}>
+          <picture className={`experience-backdrop-picture ${imageReady ? 'is-ready' : ''}`}>
+            <source type="image/avif" srcSet={LOBBY_IMAGE_SOURCES.avif} sizes={LOBBY_IMAGE_SOURCES.sizes} />
+            <source type="image/webp" srcSet={LOBBY_IMAGE_SOURCES.webp} sizes={LOBBY_IMAGE_SOURCES.sizes} />
+            <img ref={backdropRef} className="experience-backdrop" src="/lobby-plate-1920.jpg" srcSet={LOBBY_IMAGE_SOURCES.jpeg} sizes={LOBBY_IMAGE_SOURCES.sizes} width={LOBBY_GEOMETRY.width} height={LOBBY_GEOMETRY.height} fetchPriority="high" decoding="async" onLoad={revealImage} alt="3HUE maturity partner lobby: three doors leading to one path to maturity" />
+          </picture>
+          <div className="experience-backdrop-shade" aria-hidden="true" />
+          <div className="experience-hotspots" aria-label="Customer paths">
+            {experienceDoors.map((door) => {
+              const geometry = LOBBY_GEOMETRY.doorways[door.id];
+              const width = geometry.frame.right - geometry.frame.left;
+              const height = geometry.frame.bottom - geometry.frame.top;
+              const ringLeft = geometry.center.x - geometry.frame.left;
+              const ringTop = geometry.center.y - geometry.frame.top;
+              return <button key={door.id} className={`experience-hotspot experience-hotspot-${door.id} ${exploring && activeDoor.id === door.id ? 'selected' : ''}`} style={{ left: geometry.frame.left, top: geometry.frame.top, width, height, '--counter-scale': counterScale } as CSSProperties} onClick={() => chooseDoor(door.id)} onPointerEnter={() => { void prewarmLobbyImage(); }} onFocus={() => { void prewarmLobbyImage(); }} onPointerDown={() => { void prewarmLobbyImage(); }} aria-label={`Explore ${door.title}: ${door.promise}`}><span className="experience-hotspot-ring" style={{ left: ringLeft, top: ringTop }} aria-hidden="true" /><span className="experience-hotspot-chip" style={{ left: ringLeft, top: ringTop + 24 * counterScale }} aria-hidden="true">Explore {door.title}</span></button>;
+            })}
+          </div>
+          <div className="experience-scene-labels" aria-hidden="true">
+            {experienceDoors.map((door) => { const sign = LOBBY_GEOMETRY.doorways[door.id].sign; return <span className={`experience-scene-door-label experience-scene-door-${door.id}`} style={{ left: sign.x, top: sign.y, fontSize: doorFont, transform: `translate(-50%, -50%) rotate(${sign.angle}deg)` }}>{door.title}</span>; })}
+            {stageLabels.map(({ stage, point }) => <span key={stage} className={`experience-scene-stage-label experience-stage-label-${stage.toLowerCase()}`} style={{ left: point.x, top: point.y, fontSize: labelFont, transform: 'translate(-50%, -50%)' }}>{stage}</span>)}
+          </div>
+          {debug && <div className="experience-debug-overlay" aria-hidden="true">
+            {experienceDoors.map((door) => { const frame = LOBBY_GEOMETRY.doorways[door.id].frame; return <span key={door.id} className="experience-debug-frame" style={{ left: frame.left, top: frame.top, width: frame.right - frame.left, height: frame.bottom - frame.top }} />; })}
+            {LOBBY_GEOMETRY.doorways && experienceDoors.map((door) => { const point = LOBBY_GEOMETRY.doorways[door.id].center; return <i key={`${door.id}-point`} className="experience-debug-point" style={{ left: point.x, top: point.y }} />; })}
+            {LOBBY_GEOMETRY.rings.map((point) => <i key={`${point.x}-${point.y}`} className="experience-debug-ring" style={{ left: point.x, top: point.y }} />)}
+          </div>}
+        </div>
       </div>
-      <div className="experience-floor-footer"><span>People · perspective · progress</span><span className="experience-floor-legend"><i className="cyan" /> Customer path <i className="orange" /> Maturity route</span></div>
+      <div className="experience-hotspot-intro" style={introStyle}>
+        <span className="experience-intro-eyebrow">{LOBBY_CONTENT.eyebrow}</span>
+        <h1 style={{ fontSize: introH1Font }}><span>{LOBBY_CONTENT.heading[0]}</span><span><span className="accent">{LOBBY_CONTENT.headingAccent}</span>{LOBBY_CONTENT.heading[1].replace(`${LOBBY_CONTENT.headingAccent} `, ' ')}</span></h1>
+        <p style={{ fontSize: introSublineFont }}>{LOBBY_CONTENT.subline[0]}<br />{LOBBY_CONTENT.subline[1]}</p>
+      </div>
+      {!imageReady && <div className="experience-loading-status" role="status" aria-live="polite">Loading the lobby</div>}
       {exploring && <aside className="experience-detail-panel">
         <div className="experience-detail-toolbar"><span>Customer path · guided exploration</span><button className="experience-detail-close" onClick={() => setExploring(false)} aria-label="Return to Three Doors landing"><ArrowLeft size={14} /> Back to doors</button></div>
         <div className="experience-detail-tabs" role="tablist" aria-label="Customer paths">{experienceDoors.map((door) => <button key={door.id} role="tab" aria-selected={activeDoor.id === door.id} className={activeDoor.id === door.id ? 'active' : ''} onClick={() => onSelectDoor(door.id)}>{door.title}</button>)}</div>
-        <div className="experience-detail-body"><p className="experience-kicker">{activeDoor.title} · recommended fit</p><h2>{activeDoor.promise}</h2><p className="experience-detail-audience">{activeDoor.audience}</p><div className="experience-detail-links"><button onClick={onOpenCatalog}><Layers3 size={14} /> Browse service catalog</button><button onClick={onTalkToTeam}>Talk to our team <ArrowUpRight size={14} /></button></div><div className="experience-detail-rule" /><div className="experience-detail-section"><span>What creates urgency</span><ul>{activeDoor.triggers.map((trigger) => <li key={trigger}>{trigger}</li>)}</ul></div><div className="experience-detail-section"><span>The gap to close</span><p>{activeDoor.gap}</p></div><div className="experience-detail-section"><span>Relevant service families</span><div className="experience-detail-family-list">{activeDoor.serviceFamilies.map((family) => <span key={family}>{family}</span>)}</div></div><div className="experience-detail-section"><span>Shared maturity route</span><div className="experience-detail-route">{maturityStages.map((stage) => <span key={stage} className={activeDoor.maturityEmphasis.includes(stage) ? 'active' : ''}>{stage}</span>)}</div></div><div className="experience-detail-next"><span>Next decision</span><strong>{activeDoor.decision}</strong></div></div>
+        <div className="experience-detail-body"><p className="experience-kicker">{activeDoor.icp} · recommended fit</p><h2>{activeDoor.title}: {activeDoor.promise}</h2><p className="experience-detail-audience">{activeDoor.audience}</p><div className="experience-detail-links"><button onClick={onOpenCatalog}><Layers3 size={14} /> Browse service catalog</button><button onClick={onTalkToTeam}>Talk to our team <ArrowUpRight size={14} /></button></div><div className="experience-detail-rule" /><div className="experience-detail-section"><span>What creates urgency</span><ul>{activeDoor.triggers.map((trigger) => <li key={trigger}>{trigger}</li>)}</ul></div><div className="experience-detail-section"><span>The gap to close</span><p>{activeDoor.gap}</p></div><div className="experience-detail-section"><span>Relevant service families</span><div className="experience-detail-family-list">{activeDoor.serviceFamilies.map((family) => <span key={family}>{family}</span>)}</div></div><div className="experience-detail-section"><span>Shared maturity route</span><div className="experience-detail-route">{LOBBY_CONTENT.stages.map((stage) => <span key={stage} className={activeDoor.maturityEmphasis.includes(stage as LobbyMaturityStage) ? 'active' : ''}>{stage}</span>)}</div></div><div className="experience-detail-next"><span>Next decision</span><strong>{activeDoor.decision}</strong></div></div>
       </aside>}
     </main>
   </div>;
@@ -470,6 +569,16 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    const idle = window.setTimeout(() => {
+      if ('requestIdleCallback' in window) window.requestIdleCallback(() => { void prewarmLobbyImage(); });
+      else void prewarmLobbyImage();
+    }, 1000);
+    return () => {
+      window.clearTimeout(idle);
+    };
+  }, []);
+
+  useEffect(() => {
     if (icpPaused) return;
     const timer = window.setInterval(() => {
       setActiveIcpIndex((current) => (current + 1) % icpProfiles.length);
@@ -570,7 +679,7 @@ export default function Home() {
     setBriefQueue((current) => alreadyQueued ? current : [...current, finding.id]);
     announce(alreadyQueued ? 'This finding is already in your brief queue.' : 'Added to the shared briefing queue.');
   };
-  const openExperience = () => { setShowExperience(true); setMobileActionsOpen(false); };
+  const openExperience = () => { void prewarmLobbyImage(); setShowExperience(true); setMobileActionsOpen(false); };
   const openCatalog = () => { setShowCatalog(true); setMobileActionsOpen(false); };
   const openCreator = () => { setShowCreator(true); setMobileActionsOpen(false); };
   const goToIcp = (direction: number) => {
@@ -583,8 +692,8 @@ export default function Home() {
       <header className="topbar">
         <div className="brand-lockup"><img className="brand-image" src={logoData} alt="3HUE Executive Consulting" /><span className="brand-divider" aria-hidden="true" /><span className="brand-product-lockup"><span>MARKET</span><strong>INTEL</strong></span></div>
         <div className="topnav-cluster"><nav className="topnav" aria-label="Dashboard view" role="tablist">{(['Analyst', 'Director', 'C-suite'] as View[]).map((view) => <button key={view} className={`topnav-item ${activeView === view ? 'active' : ''}`} onClick={() => setActiveView(view)} role="tab" aria-selected={activeView === view}>{view}</button>)}</nav><button className="topbar-pill topbar-customize" onClick={() => setShowCustomize(true)}><SlidersHorizontal size={14} /> Customize</button></div>
-        <div className="topbar-actions"><button className="topbar-pill topbar-create" onClick={openCreator}><Sparkles size={14} /> Create</button><button className="topbar-pill" onClick={() => announce('Guide content is ready for the connected workspace.')}>Guide</button><button className="topbar-pill" onClick={openCatalog}>Product catalog</button><button className="topbar-pill topbar-experience" onClick={openExperience}>Experience</button><button className="icon-button topbar-icon" aria-label="Notifications" onClick={() => announce('No new high-impact alerts.')}><Bell size={17} /></button><button className="user-chip" title="Admin intelligence center" aria-label="Open admin intelligence center" onClick={() => openAdmin()}><span className="avatar">NB</span><ChevronDown size={14} /></button></div>
-        <div className="mobile-actions"><button className="mobile-overflow-button" aria-label="Open workspace actions" aria-expanded={mobileActionsOpen} onClick={() => setMobileActionsOpen((current) => !current)}><Menu size={18} /></button><button className="user-chip" title="Admin intelligence center" aria-label="Open admin intelligence center" onClick={() => openAdmin()}><span className="avatar">NB</span><ChevronDown size={13} /></button>{mobileActionsOpen && <div className="mobile-action-menu"><button onClick={openCreator}>Create</button><button onClick={() => setShowCustomize(true)}>Customize</button><button onClick={openExperience}>Experience</button><button onClick={openCatalog}>Product catalog</button><button onClick={() => { openAdmin(); setMobileActionsOpen(false); }}>Admin center</button></div>}</div>
+        <div className="topbar-actions"><button className="topbar-pill topbar-create" onClick={openCreator}><Sparkles size={14} /> Create</button><button className="topbar-pill" onClick={() => announce('Guide content is ready for the connected workspace.')}>Guide</button><button className="topbar-pill" onClick={openCatalog}>Product catalog</button><button className="topbar-pill topbar-experience" onClick={openExperience} onPointerEnter={() => { void prewarmLobbyImage(); }} onFocus={() => { void prewarmLobbyImage(); }} onPointerDown={() => { void prewarmLobbyImage(); }}>Experience</button><button className="icon-button topbar-icon" aria-label="Notifications" onClick={() => announce('No new high-impact alerts.')}><Bell size={17} /></button><button className="user-chip" title="Admin intelligence center" aria-label="Open admin intelligence center" onClick={() => openAdmin()}><span className="avatar">NB</span><ChevronDown size={14} /></button></div>
+        <div className="mobile-actions"><button className="mobile-overflow-button" aria-label="Open workspace actions" aria-expanded={mobileActionsOpen} onClick={() => setMobileActionsOpen((current) => !current)}><Menu size={18} /></button><button className="user-chip" title="Admin intelligence center" aria-label="Open admin intelligence center" onClick={() => openAdmin()}><span className="avatar">NB</span><ChevronDown size={13} /></button>{mobileActionsOpen && <div className="mobile-action-menu"><button onClick={openCreator}>Create</button><button onClick={() => setShowCustomize(true)}>Customize</button><button onClick={openExperience} onPointerEnter={() => { void prewarmLobbyImage(); }} onFocus={() => { void prewarmLobbyImage(); }} onPointerDown={() => { void prewarmLobbyImage(); }}>Experience</button><button onClick={openCatalog}>Product catalog</button><button onClick={() => { openAdmin(); setMobileActionsOpen(false); }}>Admin center</button></div>}</div>
       </header>
 
       <div className="builder-main">

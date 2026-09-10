@@ -411,27 +411,12 @@ button { cursor: pointer; }
 
 /* Reference-aligned customer experience: cinematic landing image with guided, room-like detail. */
 .experience-floor { position: relative; min-height: calc(100vh - 66px); overflow: hidden; background: #050d18; }
-.experience-backdrop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.experience-backdrop { position: absolute; inset: 0; width: 100%; height: 100%; object-position: center; }
 .experience-backdrop-shade { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(3,12,23,.12), rgba(3,12,23,.02) 52%, rgba(3,12,23,.26)), linear-gradient(0deg, rgba(3,12,23,.38), transparent 36%); pointer-events: none; }
-.experience-floor.with-panel .experience-backdrop { right: 39%; width: 61%; object-position: left center; }
-.experience-floor.with-panel .experience-backdrop-shade { right: 39%; }
 .experience-hotspot-intro { position: absolute; top: 9%; left: 6%; display: grid; max-width: 320px; gap: 8px; color: #fff; text-shadow: 0 2px 14px rgba(0,0,0,.7); pointer-events: none; }
 .experience-hotspot-intro span { color: #dceaf1; font-size: clamp(18px, 2vw, 27px); font-weight: 600; letter-spacing: -.035em; }
 .experience-hotspot-intro small { color: #aabfcb; font-size: 11px; line-height: 1.45; }
 .experience-hotspots { position: absolute; inset: 0; pointer-events: none; }
-.experience-hotspot { position: absolute; display: grid; place-items: center; min-width: 164px; min-height: 128px; padding: 14px; color: #fff; border: 1px solid transparent; border-radius: 9px; background: rgba(3,13,25,.08); text-align: center; text-shadow: 0 2px 9px rgba(0,0,0,.8); pointer-events: auto; transition: border-color .2s ease, background .2s ease, transform .2s ease; }
-.experience-hotspot::before { position: absolute; top: 50%; left: 50%; width: 30px; height: 30px; content: ''; border: 2px solid rgba(255,255,255,.92); border-radius: 50%; box-shadow: 0 0 0 7px rgba(5,17,31,.42), 0 0 22px rgba(30,213,238,.55); transform: translate(-50%, -50%); }
-.experience-hotspot:hover, .experience-hotspot:focus-visible, .experience-hotspot.selected { border-color: rgba(83,215,235,.76); background: rgba(4,22,39,.44); outline: none; transform: translateY(-2px); }
-.experience-hotspot span, .experience-hotspot small { opacity: 0; transition: opacity .2s ease; }
-.experience-hotspot:hover span, .experience-hotspot:hover small, .experience-hotspot:focus-visible span, .experience-hotspot:focus-visible small, .experience-hotspot.selected span, .experience-hotspot.selected small { opacity: 1; }
-.experience-hotspot span { margin-top: 48px; font-size: 14px; font-weight: 800; }
-.experience-hotspot small { margin-top: 3px; color: #8ce5f2; font-size: 9px; font-weight: 700; }
-.experience-hotspot-win-trust { top: 50%; left: 14%; }
-.experience-hotspot-gain-control { top: 49%; left: 39%; }
-.experience-hotspot-stay-ready { top: 50%; right: 12%; }
-.experience-hotspot-route { top: 19%; left: 51%; min-width: 185px; min-height: 88px; }
-.experience-hotspot-route::before { border-color: var(--orange); box-shadow: 0 0 0 7px rgba(5,17,31,.42), 0 0 22px rgba(247,163,100,.48); }
-.experience-hotspot-route span { opacity: .82; margin-top: 39px; color: #fff; }
 .experience-floor-footer { position: absolute; right: 34px; bottom: 25px; left: 34px; display: flex; align-items: center; justify-content: space-between; gap: 15px; color: #a1b6c4; font-family: var(--font-geist-mono), ui-monospace, monospace; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; text-shadow: 0 2px 8px rgba(0,0,0,.8); pointer-events: none; }
 .experience-floor-legend { display: inline-flex; align-items: center; gap: 8px; }
 .experience-floor-legend i { width: 20px; height: 2px; margin-left: 10px; background: var(--cyan); }
@@ -465,38 +450,13 @@ button { cursor: pointer; }
 .experience-detail-next { display: grid; gap: 7px; margin-top: 21px; padding: 14px; border-left: 2px solid var(--orange); background: rgba(246,150,91,.08); }
 .experience-detail-next strong { color: #e7f3f7; font-size: 12px; line-height: 1.45; }
 @keyframes experiencePanelIn { from { transform: translateX(20px); opacity: .35; } to { transform: translateX(0); opacity: 1; } }
-.experience-hotspot-intro { display: none; }
-.experience-hotspot.selected span, .experience-hotspot.selected small { opacity: 0; }
-.experience-shell > .experience-header { position: absolute; top: 0; right: 0; left: 0; background: linear-gradient(180deg, rgba(3,12,23,.62), transparent); border-bottom: 0; }
-.experience-shell > .experience-header .experience-brand, .experience-shell > .experience-header .experience-nav { display: none; }
-.experience-shell > .experience-header .experience-header-actions { margin-left: auto; }
-.experience-shell > .experience-floor { min-height: 100vh; }
 
 @media (max-width: 900px) {
   .experience-nav { display: none; }
   .experience-floor { min-height: 100vh; }
-  .experience-floor.with-panel .experience-backdrop, .experience-floor.with-panel .experience-backdrop-shade { right: 0; width: 100%; }
-  .experience-floor.with-panel .experience-backdrop { height: 43%; object-position: top center; }
   .experience-detail-panel { top: 39%; width: 100%; border-top: 1px solid rgba(255,255,255,.18); border-left: 0; }
-  .experience-hotspot-intro { top: 8%; left: 5%; max-width: 280px; }
-  .experience-hotspot-win-trust { top: 42%; left: 9%; }
-  .experience-hotspot-gain-control { top: 42%; left: 38%; }
-  .experience-hotspot-stay-ready { top: 42%; right: 6%; }
-  .experience-hotspot-route { top: 22%; left: 50%; }
 }
 @media (max-width: 600px) {
-  .experience-hotspot-intro { top: 8%; left: 16px; max-width: 245px; }
-  .experience-hotspot-intro span { font-size: 18px; }
-  .experience-hotspot-intro small { font-size: 10px; }
-  .experience-hotspot { min-width: 90px; min-height: 92px; padding: 5px; }
-  .experience-hotspot::before { width: 23px; height: 23px; }
-  .experience-hotspot span { margin-top: 37px; font-size: 10px; }
-  .experience-hotspot small { font-size: 8px; }
-  .experience-hotspot-win-trust { top: 43%; left: 1%; }
-  .experience-hotspot-gain-control { top: 43%; left: 35%; }
-  .experience-hotspot-stay-ready { top: 43%; right: 1%; }
-  .experience-hotspot-route { top: 27%; left: 50%; min-width: 125px; min-height: 60px; }
-  .experience-hotspot-route span { margin-top: 29px; }
   .experience-floor-footer { right: 16px; bottom: 13px; left: 16px; font-size: 7px; }
   .experience-floor-footer > span:first-child { display: none; }
   .experience-detail-toolbar { padding: 11px 16px; }
@@ -594,4 +554,82 @@ button { cursor: pointer; }
 @media (max-width: 560px) {
   .brand-kit-assets-heading { align-items: start; flex-direction: column; gap: 7px; }
   .brand-kit-assets-heading > span { white-space: normal; }
+}
+
+/* Step 2a: native-size lobby stage, live labels, and pinned controls. */
+.experience-shell { position: fixed; z-index: 90; inset: 0; overflow: hidden; background: #06121f; }
+.experience-header { position: absolute; z-index: 12; top: 0; right: 0; left: 0; display: flex; align-items: center; justify-content: space-between; gap: 26px; min-height: 78px; padding: 0 32px; background: linear-gradient(180deg, rgba(4,15,29,.97), rgba(4,15,29,.78) 72%, transparent); border-bottom: 0; backdrop-filter: none; }
+.experience-brand { display: flex; align-items: center; flex: none; }
+.experience-brand img { width: 116px; height: auto; display: block; }
+.experience-brand span { display: none; }
+.experience-nav { display: flex; align-items: center; justify-content: center; gap: 5px; margin-left: auto; }
+.experience-header-actions { display: flex; align-items: center; gap: 9px; }
+.experience-lobby { position: relative; min-height: 100dvh; overflow: hidden; background: #06121f; }
+.experience-stage-viewport { position: absolute; inset: 0; overflow: hidden; background: #06121f; }
+.experience-stage { position: absolute; top: 0; left: 0; overflow: visible; }
+.experience-backdrop-placeholder { position: absolute; z-index: 1; inset: -18px; background-color: #162d43; background-position: center; background-repeat: no-repeat; background-size: cover; filter: blur(18px); transform: scale(1.04); }
+.experience-backdrop-picture { position: absolute; z-index: 2; inset: 0; display: block; opacity: 0; transition: opacity 600ms ease; }
+.experience-backdrop-picture.is-ready { opacity: 1; }
+.experience-backdrop { position: absolute; inset: 0; display: block; width: 100%; height: 100%; }
+.experience-backdrop-shade { position: absolute; z-index: 3; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgba(3,12,23,.12), rgba(3,12,23,0) 55%, rgba(3,12,23,.2)), linear-gradient(0deg, rgba(3,12,23,.28), transparent 34%); }
+.experience-hotspot-intro { position: absolute; z-index: 6; display: grid; width: max-content; max-width: calc(100vw - 48px); gap: 8px; margin: 0; padding: 0; color: #fff; pointer-events: none; text-shadow: 0 2px 14px rgba(0,0,0,.7); }
+.experience-hotspot-intro::before { position: absolute; z-index: -1; top: -22px; right: -28px; bottom: -22px; left: -28px; content: ''; background: linear-gradient(90deg, rgba(4,17,31,.88), rgba(4,17,31,.48) 72%, transparent); filter: blur(1px); }
+.experience-intro-eyebrow { color: rgb(92,199,223); font-family: var(--font-geist-mono), ui-monospace, monospace; font-size: 12px; font-weight: 700; letter-spacing: .18em; line-height: 1; text-transform: uppercase; }
+.experience-hotspot-intro h1 { display: grid; gap: 0; margin: 0; color: #f4fafc; font-size: clamp(30px, 4vw, 56px); font-weight: 500; letter-spacing: -.055em; line-height: 1; }
+.experience-hotspot-intro .experience-intro-eyebrow { color: rgb(92,199,223); font-size: 12px; font-weight: 700; letter-spacing: .18em; }
+.experience-hotspot-intro h1 span { display: block; color: inherit; font-size: inherit; font-weight: inherit; letter-spacing: inherit; line-height: inherit; }
+.experience-hotspot-intro h1 > span { white-space: nowrap; }
+.experience-hotspot-intro h1 > span .accent { display: inline; }
+.experience-hotspot-intro h1 .accent { color: #52cce3; }
+.experience-hotspot-intro p { margin: 0; color: #c9d6df; font-size: clamp(15px, 1.2vw, 17px); line-height: 1.4; }
+.experience-hotspots { position: absolute; z-index: 5; inset: 0; pointer-events: none; }
+.experience-hotspot { position: absolute; display: block; min-width: 0; min-height: 0; margin: 0; padding: 0; color: inherit; border: 0; border-radius: 0; outline: none; background: transparent; box-shadow: none; pointer-events: auto; text-shadow: none; transform: none; appearance: none; }
+.experience-hotspot:hover, .experience-hotspot:focus-visible, .experience-hotspot.selected { border: 0; outline: none; background: transparent; box-shadow: none; transform: none; }
+.experience-hotspot-ring { position: absolute; z-index: 2; width: 30px; height: 30px; border: 2px solid rgba(255,255,255,.92); border-radius: 50%; background: transparent; box-shadow: 0 0 0 7px rgba(5,17,31,.42), 0 0 22px rgba(30,213,238,.55); pointer-events: none; transform: translate(-50%, -50%) scale(var(--counter-scale)); transition: border-color .18s ease, box-shadow .18s ease; }
+.experience-hotspot-gain-control .experience-hotspot-ring { border-color: #ffc08e; box-shadow: 0 0 0 7px rgba(5,17,31,.42), 0 0 22px rgba(247,163,100,.5); }
+.experience-hotspot-stay-ready .experience-hotspot-ring { border-color: #b9d6ea; box-shadow: 0 0 0 7px rgba(5,17,31,.42), 0 0 22px rgba(124,183,225,.45); }
+.experience-hotspot-chip { position: absolute; z-index: 3; display: block; min-height: 13px; padding: 3px 7px; color: #eafafd; border: 1px solid rgba(82,204,227,.86); border-radius: 99px; background: #061a2c; font-family: var(--font-geist-mono), ui-monospace, monospace; font-size: 13px; font-weight: 700; letter-spacing: .01em; line-height: 1; white-space: nowrap; pointer-events: none; transform: translate(-50%, 0) scale(var(--counter-scale)); transform-origin: 50% 0; transition: color .18s ease, border-color .18s ease, background .18s ease, transform .18s ease; }
+.experience-hotspot-ring, .experience-hotspot-chip { opacity: 1; }
+.experience-hotspot-gain-control .experience-hotspot-chip { border-color: rgba(247,163,100,.9); }
+.experience-hotspot-stay-ready .experience-hotspot-chip { border-color: rgba(174,208,234,.9); }
+.experience-hotspot:hover .experience-hotspot-ring, .experience-hotspot.selected .experience-hotspot-ring { border-color: #fff; box-shadow: 0 0 0 7px rgba(5,17,31,.48), 0 0 28px rgba(82,204,227,.9); }
+.experience-hotspot:hover .experience-hotspot-chip, .experience-hotspot.selected .experience-hotspot-chip { color: #fff; background: #09263d; border-color: #fff; transform: translate(-50%, calc(-2px * var(--counter-scale))) scale(var(--counter-scale)); }
+.experience-hotspot:focus-visible .experience-hotspot-ring, .experience-hotspot:focus-visible .experience-hotspot-chip { outline: 2px solid #fff; outline-offset: 2px; box-shadow: 0 0 0 2px #06121f, 0 0 0 4px #fff, 0 0 0 7px rgba(5,17,31,.48), 0 0 28px rgba(82,204,227,.9); }
+.experience-hotspot:focus-visible .experience-hotspot-chip { transform: translate(-50%, calc(-2px * var(--counter-scale))) scale(var(--counter-scale)); }
+.experience-hotspot span:not(.experience-hotspot-ring):not(.experience-hotspot-chip), .experience-hotspot small { display: none; }
+.experience-scene-labels { position: absolute; z-index: 4; inset: 0; pointer-events: none; }
+.experience-scene-door-label { position: absolute; color: #fff8ef; font-weight: 500; letter-spacing: -.025em; line-height: 1; white-space: nowrap; text-shadow: 0 0 10px rgba(255,210,164,.62), 0 2px 8px rgba(0,0,0,.78); }
+.experience-scene-stage-label { position: absolute; color: #fff; font-family: var(--font-geist-mono), ui-monospace, monospace; font-weight: 500; letter-spacing: .08em; line-height: 1; text-transform: uppercase; white-space: nowrap; text-shadow: 0 0 10px rgba(255,255,255,.42), 0 2px 8px rgba(0,0,0,.76); }
+.experience-debug-overlay { position: absolute; z-index: 8; inset: 0; pointer-events: none; }
+.experience-debug-frame { position: absolute; display: block; border: 1px dashed rgba(255,92,92,.9); background: rgba(255,92,92,.06); }
+.experience-debug-point { position: absolute; width: 12px; height: 12px; border: 1px solid #52cce3; border-radius: 50%; transform: translate(-50%, -50%); }
+.experience-debug-ring { position: absolute; width: 30px; height: 30px; border: 1px dotted #f7a364; border-radius: 50%; transform: translate(-50%, -50%); }
+.experience-loading-status { position: absolute; z-index: 11; right: 24px; bottom: 24px; padding: 7px 10px; color: #dff8fc; border: 1px solid rgba(82,204,227,.55); border-radius: 99px; background: rgba(4,19,34,.82); font-family: var(--font-geist-mono), ui-monospace, monospace; font-size: 10px; letter-spacing: .06em; text-transform: uppercase; }
+.experience-detail-panel { z-index: 9; }
+.experience-hotspot-route { display: none !important; }
+.experience-shell > .experience-header .experience-brand, .experience-shell > .experience-header .experience-nav { display: flex; }
+.experience-shell > .experience-header .experience-header-actions { margin-left: 0; }
+@media (max-width: 900px) {
+  .experience-header { min-height: 68px; padding: 0 18px; }
+  .experience-brand img { width: 96px; }
+  .experience-nav { display: none !important; }
+  .experience-header-actions { margin-left: auto; }
+  .experience-ghost-button { font-size: 0; }
+  .experience-ghost-button svg { margin: 0; }
+  .experience-outline-button { min-height: 32px; padding: 0 9px; font-size: 9px; }
+  .experience-hotspot-intro { width: min(420px, calc(100vw - 32px)); max-width: calc(100vw - 32px); }
+  .experience-hotspot-intro h1 > span { white-space: normal; }
+}
+@media (max-width: 480px) {
+  .experience-header { min-height: 62px; padding: 0 12px; }
+  .experience-brand img { width: 88px; }
+  .experience-outline-button { width: 34px; padding: 0; overflow: hidden; font-size: 0; }
+  .experience-outline-button svg { margin: 0 auto; }
+  .experience-hotspot-intro h1 { font-size: 30px; }
+  .experience-hotspot-intro p { font-size: 15px; }
+  .experience-loading-status { right: 12px; bottom: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .experience-backdrop-picture { transition: none !important; }
+  .experience-hotspot-ring, .experience-hotspot-chip { transition: none !important; }
 }
