@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ChangeEvent, type Dispatch, type SetStateAction } from 'react';
 import { logoData } from './logo-data';
 import {
   catalogDoors,
@@ -17,6 +17,19 @@ import {
   type MaturityStage,
 } from './catalog-data';
 import {
+  brandKitRecords,
+  creatorAssets,
+  creatorChannels,
+  creatorDrafts,
+  creatorFolders,
+  creatorOutputTypes,
+  type BrandKitRecord,
+  type CreatorAsset,
+  type CreatorDraft,
+  type CreatorOutputType,
+  type CreatorTab,
+} from './creator-data';
+import {
   Activity,
   ArrowUpRight,
   ArrowLeft,
@@ -30,31 +43,36 @@ import {
   Database,
   DatabaseZap,
   ExternalLink,
+  FileImage,
   FileText,
   Filter,
+  FolderOpen,
   Globe2,
   KeyRound,
   Layers3,
   LineChart,
   LockKeyhole,
   Menu,
+  Megaphone,
+  PenLine,
   Play,
   Plus,
   Search,
   RefreshCw,
   Route,
-  Settings2,
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
   TrendingUp,
+  UploadCloud,
   Users,
+  Video,
   X,
 } from 'lucide-react';
 
 type View = 'Analyst' | 'Director' | 'C-suite';
 type ViewSection = 'evidence' | 'signals' | 'coverage' | 'content' | 'performance' | 'hubspot' | 'impact' | 'watchlist';
-type ViewAction = 'research' | 'review' | 'tag' | 'save' | 'brief' | 'approve' | 'hold' | 'schedule' | 'acknowledge' | 'present' | 'drilldown';
+type ViewAction = 'review' | 'tag' | 'save' | 'brief' | 'approve' | 'hold' | 'acknowledge' | 'present' | 'drilldown';
 type ViewMetric = { id: string; label: string; detail: string; tone: 'cyan' | 'orange' | 'navy' };
 type ViewProfile = {
   eyebrow: string;
@@ -65,6 +83,7 @@ type ViewProfile = {
   sections: ViewSection[];
   actions: ViewAction[];
   defaultWidgets: string[];
+  lensPriority: string[];
 };
 type FindingWorkflow = {
   reviewState: 'Unreviewed' | 'Reviewed';
@@ -81,6 +100,15 @@ type IcpProfile = {
   description: string;
   signal: string;
   color: 'cyan' | 'orange' | 'navy';
+  segmentShare: string;
+  situation: string;
+  forcingFunction: string;
+  triggerSignals: string[];
+  buyingCommittee: string;
+  serviceFit: string[];
+  messageAngle: string;
+  disqualifiers: string[];
+  evidence: string;
 };
 type ExperienceDoor = {
   id: ExperienceDoorId;
@@ -134,14 +162,14 @@ type Finding = {
 
 const findings: Finding[] = [
   {
-    id: 'f1', category: 'Market shift', lens: 'AI governance',
+    id: 'f1', category: 'Market shift', lens: 'AI adoption and assurance',
     title: 'AI governance guidance is moving from principles to operating practice',
     summary: 'New guidance is framing AI risk around ownership, evidence, and repeatable controls—not only policy statements.',
     source: 'NIST AI RMF / GenAI Profile', collected: 'Today · 05:42 CT', segment: 'Provable Vendor', status: 'Unreviewed', importance: 'High',
     implication: 'This is a strong education and executive-brief angle for technology buyers that need proof their controls operate in practice.', action: 'Create an executive brief',
   },
   {
-    id: 'f2', category: 'Competitor', lens: 'Competitive landscape',
+    id: 'f2', category: 'Competitor', lens: 'Competitor offer changes',
     title: 'Drata is positioning agent governance as an early-access product',
     summary: 'The public announcement emphasizes discovery, monitoring, and control for AI agents, with availability still described as early access.',
     source: 'Drata newsroom', collected: 'Today · 04:17 CT', segment: 'Provable Vendor', status: 'Unreviewed', importance: 'High',
@@ -155,7 +183,7 @@ const findings: Finding[] = [
     implication: 'This may be a timing signal for a readiness conversation, but it is not proof of active buying intent.', action: 'Open account brief',
   },
   {
-    id: 'f4', category: 'Content opportunity', lens: 'Buyer questions',
+    id: 'f4', category: 'Content opportunity', lens: 'Buyer governance pressure',
     title: 'Buyers keep asking who owns AI evidence after deployment',
     summary: 'Recurring questions point to a gap between an AI policy and the practical work of keeping evidence current.',
     source: 'Buyer-question watchlist', collected: 'Yesterday · 17:32 CT', segment: 'Regulated Operator', status: 'Reviewed', importance: 'Medium',
@@ -176,8 +204,9 @@ const viewProfiles: Record<View, ViewProfile> = {
       { id: 'saved', label: 'Saved findings', detail: 'Ready for team review', tone: 'navy' },
     ],
     sections: ['evidence', 'signals', 'coverage', 'content'],
-    actions: ['research', 'review', 'tag', 'save', 'brief'],
+    actions: ['review', 'tag', 'save', 'brief'],
     defaultWidgets: ['briefing', 'signals', 'coverage', 'content'],
+    lensPriority: ['AI adoption and assurance', 'Buyer governance pressure', 'Competitor offer changes', 'Technical platform changes', 'Account movement', 'Content maintenance', 'Sector developments', 'Partner ecosystem'],
   },
   Director: {
     eyebrow: 'Operating scorecard',
@@ -191,8 +220,9 @@ const viewProfiles: Record<View, ViewProfile> = {
       { id: 'coverage', label: 'Source coverage', detail: '2 blocked sources', tone: 'cyan' },
     ],
     sections: ['evidence', 'signals', 'performance', 'hubspot', 'content', 'coverage'],
-    actions: ['research', 'review', 'approve', 'hold', 'brief', 'schedule'],
+    actions: ['review', 'approve', 'hold', 'brief'],
     defaultWidgets: ['briefing', 'signals', 'performance', 'coverage', 'content', 'hubspot'],
+    lensPriority: ['Account movement', 'Buyer governance pressure', 'Competitor offer changes', 'AI adoption and assurance', 'Sector developments', 'Partner ecosystem', 'Technical platform changes', 'Content maintenance'],
   },
   'C-suite': {
     eyebrow: 'Decision brief',
@@ -208,6 +238,7 @@ const viewProfiles: Record<View, ViewProfile> = {
     sections: ['impact', 'watchlist', 'hubspot', 'coverage'],
     actions: ['drilldown', 'acknowledge', 'save', 'present'],
     defaultWidgets: ['briefing', 'performance', 'hubspot', 'coverage'],
+    lensPriority: ['Buyer governance pressure', 'AI adoption and assurance', 'Account movement', 'Sector developments', 'Competitor offer changes', 'Technical platform changes', 'Partner ecosystem', 'Content maintenance'],
   },
 };
 
@@ -225,7 +256,16 @@ const widgets = [
   { id: 'hubspot', label: 'HubSpot funnel', description: 'Read-only CRM rollup', icon: BriefcaseBusiness },
 ];
 
-const lensOptions = ['All lenses', 'AI governance', 'Competitive landscape', 'Account movement', 'Buyer questions'];
+const marketLensDefinitions = [
+  { id: 'buyer-governance', label: 'Buyer governance pressure', description: 'Dated obligations, customer requirements, board concerns, and assurance pressure.' },
+  { id: 'ai-assurance', label: 'AI adoption and assurance', description: 'Concrete AI use cases, evaluation expectations, vendor changes, and governance implications.' },
+  { id: 'competitor-offers', label: 'Competitor offer changes', description: 'Changes in competitor scope, packaging, delivery model, or published positioning.' },
+  { id: 'account-movement', label: 'Account movement', description: 'CRM, hiring, funding, acquisition, and public account timing signals.' },
+  { id: 'sector-developments', label: 'Sector developments', description: 'Primary-source events that change operating complexity or assurance demands.' },
+  { id: 'platform-changes', label: 'Technical platform changes', description: 'Documented capability, deprecation, or platform changes affecting controls and evidence.' },
+  { id: 'content-maintenance', label: 'Content maintenance', description: 'Source changes that invalidate dated claims, examples, or existing content.' },
+  { id: 'partner-ecosystem', label: 'Partner ecosystem', description: 'Confirmed partner, alliance, or channel movement relevant to 3HUE.' },
+];
 
 const sourceConnections: SourceConnection[] = [
   { id: 'hubspot', name: 'HubSpot CRM', category: 'Revenue', description: 'Read-only accounts, contacts, pipeline, and lifecycle context.', status: 'Connected', lastRefresh: '12 min ago', coverage: '126 contacts · 12 opportunities' },
@@ -255,9 +295,9 @@ const initialResearchRuns: ResearchRun[] = [
 ];
 
 const icpProfiles: IcpProfile[] = [
-  { id: 'provable-vendor', hue: 'HUE 01', name: 'Provable Vendor', tagline: 'Proof creates trust', description: 'AI-native vendors that need customer assurance evidence to win and retain enterprise buyers.', signal: 'AI governance language rising', color: 'cyan' },
-  { id: 'portfolio', hue: 'HUE 02', name: 'Portfolio', tagline: 'Readiness creates timing', description: 'Portfolio companies entering a more formal control environment or preparing for a growth event.', signal: 'Security leadership movement', color: 'orange' },
-  { id: 'regulated-operator', hue: 'HUE 03', name: 'Regulated Operator', tagline: 'Evidence creates confidence', description: 'Operators whose AI use creates pressure around ownership, controls, and customer-facing proof.', signal: 'Buyer questions recurring', color: 'navy' },
+  { id: 'provable-vendor', hue: 'HUE 01', name: 'Provable Vendor', tagline: 'Proof creates trust', description: 'AI-native vendors that need customer assurance evidence to win and retain enterprise buyers.', signal: 'AI governance language rising', color: 'cyan', segmentShare: '~60% of ranked segment mix', situation: 'A SaaS, digital-product, or AI-native vendor is being asked to prove security before a deal, renewal, diligence event, or customer expansion.', forcingFunction: 'A customer, insurer, investor, or buyer has leverage and the company lacks an internal owner for the evidence work.', triggerSignals: ['Enterprise deal or renewal blocked by assurance requirements', 'AI rollout creates new customer questions about ownership and control', 'Funding, diligence, or procurement asks for repeatable evidence'], buyingCommittee: 'Founder or CEO sponsor with technology, security, risk, legal, or assurance stakeholders.', serviceFit: ['AI risk and readiness', 'SOC 2 / ISO readiness', 'Risk assessment and governance', 'Managed security and privacy support'], messageAngle: 'Turn scattered readiness work into proof a buyer can understand and trust.', disqualifiers: ['No active assurance pressure or business change', 'No executive owner for the decision'], evidence: 'Supplied forcing-function research; segment share is a strategy estimate, not measured pipeline.' },
+  { id: 'portfolio', hue: 'HUE 02', name: 'Portfolio', tagline: 'Readiness creates timing', description: 'Portfolio companies and ownership groups entering a more formal control environment or preparing for a growth event.', signal: 'Security leadership movement', color: 'orange', segmentShare: '~25% of ranked segment mix', situation: 'An investment or ownership group needs a common view of risk, technology, vendors, and readiness across holdings.', forcingFunction: 'Acquisition, lender or investor diligence, board reporting, or a portfolio review exposes inconsistent evidence and operating practices.', triggerSignals: ['New acquisition or integration work', 'Board, lender, or investor reporting is inconsistent', 'Security leadership movement at an operating company'], buyingCommittee: 'Investment or ownership sponsor with portfolio operations, board, and operating-company technology or security leaders.', serviceFit: ['Portfolio-wide risk and vendor governance', 'Board and investor performance reporting', 'Managed programs', 'Enterprise architecture and continuity'], messageAngle: 'Give leaders portfolio-wide visibility and governance without slowing the companies doing the work.', disqualifiers: ['Single-company need with no portfolio or holding-company motion', 'No shared reporting or governance requirement'], evidence: 'Supplied forcing-function research and private-equity market analysis; buying motion remains a hypothesis until CRM validation.' },
+  { id: 'regulated-operator', hue: 'HUE 03', name: 'Regulated Operator', tagline: 'Evidence creates confidence', description: 'Regulated and operationally complex organizations that need defensible decisions, ownership, resilience, response, and evidence.', signal: 'Buyer questions recurring', color: 'navy', segmentShare: '~15% of ranked segment mix', situation: 'An operator must keep its control environment defensible while AI, privacy, resilience, incident, or regulatory pressure crosses organizational boundaries.', forcingFunction: 'An examination, audit finding, incident, continuity concern, or remediation deadline exposes the cost of discovering gaps late.', triggerSignals: ['Regulatory examination or remediation deadline', 'Security incident or continuity concern', 'AI, privacy, or customer assurance pressure crossing operational teams'], buyingCommittee: 'Executive sponsor with security, risk, compliance, privacy, technology, operations, or audit owners.', serviceFit: ['Cyber incident response', 'Business continuity and operational resilience', 'Managed detection and response', 'Privacy and AI governance'], messageAngle: 'Make readiness continuous so the organization can operate defensibly when conditions change.', disqualifiers: ['No operational or regulatory trigger', 'Seeking a point tool without accountable operating ownership'], evidence: 'Supplied forcing-function research and public markets/regulated-operator dossier; priority share is directional.' },
 ];
 
 const experienceDoors: ExperienceDoor[] = [
@@ -296,6 +336,53 @@ function ExperienceOverlay({ activeDoorId, onSelectDoor, onClose, onOpenCatalog,
   </div>;
 }
 
+function CreatorOverlay({ activeView, onClose, onNotice, assets, setAssets, drafts, setDrafts }: { activeView: View; onClose: () => void; onNotice: (message: string) => void; assets: CreatorAsset[]; setAssets: Dispatch<SetStateAction<CreatorAsset[]>>; drafts: CreatorDraft[]; setDrafts: Dispatch<SetStateAction<CreatorDraft[]>> }) {
+  const [tab, setTab] = useState<CreatorTab>('Create');
+  const [outputType, setOutputType] = useState<CreatorOutputType>('Social post');
+  const [hue, setHue] = useState('Provable Vendor');
+  const [channel, setChannel] = useState('LinkedIn');
+  const [folderId, setFolderId] = useState('social');
+  const [query, setQuery] = useState('');
+  const [draftTitle, setDraftTitle] = useState('');
+  const [selectedAsset, setSelectedAsset] = useState<CreatorAsset | null>(null);
+  const topLevelFolders = creatorFolders.filter((folder) => !folder.parentId);
+  const visibleAssets = useMemo(() => assets.filter((asset) => asset.folderId === folderId && (!query || `${asset.name} ${asset.kind} ${asset.description}`.toLowerCase().includes(query.toLowerCase()))), [assets, folderId, query]);
+  const visibleDrafts = useMemo(() => drafts.filter((draft) => !query || `${draft.title} ${draft.outputType} ${draft.hue}`.toLowerCase().includes(query.toLowerCase())), [drafts, query]);
+  const selectedFolder = creatorFolders.find((folder) => folder.id === folderId) ?? creatorFolders[0];
+  const createDraft = () => {
+    const title = draftTitle.trim() || `${outputType} for ${hue}`;
+    const newDraft: CreatorDraft = { id: `draft-${Date.now()}`, title, outputType, folderId, status: 'Draft', hue, channel, updatedAt: 'Just now · session preview' };
+    setDrafts((current) => [newDraft, ...current]);
+    setDraftTitle('');
+    setTab('Library');
+    onNotice(`${outputType} draft saved to ${selectedFolder.label}.`);
+  };
+  const handleUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const newAsset: CreatorAsset = { id: `asset-${Date.now()}`, name: file.name, kind: file.type.startsWith('video/') ? 'Video plan' : file.type.startsWith('image/') ? 'Image' : 'Source document', folderId, status: 'Needs review', source: 'Session upload · private library preview', description: 'Uploaded for review before it can be used in a generated or published asset.', updatedAt: 'Just now' };
+    setAssets((current) => [newAsset, ...current]);
+    onNotice(`${file.name} added to the private library preview.`);
+    event.target.value = '';
+  };
+  const iconForType = (type: CreatorOutputType) => type === 'Image direction' ? <FileImage size={16} /> : type === 'Video outline' ? <Video size={16} /> : type === 'Ad concept' ? <Megaphone size={16} /> : type === 'Content brief' ? <FileText size={16} /> : <PenLine size={16} />;
+
+  return <div className="creator-shell" role="dialog" aria-modal="true" aria-label="3HUE creator workspace">
+    <header className="creator-header"><div className="creator-brand"><img src={logoData} alt="3HUE Executive Consulting" /><div><p className="creator-kicker">MARKETING CREATOR</p><h1>Create with intelligence</h1><p>Turn approved market context into draft social, campaign, image, ad, and video work.</p></div></div><div className="creator-header-meta"><span><LockKeyhole size={13} /> Private library preview</span><span>{activeView} defaults</span><button className="creator-close" onClick={onClose} aria-label="Close creator workspace"><X size={20} /></button></div></header>
+    <nav className="creator-tabs" aria-label="Creator workspace sections" role="tablist">{(['Create', 'Library', 'Brand kit', 'Campaigns', 'Templates'] as CreatorTab[]).map((item) => <button key={item} role="tab" aria-selected={tab === item} className={tab === item ? 'active' : ''} onClick={() => setTab(item)}>{item}</button>)}</nav>
+    <div className="creator-body">
+      <aside className="creator-sidebar"><div className="creator-sidebar-heading"><span className="eyebrow">Private folders</span><FolderOpen size={16} /></div>{topLevelFolders.map((folder) => <div key={folder.id}><button className={`creator-folder ${folderId === folder.id ? 'active' : ''}`} onClick={() => { setFolderId(folder.id); setTab('Library'); }}><FolderOpen size={15} />{folder.label}</button>{creatorFolders.filter((child) => child.parentId === folder.id).map((child) => <button key={child.id} className={`creator-subfolder ${folderId === child.id ? 'active' : ''}`} onClick={() => { setFolderId(child.id); setTab('Library'); }}>{child.label}</button>)}</div>)}<div className="creator-sidebar-note"><ShieldCheck size={14} /><span>Drafts stay private and are not exposed to Experience or Product catalog.</span></div></aside>
+      <main className="creator-main">
+        {tab === 'Create' && <section className="creator-create-view"><div className="creator-view-heading"><div><p className="eyebrow accent-eyebrow">Draft studio</p><h2>Make the next useful thing</h2><p>Start from a hue, a market lens, or a finding. Generated output stays a draft until reviewed.</p></div><span className="creator-role-pill"><Sparkles size={14} /> {activeView} workflow</span></div><div className="creator-output-grid">{creatorOutputTypes.map((type) => <button key={type} className={`creator-output-card ${outputType === type ? 'active' : ''}`} onClick={() => setOutputType(type)}>{iconForType(type)}<strong>{type}</strong><span>{type === 'Social post' ? 'Channel-ready point of view' : type === 'Content brief' ? 'Evidence-backed content plan' : type === 'Image direction' ? 'Visual concept with brand guardrails' : type === 'Ad concept' ? 'Message and creative direction' : 'Script and shot-list starting point'}</span></button>)}</div><div className="creator-composer"><div className="creator-composer-heading"><div><p className="eyebrow">{outputType}</p><h3>Set the creative context</h3></div><span className="creator-status-badge draft">Draft only</span></div><div className="creator-form-grid"><label><span>Draft title</span><input value={draftTitle} onChange={(event) => setDraftTitle(event.target.value)} placeholder={`e.g. ${outputType} about operated readiness`} /></label><label><span>Target hue / ICP</span><select value={hue} onChange={(event) => setHue(event.target.value)}><option>Provable Vendor</option><option>Portfolio</option><option>Regulated Operator</option><option>Win Trust</option><option>Gain Control</option><option>Stay Ready</option></select></label><label><span>Channel</span><select value={channel} onChange={(event) => setChannel(event.target.value)}>{creatorChannels.map((item) => <option key={item}>{item}</option>)}</select></label><label><span>Save to folder</span><select value={folderId} onChange={(event) => setFolderId(event.target.value)}>{creatorFolders.filter((folder) => !folder.parentId || ['social', 'campaigns', 'video', 'ads', 'images'].includes(folder.id)).map((folder) => <option key={folder.id} value={folder.id}>{folder.label}</option>)}</select></label><label className="creator-form-wide"><span>Starting context</span><textarea placeholder="Add the finding, buyer question, campaign goal, or image direction you want the draft to use." /></label></div><div className="creator-composer-footer"><span><ShieldCheck size={14} /> Source facts and approved claims stay separate from draft language.</span><button className="primary-button" onClick={createDraft}><Sparkles size={15} /> Create draft</button></div></div></section>}
+        {tab === 'Library' && <section className="creator-library-view"><div className="creator-view-heading"><div><p className="eyebrow accent-eyebrow">Asset library</p><h2>{selectedFolder.label}</h2><p>{selectedFolder.description}</p></div><label className="creator-upload-button"><UploadCloud size={15} /> Upload to folder<input type="file" onChange={handleUpload} /></label></div><div className="creator-library-toolbar"><label className="creator-search"><Search size={15} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search private assets and drafts" aria-label="Search private assets and drafts" /></label><span>{visibleAssets.length + visibleDrafts.length} records in view</span></div><div className="creator-record-grid">{visibleDrafts.map((draft) => <article className="creator-record-card creator-draft-card" key={draft.id}><div className="creator-record-top"><span className="creator-record-icon">{iconForType(draft.outputType)}</span><span className="creator-status-badge draft">{draft.status}</span></div><h3>{draft.title}</h3><p>{draft.outputType} · {draft.channel} · {draft.hue}</p><small>{draft.updatedAt}</small></article>)}{visibleAssets.map((asset) => <button className="creator-record-card" key={asset.id} onClick={() => setSelectedAsset(asset)}><div className="creator-record-top"><span className="creator-record-icon"><FileText size={16} /></span><span className={`creator-status-badge ${asset.status === 'Approved reference' ? 'approved' : 'review'}`}>{asset.status}</span></div><h3>{asset.name}</h3><p>{asset.kind} · {asset.source}</p><small>{asset.updatedAt}</small></button>)}{visibleAssets.length === 0 && visibleDrafts.length === 0 && <div className="creator-empty"><FolderOpen size={22} /><strong>No records in this folder yet.</strong><span>Upload a source file or create a draft to start the private library.</span></div>}</div>{selectedAsset && <aside className="creator-asset-detail"><div className="creator-detail-heading"><div><p className="eyebrow">{selectedAsset.kind}</p><h3>{selectedAsset.name}</h3></div><button className="icon-button" onClick={() => setSelectedAsset(null)} aria-label="Close asset details"><X size={17} /></button></div><p>{selectedAsset.description}</p><div className="creator-detail-list"><span><strong>Status</strong>{selectedAsset.status}</span><span><strong>Source</strong>{selectedAsset.source}</span><span><strong>Updated</strong>{selectedAsset.updatedAt}</span></div><button className="secondary-button" onClick={() => onNotice('Asset approval workflow is ready for the private storage phase.')}><Check size={15} /> Review asset</button></aside>}</section>}
+        {tab === 'Brand kit' && <section className="creator-brand-view"><div className="creator-view-heading"><div><p className="eyebrow accent-eyebrow">Brand kit</p><h2>Give every draft the right starting point</h2><p>Keep identity, voice, proof, and claims guidance close to the work.</p></div><button className="secondary-button" onClick={() => onNotice('Brand-kit upload is ready for the private library phase.')}><Plus size={15} /> Add brand rule</button></div><div className="brand-kit-grid">{brandKitRecords.map((record: BrandKitRecord) => <article className="brand-kit-card" key={record.id}><div className="creator-record-top"><span className="eyebrow">{record.label}</span><span className={`creator-status-badge ${record.status === 'Approved reference' ? 'approved' : 'review'}`}>{record.status}</span></div><strong>{record.value}</strong><small>{record.source}</small></article>)}</div><div className="brand-kit-callout"><ShieldCheck size={17} /><div><strong>Source-aware creation</strong><p>Claims, customer stories, metrics, and framework language should carry their source and approval status into every draft.</p></div></div></section>}
+        {tab === 'Campaigns' && <section className="creator-campaign-view"><div className="creator-view-heading"><div><p className="eyebrow accent-eyebrow">Campaign workspace</p><h2>Organize the work around a market motion</h2><p>Connect a hue, lens, service family, content series, and channel plan before drafting.</p></div><button className="primary-button" onClick={() => { setTab('Create'); setOutputType('Content brief'); setFolderId('campaigns'); }}><Plus size={15} /> Start campaign brief</button></div><div className="campaign-board">{['Ship List · 90-day sequence', 'Governed AI adoption', 'Evidence that supports enterprise sales'].map((campaign, index) => <article className="campaign-card" key={campaign}><div className="campaign-card-top"><span className="eyebrow">{index === 0 ? 'Supplied plan' : 'Campaign hypothesis'}</span><span>{index === 0 ? 'Needs review' : 'Draft'}</span></div><h3>{campaign}</h3><p>{index === 0 ? 'Existing source-library execution plan with founder series, outreach, and offer one-pagers.' : 'Use findings, source evidence, and approved brand rules to build a focused campaign motion.'}</p><button className="text-button" onClick={() => { setTab('Create'); setDraftTitle(campaign); setOutputType('Content brief'); }}>Open in creator <ArrowUpRight size={14} /></button></article>)}</div></section>}
+        {tab === 'Templates' && <section className="creator-template-view"><div className="creator-view-heading"><div><p className="eyebrow accent-eyebrow">Templates</p><h2>Repeat the formats that work</h2><p>Start with approved structures while keeping the source and claim boundary visible.</p></div></div><div className="template-grid">{['Founder point of view', 'Buyer question carousel', 'Executive decision brief', 'Service family explainer', 'CEO Corner video outline', 'Paid social test'].map((template) => <button className="template-card" key={template} onClick={() => { setTab('Create'); setDraftTitle(template); }}><span className="creator-record-icon"><Layers3 size={16} /></span><strong>{template}</strong><span>Template · needs brand and evidence review</span></button>)}</div></section>}
+      </main>
+    </div>
+  </div>;
+}
+
 function CatalogOverlay({ family, setFamily, query, setQuery, door, setDoor, stage, setStage, persona, setPersona, trigger, setTrigger, framework, setFramework, category, setCategory, categories, services, selectedService, setSelectedService, onClose }: { family: CatalogFamily | 'Packages'; setFamily: (family: CatalogFamily | 'Packages') => void; query: string; setQuery: (value: string) => void; door: string; setDoor: (value: string) => void; stage: string; setStage: (value: string) => void; persona: string; setPersona: (value: string) => void; trigger: string; setTrigger: (value: string) => void; framework: string; setFramework: (value: string) => void; category: string; setCategory: (value: string) => void; categories: string[]; services: CatalogService[]; selectedService: CatalogService | null; setSelectedService: (service: CatalogService | null) => void; onClose: () => void }) {
   const evidenceClass = (label: CatalogService['evidenceLabel']) => label === 'Draft catalog record' ? 'draft' : label === 'Confirm price' ? 'confirm' : 'observed';
   const familyLabel = family === 'Packages' ? 'Ready-to-quote bundles' : `${family} services`;
@@ -321,6 +408,9 @@ export default function Home() {
   const [showPresent, setShowPresent] = useState(false);
   const [showExperience, setShowExperience] = useState(false);
   const [showCatalog, setShowCatalog] = useState(false);
+  const [showCreator, setShowCreator] = useState(false);
+  const [creatorAssetState, setCreatorAssetState] = useState<CreatorAsset[]>(creatorAssets);
+  const [creatorDraftState, setCreatorDraftState] = useState<CreatorDraft[]>(creatorDrafts);
   const [mobileActionsOpen, setMobileActionsOpen] = useState(false);
   const [experienceDoorId, setExperienceDoorId] = useState<ExperienceDoorId>('win-trust');
   const [catalogFamily, setCatalogFamily] = useState<CatalogFamily | 'Packages'>('ISG');
@@ -349,10 +439,12 @@ export default function Home() {
   const [briefQueue, setBriefQueue] = useState<string[]>([]);
   const [activeIcpIndex, setActiveIcpIndex] = useState(0);
   const [icpPaused, setIcpPaused] = useState(false);
+  const [expandedIcp, setExpandedIcp] = useState(false);
   const [notice, setNotice] = useState('');
 
   const activeProfile = viewProfiles[activeView];
   const visibleWidgets = visibleWidgetsByView[activeView];
+  const activeLensOptions = activeProfile.lensPriority;
 
   useEffect(() => {
     if (icpPaused) return;
@@ -386,12 +478,14 @@ export default function Home() {
   }, [catalogCategory, catalogDoor, catalogFamily, catalogFramework, catalogPersona, catalogQuery, catalogStage, catalogTrigger]);
 
   const closeCatalog = () => { setShowCatalog(false); setSelectedCatalogService(null); };
+  const closeCreator = () => setShowCreator(false);
 
   useEffect(() => {
-    if (!showExperience && !showCatalog) return;
+    if (!showExperience && !showCatalog && !showCreator) return;
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         if (showCatalog) closeCatalog();
+        else if (showCreator) closeCreator();
         else setShowExperience(false);
       }
     };
@@ -401,7 +495,7 @@ export default function Home() {
       document.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = '';
     };
-  }, [showCatalog, showExperience]);
+  }, [showCatalog, showCreator, showExperience]);
 
   const briefingFindings = useMemo(() => {
     const queued = briefQueue.map((id) => findings.find((finding) => finding.id === id)).filter((finding): finding is Finding => Boolean(finding));
@@ -455,6 +549,7 @@ export default function Home() {
   };
   const openExperience = () => { setShowExperience(true); setMobileActionsOpen(false); };
   const openCatalog = () => { setShowCatalog(true); setMobileActionsOpen(false); };
+  const openCreator = () => { setShowCreator(true); setMobileActionsOpen(false); };
   const goToIcp = (direction: number) => {
     setActiveIcpIndex((current) => (current + direction + icpProfiles.length) % icpProfiles.length);
   };
@@ -464,25 +559,17 @@ export default function Home() {
     <main className="app-shell">
       <header className="topbar">
         <div className="brand-lockup"><img className="brand-image" src={logoData} alt="3HUE Executive Consulting" /><span className="brand-divider" aria-hidden="true" /><span className="brand-product-lockup"><span>MARKET</span><strong>INTEL</strong></span></div>
-        <nav className="topnav" aria-label="Dashboard view" role="tablist">{(['Analyst', 'Director', 'C-suite'] as View[]).map((view) => <button key={view} className={`topnav-item ${activeView === view ? 'active' : ''}`} onClick={() => setActiveView(view)} role="tab" aria-selected={activeView === view}>{view}</button>)}</nav>
-        <div className="topbar-actions"><label className="top-search"><Search size={14} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search intelligence" aria-label="Search intelligence" /></label><button className="topbar-pill" onClick={() => announce('Guide content is ready for the connected workspace.')}>Guide</button><button className="topbar-pill" onClick={openCatalog}>Product catalog</button><button className="topbar-pill topbar-experience" onClick={openExperience}>Experience</button><button className="icon-button topbar-icon" aria-label="Notifications" onClick={() => announce('No new high-impact alerts.')}><Bell size={17} /></button><button className="user-chip" title="Admin intelligence center" aria-label="Open admin intelligence center" onClick={() => openAdmin()}><span className="avatar">NB</span><ChevronDown size={14} /></button></div>
-        <div className="mobile-actions"><button className="mobile-overflow-button" aria-label="Open workspace actions" aria-expanded={mobileActionsOpen} onClick={() => setMobileActionsOpen((current) => !current)}><Menu size={18} /></button><button className="user-chip" title="Admin intelligence center" aria-label="Open admin intelligence center" onClick={() => openAdmin()}><span className="avatar">NB</span><ChevronDown size={13} /></button>{mobileActionsOpen && <div className="mobile-action-menu"><button onClick={openExperience}>Experience</button><button onClick={openCatalog}>Product catalog</button><button onClick={() => { openAdmin(); setMobileActionsOpen(false); }}>Admin center</button></div>}</div>
+        <div className="topnav-cluster"><nav className="topnav" aria-label="Dashboard view" role="tablist">{(['Analyst', 'Director', 'C-suite'] as View[]).map((view) => <button key={view} className={`topnav-item ${activeView === view ? 'active' : ''}`} onClick={() => setActiveView(view)} role="tab" aria-selected={activeView === view}>{view}</button>)}</nav><button className="topbar-pill topbar-customize" onClick={() => setShowCustomize(true)}><SlidersHorizontal size={14} /> Customize</button></div>
+        <div className="topbar-actions"><button className="topbar-pill topbar-create" onClick={openCreator}><Sparkles size={14} /> Create</button><button className="topbar-pill" onClick={() => announce('Guide content is ready for the connected workspace.')}>Guide</button><button className="topbar-pill" onClick={openCatalog}>Product catalog</button><button className="topbar-pill topbar-experience" onClick={openExperience}>Experience</button><button className="icon-button topbar-icon" aria-label="Notifications" onClick={() => announce('No new high-impact alerts.')}><Bell size={17} /></button><button className="user-chip" title="Admin intelligence center" aria-label="Open admin intelligence center" onClick={() => openAdmin()}><span className="avatar">NB</span><ChevronDown size={14} /></button></div>
+        <div className="mobile-actions"><button className="mobile-overflow-button" aria-label="Open workspace actions" aria-expanded={mobileActionsOpen} onClick={() => setMobileActionsOpen((current) => !current)}><Menu size={18} /></button><button className="user-chip" title="Admin intelligence center" aria-label="Open admin intelligence center" onClick={() => openAdmin()}><span className="avatar">NB</span><ChevronDown size={13} /></button>{mobileActionsOpen && <div className="mobile-action-menu"><button onClick={openCreator}>Create</button><button onClick={() => setShowCustomize(true)}>Customize</button><button onClick={openExperience}>Experience</button><button onClick={openCatalog}>Product catalog</button><button onClick={() => { openAdmin(); setMobileActionsOpen(false); }}>Admin center</button></div>}</div>
       </header>
-
-      <section className="context-bar" aria-label="Market context">
-        <div className="context-title"><strong>Markets 3HUE supports</strong></div>
-        <div className="context-field"><span>ICP</span><strong>Loaded strategy</strong></div>
-        <div className="context-field"><span>Last collection</span><strong>Today · 05:42 CT</strong></div>
-        <div className="context-field"><span>Source health</span><strong><span className="status-dot" /> 6 healthy</strong></div>
-        <button className="context-button" onClick={() => setShowSettings(true)}><Settings2 size={14} /> Configure scope</button>
-      </section>
 
       <div className="builder-main">
         <section className="content-area">
-          <div className="content-heading"><div><p className="eyebrow accent-eyebrow">{activeProfile.eyebrow} · {activeView} view · Wednesday, September 10, 2026</p><h1>{activeProfile.title}</h1><p className="heading-subtitle">{activeProfile.subtitle}</p><span className="preview-badge"><Activity size={13} /> Review mode · representative data</span></div><div className="heading-actions"><button className="secondary-button" onClick={() => setShowCustomize(true)}><SlidersHorizontal size={15} /> Customize</button>{hasAction('research') && <button className="primary-button" onClick={() => announce('Research request started. We will report source coverage when it completes.')}><Sparkles size={15} /> Ask for research</button>}{hasAction('schedule') && <button className="primary-button" onClick={() => openAdmin('runs')}><Clock3 size={15} /> Schedule collection</button>}{hasAction('present') && <button className="primary-button" onClick={() => setShowPresent(true)}><ArrowUpRight size={15} /> Present brief</button>}</div></div>
+          <div className="content-heading"><div><p className="eyebrow accent-eyebrow">{activeProfile.eyebrow} · {activeView} view · Wednesday, September 10, 2026</p><h1>{activeProfile.title}</h1><p className="heading-subtitle">{activeProfile.subtitle}</p><span className="preview-badge"><Activity size={13} /> Review mode · representative data</span></div><div className="heading-actions">{hasAction('present') && <button className="primary-button" onClick={() => setShowPresent(true)}><ArrowUpRight size={15} /> Present brief</button>}</div></div>
 
           <div className="filter-row"><div className="search-box"><Search size={15} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search findings, accounts, sources" aria-label="Search findings, accounts, sources" /></div><label className="select-wrap"><Filter size={14} /><select value={segment} onChange={(event) => setSegment(event.target.value)} aria-label="Filter by customer segment"><option>All segments</option><option>Provable Vendor</option><option>Portfolio</option><option>Regulated Operator</option></select><ChevronDown size={13} /></label><span className="filter-note"><Clock3 size={14} /> Next collection in 3h 42m</span></div>
-          <div className="chip-row"><span className="chip-label">Market lenses</span>{lensOptions.map((option) => <button key={option} className={`filter-chip ${lens === option ? 'active' : ''}`} onClick={() => setLens(option)}>{option}</button>)}</div>
+          <div className="chip-row"><span className="chip-label">Market lenses</span><button className={`filter-chip ${lens === 'All lenses' ? 'active' : ''}`} onClick={() => setLens('All lenses')}>All lenses</button>{activeLensOptions.map((option) => <button key={option} className={`filter-chip ${lens === option ? 'active' : ''}`} onClick={() => setLens(option)} title={marketLensDefinitions.find((item) => item.label === option)?.description}>{option}</button>)}</div>
 
           <div className={`view-workspace view-workspace-${activeView.toLowerCase().replace('-', '')} density-${activeProfile.density}`}>
           <div className="metric-grid">{activeProfile.metrics.map((metric) => <Metric key={metric.id} label={metric.label} value={metricValue(metric.id)} detail={metric.detail} tone={metric.tone} />)}</div>
@@ -522,11 +609,12 @@ export default function Home() {
           </div>
         </section>
 
-        <aside className="icp-rail" aria-label="3HUE ICP rotation"><div className="icp-rail-header"><div><p className="eyebrow">Targeting lens</p><h2>Who we are watching</h2></div><span className="rail-code">3HUE / ICP</span></div><div className="icp-carousel" aria-label="3HUE ICP profiles"><div className="icp-track">{icpProfiles.map((profile, index) => { const offset = (index - activeIcpIndex + icpProfiles.length) % icpProfiles.length; return <button key={profile.id} className={`icp-card icp-card-${profile.color} ${offset === 0 ? 'active' : offset === 1 ? 'next' : 'previous'}`} onClick={() => setActiveIcpIndex(index)} aria-label={`Show ${profile.name} ICP`} aria-pressed={offset === 0}><div className="icp-card-top"><span className="eyebrow">{profile.hue}</span><span className="icp-card-index">{String(index + 1).padStart(2, '0')} / {icpProfiles.length}</span></div><strong>{profile.name}</strong><span className="icp-tagline">{profile.tagline}</span><p>{profile.description}</p><span className="icp-signal"><span className="status-dot" />{profile.signal}</span></button>; })}</div><div className="icp-dots" aria-label="Choose ICP">{icpProfiles.map((profile, index) => <button key={profile.id} className={`icp-dot ${index === activeIcpIndex ? 'active' : ''}`} onClick={() => setActiveIcpIndex(index)} aria-label={`Show ${profile.name}`} />)}</div></div><div className="icp-controls"><span className="icp-rotation-status"><span className={`icp-live-dot ${icpPaused ? 'paused' : ''}`} />{icpPaused ? 'Paused' : 'Auto-rotating'}</span><div><button className="icon-button" aria-label="Previous ICP" onClick={() => goToIcp(-1)}><ChevronLeft size={15} /></button><button className="secondary-button small-button" onClick={() => setIcpPaused((current) => !current)}>{icpPaused ? 'Resume' : 'Pause'}</button><button className="icon-button" aria-label="Next ICP" onClick={() => goToIcp(1)}><ChevronRight size={15} /></button></div></div><div className="icp-rail-footer"><Sparkles size={14} /><span>Rotates through the three 3HUE targeting lenses.</span></div></aside>
+        <aside className="icp-rail" aria-label="3HUE ICP rotation"><div className="icp-rail-header"><div><p className="eyebrow">Targeting lens</p><h2>Who we are watching</h2></div><span className="rail-code">3HUE / ICP</span></div><div className="icp-carousel" aria-label="3HUE ICP profiles"><div className="icp-track">{icpProfiles.map((profile, index) => { const offset = (index - activeIcpIndex + icpProfiles.length) % icpProfiles.length; return <button key={profile.id} className={`icp-card icp-card-${profile.color} ${offset === 0 ? 'active' : offset === 1 ? 'next' : 'previous'}`} onClick={() => { setActiveIcpIndex(index); setExpandedIcp(true); }} aria-label={`Open ${profile.name} ICP profile`} aria-pressed={offset === 0}><div className="icp-card-top"><span className="eyebrow">{profile.hue}</span><span className="icp-card-index">{String(index + 1).padStart(2, '0')} / {icpProfiles.length}</span></div><strong>{profile.name}</strong><span className="icp-tagline">{profile.tagline}</span><p>{profile.description}</p><span className="icp-share">{profile.segmentShare}</span><span className="icp-signal"><span className="status-dot" />{profile.signal}</span><span className="icp-card-link">Open profile <ArrowUpRight size={12} /></span></button>; })}</div><div className="icp-dots" aria-label="Choose ICP">{icpProfiles.map((profile, index) => <button key={profile.id} className={`icp-dot ${index === activeIcpIndex ? 'active' : ''}`} onClick={() => { setActiveIcpIndex(index); setExpandedIcp(true); }} aria-label={`Show ${profile.name}`} />)}</div></div><div className="icp-controls"><span className="icp-rotation-status"><span className={`icp-live-dot ${icpPaused ? 'paused' : ''}`} />{icpPaused ? 'Paused' : 'Auto-rotating'}</span><div><button className="icon-button" aria-label="Previous ICP" onClick={() => goToIcp(-1)}><ChevronLeft size={15} /></button><button className="secondary-button small-button" onClick={() => setIcpPaused((current) => !current)}>{icpPaused ? 'Resume' : 'Pause'}</button><button className="icon-button" aria-label="Next ICP" onClick={() => goToIcp(1)}><ChevronRight size={15} /></button></div></div><div className="icp-rail-footer"><Sparkles size={14} /><span>Source facts and guidance are kept visibly separate.</span></div>{expandedIcp && <div className="icp-profile-panel"><div className="icp-profile-heading"><div><p className="eyebrow">{icpProfiles[activeIcpIndex].hue} · source-backed profile</p><h3>{icpProfiles[activeIcpIndex].name}</h3></div><button className="icon-button" onClick={() => setExpandedIcp(false)} aria-label="Close ICP profile"><X size={16} /></button></div><p className="icp-profile-situation">{icpProfiles[activeIcpIndex].situation}</p><div className="icp-profile-grid"><div><span>Forcing function</span><p>{icpProfiles[activeIcpIndex].forcingFunction}</p></div><div><span>Segment estimate</span><p>{icpProfiles[activeIcpIndex].segmentShare}</p></div><div><span>Trigger signals</span><ul>{icpProfiles[activeIcpIndex].triggerSignals.map((item) => <li key={item}>{item}</li>)}</ul></div><div><span>Buying committee</span><p>{icpProfiles[activeIcpIndex].buyingCommittee}</p></div><div><span>Relevant service fit</span><div className="icp-profile-tags">{icpProfiles[activeIcpIndex].serviceFit.map((item) => <span key={item}>{item}</span>)}</div></div><div><span>Marketing angle</span><p>{icpProfiles[activeIcpIndex].messageAngle}</p></div></div><div className="icp-profile-boundary"><strong>Evidence boundary</strong><p>{icpProfiles[activeIcpIndex].evidence}</p><span>Disqualifiers: {icpProfiles[activeIcpIndex].disqualifiers.join(' · ')}</span></div></div>}</aside>
       </div>
 
       {showExperience && <ExperienceOverlay activeDoorId={experienceDoorId} onSelectDoor={setExperienceDoorId} onClose={() => setShowExperience(false)} onOpenCatalog={openCatalog} onTalkToTeam={() => announce('Conversation request is ready for the next connected workflow.')} />}
       {showCatalog && <CatalogOverlay family={catalogFamily} setFamily={setCatalogFamily} query={catalogQuery} setQuery={setCatalogQuery} door={catalogDoor} setDoor={setCatalogDoor} stage={catalogStage} setStage={setCatalogStage} persona={catalogPersona} setPersona={setCatalogPersona} trigger={catalogTrigger} setTrigger={setCatalogTrigger} framework={catalogFramework} setFramework={setCatalogFramework} category={catalogCategory} setCategory={setCatalogCategory} categories={catalogCategories} services={filteredCatalogServices} selectedService={selectedCatalogService} setSelectedService={setSelectedCatalogService} onClose={closeCatalog} />}
+      {showCreator && <CreatorOverlay activeView={activeView} onClose={closeCreator} onNotice={announce} assets={creatorAssetState} setAssets={setCreatorAssetState} drafts={creatorDraftState} setDrafts={setCreatorDraftState} />}
 
       {selectedFinding && selectedWorkflow && <div className="drawer-backdrop"><aside className="detail-drawer" aria-label="Finding details"><div className="drawer-hero"><div><p className="eyebrow">{selectedFinding.category} · {selectedFinding.segment}</p><h2>{selectedFinding.title}</h2><p className="drawer-code">{selectedFinding.source} · {selectedFinding.collected}</p></div><button className="drawer-close" onClick={() => setSelectedFinding(null)} aria-label="Close finding details"><X size={19} /></button></div><div className="drawer-body"><p className="drawer-summary">{selectedFinding.summary}</p><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Workflow state</p></div><div className="drawer-chips"><span>{selectedWorkflow.reviewState}</span><span>{selectedWorkflow.decisionState}</span>{selectedWorkflow.saved && <span>Saved</span>}{selectedWorkflow.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">What’s included</p></div><ul className="drawer-checklist"><li><Check size={16} />Reported fact and source context</li><li><Check size={16} />Implication for {selectedFinding.segment.toLowerCase()} buyers</li><li><Check size={16} />Recommended marketing response</li><li><Check size={16} />Freshness and confidence markers</li></ul></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Why it matters</p></div><p className="drawer-copy">{selectedFinding.implication}</p></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Market context</p></div><div className="drawer-chips"><span>{selectedFinding.lens}</span><span>{selectedFinding.segment}</span><span>{selectedFinding.importance} priority</span></div></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Evidence</p></div><div className="evidence-card"><ShieldCheck size={17} /><div><strong>{selectedFinding.source}</strong><p>Reported fact and interpretation are separated. Open the original source before publishing.</p><button className="inline-link" onClick={() => announce('Source link is ready for the connected source.')}>View source <ExternalLink size={13} /></button></div></div></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Suggested action</p></div><button className="action-card" onClick={() => announce(`${selectedFinding.action} started.`)}><Sparkles size={16} /><span>{selectedFinding.action}</span><ArrowUpRight size={15} /></button></div><div className="drawer-actions">{hasAction('review') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { reviewState: 'Reviewed' }, 'Finding marked reviewed across all views.')}><Check size={15} /> Mark reviewed</button>}{hasAction('approve') && <button className="primary-button" onClick={() => updateWorkflow(selectedFinding, { decisionState: 'Approved', reviewState: 'Reviewed' }, 'Finding approved for executive view.')}><Check size={15} /> Approve</button>}{hasAction('hold') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { decisionState: 'Held' }, 'Finding held for more evidence.')}><Clock3 size={15} /> Hold</button>}{hasAction('tag') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { tags: [...selectedWorkflow.tags, 'Analyst review'] }, 'Analyst review tag added.')}><Plus size={15} /> Tag</button>}{hasAction('save') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { saved: true }, 'Finding saved to the shared workspace.')}><Check size={15} /> Save</button>}{hasAction('brief') && <button className="primary-button" onClick={() => addToBrief(selectedFinding)}>Add to brief</button>}{hasAction('acknowledge') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { lastAction: 'Acknowledged by C-suite' }, 'Signal acknowledged for the executive view.')}><Check size={15} /> Acknowledge</button>}</div></div></aside></div>}
 
