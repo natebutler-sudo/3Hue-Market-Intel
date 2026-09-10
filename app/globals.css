@@ -27,6 +27,7 @@ button { cursor: pointer; }
 .app-shell { min-height: 100vh; background: var(--canvas); }
 .topbar { position: sticky; top: 0; z-index: 10; display: grid; grid-template-columns: 215px minmax(0, 1fr) auto; align-items: center; gap: 20px; min-height: 60px; padding: 0 28px; color: #fff; background: var(--navy); box-shadow: 0 4px 18px rgba(6, 19, 37, .18); }
 .brand-lockup { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.brand-image { display: block; width: 155px; height: auto; }
 .brand-mark { display: flex; align-items: end; gap: 3px; width: 29px; height: 25px; }
 .brand-mark span { display: block; width: 7px; border-radius: 6px 6px 1px 1px; }
 .brand-mark span:nth-child(1) { height: 15px; background: var(--cyan); }
@@ -203,6 +204,7 @@ button { cursor: pointer; }
 @media (max-width: 700px) {
   .topbar { position: relative; grid-template-columns: 1fr; gap: 7px; min-height: 58px; padding: 11px 16px 8px; }
   .brand-lockup { justify-content: center; }
+  .brand-image { width: 126px; }
   .topnav { justify-content: center; order: 2; width: 100%; }
   .topnav-item { min-height: 28px; padding: 0 9px; font-size: 10px; }
   .mobile-nav-row { display: flex; align-items: center; justify-content: space-between; height: 39px; padding: 0 13px; color: #698097; border-bottom: 1px solid var(--line); background: #fff; font-size: 11px; font-weight: 800; }

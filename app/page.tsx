@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { logoData } from './logo-data';
 import {
   Activity,
   ArrowUpRight,
@@ -142,7 +143,7 @@ export default function Home() {
   return (
     <main className="app-shell">
       <header className="topbar">
-        <div className="brand-lockup"><div className="brand-mark"><span /><span /><span /></div><div><p className="brand-name">3HUE</p><p className="brand-product">MARKET INTEL</p></div></div>
+        <div className="brand-lockup"><img className="brand-image" src={logoData} alt="3HUE Executive Consulting" /></div>
         <nav className="topnav" aria-label="Primary navigation">{navItems.map(({ label }) => <button key={label} className={`topnav-item ${activeNav === label ? 'active' : ''}`} onClick={() => setActiveNav(label)}>{label}{label === 'Research' && <span className="topnav-count">4</span>}</button>)}</nav>
         <div className="topbar-actions"><label className="top-search"><Search size={14} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search intelligence" aria-label="Search intelligence" /></label><button className="topbar-pill" onClick={() => announce('Guide content is ready for the connected workspace.')}>Guide</button><button className="topbar-pill saved-pill" onClick={() => setActiveNav('Briefs')}>Saved <span>{briefQueue.length || 0}</span></button><button className="icon-button topbar-icon" aria-label="Notifications" onClick={() => announce('No new high-impact alerts.')}><Bell size={17} /></button><button className="user-chip" onClick={() => setShowSettings(true)}><span className="avatar">NB</span><ChevronDown size={14} /></button></div>
       </header>
