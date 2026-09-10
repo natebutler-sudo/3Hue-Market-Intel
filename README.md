@@ -4,7 +4,7 @@ A focused marketing intelligence workspace for the markets that 3HUE serves.
 
 ## Project status
 
-Discovery and planning are underway. No website implementation or live data integrations have been built yet. This repository will hold the website source, planning documents, and supporting assets as the project develops.
+The first dashboard experience is now implemented and builds through Sites. It is a functional UI slice with representative findings and connection states so the team can review the workflow before live integrations are connected. HubSpot, analytics, scheduled collection, email, and Bring Your AI wiring are not connected yet.
 
 ## Agreed direction
 
@@ -38,9 +38,15 @@ Materials are organized by purpose:
 
 Original documents are preserved separately from derived planning notes.
 
-## Next planning steps
+## Current dashboard slice
 
-1. Discuss the source-review findings and adopt the reconciled business context as a working foundation.
-2. Define priority marketing decisions and deliverables the tool should support.
-3. Agree on the first-release scope, information sources, and refresh expectations.
-4. Finalize the interface and implementation plan before building.
+The application includes three switchable views (Analyst, Director, and C-suite), focused search and segment filtering, evidence detail drawers, dashboard customization, source-coverage health, a read-only HubSpot funnel preview, and Bring Your AI connection settings. The current data is explicitly representative; it is not presented as live CRM or market data.
+
+Source code lives in `app/`, with Sites configuration in `.openai/hosting.json`. API keys, credentials, and live CRM data must stay in runtime secrets or connected services rather than GitHub.
+
+## Next implementation steps
+
+1. Validate the first dashboard slice with the marketing team and refine the default widgets.
+2. Add authenticated persistence for layouts, findings, briefs, and admin strategy in D1/R2.
+3. Connect HubSpot, GA4, Search Console, YouTube/vidIQ, and coverage-gap reporting through supported interfaces.
+4. Add the four-hour collector, 6:00 a.m. Central digest, Bring Your AI provider adapters, and seven-day pilot checks.
