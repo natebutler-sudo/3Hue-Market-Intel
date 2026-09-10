@@ -1,6 +1,6 @@
 # 3HUE Experience — document-led implementation
 
-Current phase: **1 — stopped on the clean image's residual header band**. The supplied plate now passes the native-size check at **2880×1621**, but the independent guardian rejected the remaining header-shaped navy band and sharp lower edge. No application code or deployed artwork has changed in this phase.
+Current phase: **1 — approved artwork, completing derivative and asset checks**. The supplied plate passes the native-size, removal, geometry and illumination checks under the user's O4 design override, and the user has approved it. P1-D05 remains open for derivatives, file limits, HTTP 200 responses and old-scene-live verification. No application code or deployed artwork has changed in this phase.
 
 The eight user-supplied Markdown files are preserved byte-for-byte in [source](source/), with SHA-256 hashes in [source-manifest.json](source-manifest.json). Source audit findings remain claims until independently measured. The [override ledger](overrides.md) contains the three confirmed changes to the documents' defaults.
 
@@ -36,13 +36,15 @@ The implementation agent is the primary agent. `/root/experience_guardian` indep
 
 - [Phase 1 candidate 01 rejection](reviews/phase-1-candidate-01.md): built-in edit was undersized at 1672×941; artwork not accepted.
 - [Phase 1 candidate 02 rejection](reviews/phase-1-candidate-02.md): supplied 2880×1621 plate passes size, but retains the prohibited header band; artwork not accepted.
+- [Phase 1 candidate 02 acceptance under O4](reviews/phase-1-candidate-02-accepted.md): guardian re-review and explicit user approval pass all candidate checks; P1-D05 remains open.
+- [Phase 1 responsive asset preparation](reviews/phase-1-assets.md): master and AVIF/WebP/JPEG variants are locally measured; HTTP and old-scene-live checks remain open.
 - [Documentation guardian review and correction](reviews/documentation-checkpoint.md): archive/register accepted for GitHub; this is not artwork or live-site acceptance.
-- **1 acceptance item Fail; 2 Pass; 40 Not run.** No phase marked complete.
-- Header-band removal, full geometry acceptance, comparisons after correction and user image approval remain outstanding. No responsive derivatives or asset publication occurred.
+- **0 acceptance items Fail; 4 Pass; 39 Not run.** Phase 1 is not complete until P1-D05 passes.
+- Derivative size limits, HTTP 200 checks, and confirmation that the old scene remains live are outstanding. No responsive derivatives or asset publication has occurred.
 - Phases 2a–6 are **Not run**, blocked by the sequential phase-1 gate.
-- To resume under the current requirements, supply a corrected retouched 16:9 plate with the header band removed, at least 1920×1080. It must still pass guardian checks and the user artwork gate. An explicit user change to the removal or geometry rule would be a new override, not something the agents can assume.
+- To finish Phase 1, complete the prescribed derivatives and post-publication HTTP/old-scene checks. O4 is the explicit approved exception for the retained upper band; no other clean-plate requirement is waived.
 
-Both rejected candidates stay outside application assets. The undersized built-in result was not adopted, upscaled, cropped or padded; the supplied candidate was not adopted because of the residual band. The currently published Experience remains as before this execution phase.
+The undersized built-in result stays outside application assets. The supplied candidate is approved as the Phase 1 master under O4 but is not yet wired into the Experience; the currently published Experience remains as before this execution phase until Step 2a.
 
 ## Register verification
 

@@ -60,9 +60,11 @@ Source: [1-clean-plate.md, line 27](source/1-clean-plate.md#L27).
 
 - After my OK: every saved file returns 200, each AVIF and WebP copy is 500 KB or less, and the live lobby still shows the old image.
 
-Measured result: User artwork-OK gate has not been reached; responsive derivatives, HTTP 200 checks and live old-image verification are not run.
+Measured result: User artwork-OK gate is satisfied. Master and responsive variants are prepared; all AVIF/WebP files are below 500 KB and local dimensions are verified. HTTP 200 checks after publication and confirmation that the live lobby still serves the old image remain not run.
 
 Candidate guardian: Not run. Published guardian: Not run.
+
+Evidence: [reviews/phase-1-assets.md](reviews/phase-1-assets.md)
 
 ## Phase 2a — 2a-baseline-stage-labels.md
 
