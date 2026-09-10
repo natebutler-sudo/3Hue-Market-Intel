@@ -3,8 +3,23 @@
 import { useEffect, useMemo, useState } from 'react';
 import { logoData } from './logo-data';
 import {
+  catalogDoors,
+  catalogFamilies,
+  catalogFrameworks,
+  catalogPackages,
+  catalogPersonas,
+  catalogServices,
+  catalogStages,
+  catalogTriggers,
+  type CatalogFamily,
+  type CatalogService,
+  type ExperienceDoorId,
+  type MaturityStage,
+} from './catalog-data';
+import {
   Activity,
   ArrowUpRight,
+  ArrowLeft,
   Bell,
   BriefcaseBusiness,
   Check,
@@ -19,6 +34,7 @@ import {
   Filter,
   Globe2,
   KeyRound,
+  Layers3,
   LineChart,
   LockKeyhole,
   Menu,
@@ -26,11 +42,13 @@ import {
   Plus,
   Search,
   RefreshCw,
+  Route,
   Settings2,
   ShieldCheck,
   SlidersHorizontal,
   Sparkles,
   TrendingUp,
+  Users,
   X,
 } from 'lucide-react';
 
@@ -62,6 +80,19 @@ type IcpProfile = {
   tagline: string;
   description: string;
   signal: string;
+  color: 'cyan' | 'orange' | 'navy';
+};
+type ExperienceDoor = {
+  id: ExperienceDoorId;
+  title: string;
+  promise: string;
+  audience: string;
+  triggers: string[];
+  tension: string;
+  gap: string;
+  serviceFamilies: string[];
+  decision: string;
+  maturityEmphasis: MaturityStage[];
   color: 'cyan' | 'orange' | 'navy';
 };
 type AdminTab = 'overview' | 'sources' | 'watchlists' | 'runs';
@@ -229,6 +260,48 @@ const icpProfiles: IcpProfile[] = [
   { id: 'regulated-operator', hue: 'HUE 03', name: 'Regulated Operator', tagline: 'Evidence creates confidence', description: 'Operators whose AI use creates pressure around ownership, controls, and customer-facing proof.', signal: 'Buyer questions recurring', color: 'navy' },
 ];
 
+const experienceDoors: ExperienceDoor[] = [
+  { id: 'win-trust', title: 'Win Trust', promise: 'Prove you are ready.', audience: 'For teams that need customer assurance, readiness evidence, or a faster path through diligence.', triggers: ['An enterprise deal or renewal is blocked by assurance requirements.', 'A customer, insurer, or investor is asking for evidence you cannot assemble quickly.', 'AI adoption is creating new customer questions about ownership and control.'], tension: 'The business is ready to grow, but proof is scattered across policies, systems, and people.', gap: 'The gap is between having good intentions and being able to show repeatable evidence when the buyer asks.', serviceFamilies: ['Risk assessment and risk management', 'Information security program and governance', 'Privacy management and data protection', 'ISMS, SSPP, and statement of applicability'], decision: 'Choose the evidence and operating work that turns readiness into buyer confidence.', maturityEmphasis: ['Assess', 'Strengthen', 'Advance'], color: 'cyan' },
+  { id: 'gain-control', title: 'Gain Control', promise: 'See and govern what matters.', audience: 'For ownership and operating teams that need shared visibility, leverage, and governance across multiple companies.', triggers: ['A new platform acquisition or portfolio review needs a common view.', 'Board, lender, or investor reporting is inconsistent across holdings.', 'The portfolio needs more control without adding a full internal team.'], tension: 'Important risk and technology decisions are being made company by company without a shared operating picture.', gap: 'The gap is between local activity and portfolio-level oversight that can guide investment, sequencing, and accountability.', serviceFamilies: ['Digital maturity paradigm assessments', 'Managed enterprise architecture programs', 'Vendor and third-party risk management', 'Board and investor performance reporting'], decision: 'Create a repeatable governance rhythm that gives leaders visibility without slowing operators down.', maturityEmphasis: ['Assess', 'Operate', 'Advance'], color: 'orange' },
+  { id: 'stay-ready', title: 'Stay Ready', promise: 'Operate defensibly.', audience: 'For regulated and risk-heavy operators that need clear ownership, resilience, response, and evidence that survives scrutiny.', triggers: ['An examiner request, audit finding, or remediation deadline is active.', 'An incident or continuity concern exposes a readiness gap.', 'Regulatory, privacy, or AI adoption pressure is crossing operational boundaries.'], tension: 'The organization cannot afford to discover ownership or evidence gaps during an examination or incident.', gap: 'The gap is between documented plans and an operating model that stays ready when conditions change.', serviceFamilies: ['Cyber incident response programs', 'Business continuity and operational resilience', 'Managed detection and response', 'Privacy management and data protection'], decision: 'Establish the accountable programs and managed practices that make readiness continuous.', maturityEmphasis: ['Strengthen', 'Operate', 'Advance'], color: 'navy' },
+];
+
+function ExperienceOverlay({ activeDoorId, onSelectDoor, onClose, onOpenCatalog, onTalkToTeam }: { activeDoorId: ExperienceDoorId; onSelectDoor: (id: ExperienceDoorId) => void; onClose: () => void; onOpenCatalog: () => void; onTalkToTeam: () => void }) {
+  const activeDoor = experienceDoors.find((door) => door.id === activeDoorId) ?? experienceDoors[0];
+  const maturityStages: MaturityStage[] = ['Assess', 'Strengthen', 'Operate', 'Advance'];
+  const [exploring, setExploring] = useState(false);
+  const chooseDoor = (id: ExperienceDoorId) => { onSelectDoor(id); setExploring(true); };
+
+  return <div className="experience-shell" role="dialog" aria-modal="true" aria-label="3HUE customer experience">
+    <header className="experience-header">
+      <div className="experience-brand"><img src={logoData} alt="3HUE Executive Consulting" /><span>MATURITY PARTNER</span></div>
+      <nav className="experience-nav" aria-label="Experience sections"><button className="experience-nav-item active">Approach</button><button className="experience-nav-item" onClick={onOpenCatalog}>Customer paths</button><button className="experience-nav-item">Insights</button><button className="experience-nav-item">About</button></nav>
+      <div className="experience-header-actions"><button className="experience-ghost-button" onClick={onClose}><ArrowLeft size={14} /> Return to intelligence</button><button className="experience-outline-button" onClick={onTalkToTeam}>Talk to our team <ArrowUpRight size={14} /></button></div>
+    </header>
+    <main className={`experience-floor ${exploring ? 'with-panel' : ''}`}>
+      <img className="experience-backdrop" src="/three-doors-concept.png" alt="3HUE maturity partner concept: three doors leading to one path to maturity" />
+      <div className="experience-backdrop-shade" aria-hidden="true" />
+      <div className="experience-hotspot-intro"><span>Three doors. One path to maturity.</span><small>Select a path to explore how 3HUE helps teams move from uncertainty to operational confidence.</small></div>
+      <div className="experience-hotspots" aria-label="Customer paths">
+        {experienceDoors.map((door) => <button key={door.id} className={`experience-hotspot experience-hotspot-${door.id} ${activeDoor.id === door.id ? 'selected' : ''}`} onClick={() => chooseDoor(door.id)} aria-label={`Explore ${door.title}: ${door.promise}`}><span>{door.title}</span><small>{door.promise}</small></button>)}
+        <button className="experience-hotspot experience-hotspot-route" onClick={() => setExploring(true)} aria-label="Explore the shared maturity path"><span>See the maturity path</span></button>
+      </div>
+      <div className="experience-floor-footer"><span>People · perspective · progress</span><span className="experience-floor-legend"><i className="cyan" /> Customer path <i className="orange" /> Maturity route</span></div>
+      {exploring && <aside className="experience-detail-panel">
+        <div className="experience-detail-toolbar"><span>Customer path · guided exploration</span><button className="experience-detail-close" onClick={() => setExploring(false)} aria-label="Return to Three Doors landing"><ArrowLeft size={14} /> Back to doors</button></div>
+        <div className="experience-detail-tabs" role="tablist" aria-label="Customer paths">{experienceDoors.map((door) => <button key={door.id} role="tab" aria-selected={activeDoor.id === door.id} className={activeDoor.id === door.id ? 'active' : ''} onClick={() => onSelectDoor(door.id)}>{door.title}</button>)}</div>
+        <div className="experience-detail-body"><p className="experience-kicker">{activeDoor.title} · recommended fit</p><h2>{activeDoor.promise}</h2><p className="experience-detail-audience">{activeDoor.audience}</p><div className="experience-detail-links"><button onClick={onOpenCatalog}><Layers3 size={14} /> Browse service catalog</button><button onClick={onTalkToTeam}>Talk to our team <ArrowUpRight size={14} /></button></div><div className="experience-detail-rule" /><div className="experience-detail-section"><span>What creates urgency</span><ul>{activeDoor.triggers.map((trigger) => <li key={trigger}>{trigger}</li>)}</ul></div><div className="experience-detail-section"><span>The gap to close</span><p>{activeDoor.gap}</p></div><div className="experience-detail-section"><span>Relevant service families</span><div className="experience-detail-family-list">{activeDoor.serviceFamilies.map((family) => <span key={family}>{family}</span>)}</div></div><div className="experience-detail-section"><span>Shared maturity route</span><div className="experience-detail-route">{maturityStages.map((stage) => <span key={stage} className={activeDoor.maturityEmphasis.includes(stage) ? 'active' : ''}>{stage}</span>)}</div></div><div className="experience-detail-next"><span>Next decision</span><strong>{activeDoor.decision}</strong></div></div>
+      </aside>}
+    </main>
+  </div>;
+}
+
+function CatalogOverlay({ family, setFamily, query, setQuery, door, setDoor, stage, setStage, persona, setPersona, trigger, setTrigger, framework, setFramework, category, setCategory, categories, services, selectedService, setSelectedService, onClose }: { family: CatalogFamily | 'Packages'; setFamily: (family: CatalogFamily | 'Packages') => void; query: string; setQuery: (value: string) => void; door: string; setDoor: (value: string) => void; stage: string; setStage: (value: string) => void; persona: string; setPersona: (value: string) => void; trigger: string; setTrigger: (value: string) => void; framework: string; setFramework: (value: string) => void; category: string; setCategory: (value: string) => void; categories: string[]; services: CatalogService[]; selectedService: CatalogService | null; setSelectedService: (service: CatalogService | null) => void; onClose: () => void }) {
+  const evidenceClass = (label: CatalogService['evidenceLabel']) => label === 'Draft catalog record' ? 'draft' : label === 'Confirm price' ? 'confirm' : 'observed';
+  const familyLabel = family === 'Packages' ? 'Ready-to-quote bundles' : `${family} services`;
+  return <div className="catalog-shell" role="dialog" aria-modal="true" aria-label="3HUE product catalog"><header className="catalog-header"><div className="catalog-brand"><img src={logoData} alt="3HUE Executive Consulting" /><div><p className="catalog-kicker">MARKETING ENABLEMENT</p><h1>Product catalog</h1><p>Understand what 3HUE sells, why it matters, and where each offer creates a useful marketing angle.</p></div></div><button className="catalog-close" onClick={onClose} aria-label="Close product catalog"><X size={20} /></button></header><div className="catalog-disclosure"><ShieldCheck size={15} /><span>Internal discovery catalog. Builder values are observed records and are not an approved public price sheet or final quote.</span></div><nav className="catalog-family-tabs" aria-label="Product families">{catalogFamilies.map((item) => <button key={item} className={family === item ? 'active' : ''} onClick={() => { setFamily(item); setCategory('All categories'); setSelectedService(null); }}>{item === 'ITC Staff Aug' ? 'Staff Aug' : item}</button>)}</nav><main className="catalog-main"><div className="catalog-heading"><div><p className="catalog-kicker">{familyLabel}</p><h2>Find the work behind the story</h2></div><span className="catalog-count">{family === 'Packages' ? `${catalogPackages.length} packages` : `${services.length} services`}</span></div>{family !== 'Packages' && <div className="catalog-filter-panel"><label className="catalog-search"><Search size={15} /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search services, codes, triggers" aria-label="Search product catalog" /></label><label><span>Door</span><select value={door} onChange={(event) => setDoor(event.target.value)}><option>All doors</option>{catalogDoors.map((item) => <option key={item.id}>{item.label}</option>)}</select></label><label><span>Stage</span><select value={stage} onChange={(event) => setStage(event.target.value)}><option>All stages</option>{catalogStages.map((item) => <option key={item}>{item}</option>)}</select></label><label><span>Persona</span><select value={persona} onChange={(event) => setPersona(event.target.value)}><option>All personas</option>{catalogPersonas.map((item) => <option key={item}>{item}</option>)}</select></label><label><span>Framework</span><select value={framework} onChange={(event) => setFramework(event.target.value)}><option>All frameworks</option>{catalogFrameworks.map((item) => <option key={item}>{item}</option>)}</select></label><label><span>Trigger</span><select value={trigger} onChange={(event) => setTrigger(event.target.value)}><option>All triggers</option>{catalogTriggers.map((item) => <option key={item}>{item}</option>)}</select></label><label><span>Category</span><select value={category} onChange={(event) => setCategory(event.target.value)}>{categories.map((item) => <option key={item}>{item}</option>)}</select></label></div>}{family === 'Packages' ? <div className="catalog-package-grid">{catalogPackages.map((item) => <article className="catalog-package-card" key={item.name}><div className="catalog-card-top"><span className="catalog-status observed">Observed bundle</span><span>{item.stage}</span></div><h3>{item.name}</h3><p>{item.description}</p><div className="catalog-package-meta"><strong>{item.pricing}</strong><span>{item.services} configured services · {catalogDoors.find((doorItem) => doorItem.id === item.door)?.label}</span></div><button className="catalog-link-button" onClick={() => { setFamily('ISG'); setCategory('All categories'); }}>Explore underlying services <ArrowUpRight size={14} /></button></article>)}</div> : <div className="catalog-content-grid"><div className="catalog-service-grid">{services.map((service) => <button key={service.code} className="catalog-service-card" onClick={() => setSelectedService(service)}><div className="catalog-card-top"><span className={`catalog-status ${evidenceClass(service.evidenceLabel)}`}>{service.evidenceLabel}</span><span>{service.family}</span></div><h3>{service.name}</h3><p>{service.description}</p><div className="catalog-service-meta"><span>{service.category}</span><strong>{service.price} <small>{service.billing}</small></strong></div><div className="catalog-card-tags">{service.doors.slice(0, 2).map((serviceDoor) => <span key={serviceDoor}>{catalogDoors.find((item) => item.id === serviceDoor)?.label}</span>)}<span>{service.stages[0]}</span></div></button>)}{services.length === 0 && <div className="catalog-empty"><Search size={22} /><strong>No catalog records match those filters.</strong><span>Try a broader door, stage, framework, or search term.</span></div>}</div>{selectedService && <aside className="catalog-detail-panel"><div className="catalog-detail-header"><div><p className="catalog-kicker">{selectedService.family} · {selectedService.category}</p><h2>{selectedService.name}</h2></div><button className="icon-button" onClick={() => setSelectedService(null)} aria-label="Close service details"><X size={17} /></button></div><div className="catalog-detail-body"><div className="catalog-detail-status"><span className={`catalog-status ${evidenceClass(selectedService.evidenceLabel)}`}>{selectedService.evidenceLabel}</span><span className="catalog-code">{selectedService.code}</span></div><p className="catalog-detail-copy">{selectedService.description}</p><div className="catalog-price-panel"><span>Observed Builder value</span><strong>{selectedService.price}</strong><small>{selectedService.billing}{selectedService.priceStatus === 'from' ? ' · starting from' : selectedService.priceStatus === 'confirm' ? ' · confirm before using' : ''}</small></div><div className="catalog-detail-section"><span>Recommended marketing context</span><p>{selectedService.marketingAngle}</p></div><div className="catalog-detail-section"><span>Recommended fit</span><div className="catalog-detail-tags">{selectedService.personas.map((item) => <span key={item}><Users size={12} />{item}</span>)}{selectedService.stages.map((item) => <span key={item}><Route size={12} />{item}</span>)}</div></div><div className="catalog-detail-section"><span>Buyer triggers</span><ul>{selectedService.triggers.map((item) => <li key={item}>{item}</li>)}</ul></div><div className="catalog-detail-section"><span>Framework context</span><div className="catalog-detail-tags">{selectedService.frameworks.map((item) => <span key={item}>{item}</span>)}</div></div></div></aside>}</div>}</main></div>;
+}
+
 function Metric({ label, value, detail, tone = 'cyan' }: { label: string; value: string; detail: string; tone?: 'cyan' | 'orange' | 'navy' }) {
   return <div className="metric-card"><div className={`metric-icon metric-${tone}`}><TrendingUp size={16} /></div><div><p className="eyebrow">{label}</p><p className="metric-value">{value}</p><p className="metric-detail">{detail}</p></div></div>;
 }
@@ -246,6 +319,19 @@ export default function Home() {
   const [showCustomize, setShowCustomize] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showPresent, setShowPresent] = useState(false);
+  const [showExperience, setShowExperience] = useState(false);
+  const [showCatalog, setShowCatalog] = useState(false);
+  const [mobileActionsOpen, setMobileActionsOpen] = useState(false);
+  const [experienceDoorId, setExperienceDoorId] = useState<ExperienceDoorId>('win-trust');
+  const [catalogFamily, setCatalogFamily] = useState<CatalogFamily | 'Packages'>('ISG');
+  const [catalogQuery, setCatalogQuery] = useState('');
+  const [catalogDoor, setCatalogDoor] = useState('All doors');
+  const [catalogStage, setCatalogStage] = useState('All stages');
+  const [catalogPersona, setCatalogPersona] = useState('All personas');
+  const [catalogTrigger, setCatalogTrigger] = useState('All triggers');
+  const [catalogFramework, setCatalogFramework] = useState('All frameworks');
+  const [catalogCategory, setCatalogCategory] = useState('All categories');
+  const [selectedCatalogService, setSelectedCatalogService] = useState<CatalogService | null>(null);
   const [adminTab, setAdminTab] = useState<AdminTab>('overview');
   const [sourceFilter, setSourceFilter] = useState('All sources');
   const [watchlistDraft, setWatchlistDraft] = useState('');
@@ -283,6 +369,40 @@ export default function Home() {
     return searchMatch && segmentMatch && lensMatch;
   }), [search, segment, lens]);
 
+  const catalogCategories = useMemo(() => ['All categories', ...new Set(catalogServices.filter((service) => catalogFamily === 'Packages' || service.family === catalogFamily).map((service) => service.category))], [catalogFamily]);
+  const filteredCatalogServices = useMemo(() => {
+    const normalizedQuery = catalogQuery.trim().toLowerCase();
+    return catalogServices.filter((service) => {
+      const queryMatch = !normalizedQuery || `${service.name} ${service.description} ${service.code} ${service.family} ${service.category} ${service.triggers.join(' ')}`.toLowerCase().includes(normalizedQuery);
+      const familyMatch = catalogFamily === 'Packages' || service.family === catalogFamily;
+      const doorMatch = catalogDoor === 'All doors' || service.doors.includes(catalogDoors.find((item) => item.label === catalogDoor)?.id ?? 'win-trust');
+      const stageMatch = catalogStage === 'All stages' || service.stages.includes(catalogStage as MaturityStage);
+      const personaMatch = catalogPersona === 'All personas' || service.personas.includes(catalogPersona);
+      const triggerMatch = catalogTrigger === 'All triggers' || service.triggers.includes(catalogTrigger);
+      const frameworkMatch = catalogFramework === 'All frameworks' || service.frameworks.includes(catalogFramework);
+      const categoryMatch = catalogCategory === 'All categories' || service.category === catalogCategory;
+      return queryMatch && familyMatch && doorMatch && stageMatch && personaMatch && triggerMatch && frameworkMatch && categoryMatch;
+    });
+  }, [catalogCategory, catalogDoor, catalogFamily, catalogFramework, catalogPersona, catalogQuery, catalogStage, catalogTrigger]);
+
+  const closeCatalog = () => { setShowCatalog(false); setSelectedCatalogService(null); };
+
+  useEffect(() => {
+    if (!showExperience && !showCatalog) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        if (showCatalog) closeCatalog();
+        else setShowExperience(false);
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [showCatalog, showExperience]);
+
   const briefingFindings = useMemo(() => {
     const queued = briefQueue.map((id) => findings.find((finding) => finding.id === id)).filter((finding): finding is Finding => Boolean(finding));
     return queued.length > 0 ? queued : filteredFindings.slice(0, 3);
@@ -299,7 +419,6 @@ export default function Home() {
     announce(message);
   };
   const hasAction = (action: ViewAction) => activeProfile.actions.includes(action);
-  const hasSection = (section: ViewSection) => activeProfile.sections.includes(section);
   const metricValue = (metricId: string) => {
     if (metricId === 'new-findings') return String(filteredFindings.length + 14);
     if (metricId === 'unreviewed') return String(Object.values(workflowByFindingId).filter((item) => item.reviewState === 'Unreviewed').length);
@@ -334,6 +453,8 @@ export default function Home() {
     setBriefQueue((current) => alreadyQueued ? current : [...current, finding.id]);
     announce(alreadyQueued ? 'This finding is already in your brief queue.' : 'Added to the shared briefing queue.');
   };
+  const openExperience = () => { setShowExperience(true); setMobileActionsOpen(false); };
+  const openCatalog = () => { setShowCatalog(true); setMobileActionsOpen(false); };
   const goToIcp = (direction: number) => {
     setActiveIcpIndex((current) => (current + direction + icpProfiles.length) % icpProfiles.length);
   };
@@ -344,8 +465,8 @@ export default function Home() {
       <header className="topbar">
         <div className="brand-lockup"><img className="brand-image" src={logoData} alt="3HUE Executive Consulting" /><span className="brand-divider" aria-hidden="true" /><span className="brand-product-lockup"><span>MARKET</span><strong>INTEL</strong></span></div>
         <nav className="topnav" aria-label="Dashboard view" role="tablist">{(['Analyst', 'Director', 'C-suite'] as View[]).map((view) => <button key={view} className={`topnav-item ${activeView === view ? 'active' : ''}`} onClick={() => setActiveView(view)} role="tab" aria-selected={activeView === view}>{view}</button>)}</nav>
-        <div className="topbar-actions"><label className="top-search"><Search size={14} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search intelligence" aria-label="Search intelligence" /></label><button className="topbar-pill" onClick={() => announce('Guide content is ready for the connected workspace.')}>Guide</button><button className="topbar-pill saved-pill" onClick={() => announce('Saved briefing queue is ready.')}>Saved <span>{briefQueue.length || 0}</span></button><button className="topbar-pill" onClick={() => openAdmin('runs')}>Schedule</button><button className="topbar-pill topbar-present" onClick={() => setShowPresent(true)}>Present</button><button className="icon-button topbar-icon" aria-label="Notifications" onClick={() => announce('No new high-impact alerts.')}><Bell size={17} /></button><button className="user-chip" title="Admin intelligence center" aria-label="Open admin intelligence center" onClick={() => openAdmin()}><span className="avatar">NB</span><ChevronDown size={14} /></button></div>
-        <div className="mobile-actions"><button className="mobile-overflow-button" aria-label="Open workspace actions" onClick={() => openAdmin()}><Menu size={18} /></button><button className="user-chip" title="Admin intelligence center" aria-label="Open admin intelligence center" onClick={() => openAdmin()}><span className="avatar">NB</span><ChevronDown size={13} /></button></div>
+        <div className="topbar-actions"><label className="top-search"><Search size={14} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search intelligence" aria-label="Search intelligence" /></label><button className="topbar-pill" onClick={() => announce('Guide content is ready for the connected workspace.')}>Guide</button><button className="topbar-pill" onClick={openCatalog}>Product catalog</button><button className="topbar-pill topbar-experience" onClick={openExperience}>Experience</button><button className="icon-button topbar-icon" aria-label="Notifications" onClick={() => announce('No new high-impact alerts.')}><Bell size={17} /></button><button className="user-chip" title="Admin intelligence center" aria-label="Open admin intelligence center" onClick={() => openAdmin()}><span className="avatar">NB</span><ChevronDown size={14} /></button></div>
+        <div className="mobile-actions"><button className="mobile-overflow-button" aria-label="Open workspace actions" aria-expanded={mobileActionsOpen} onClick={() => setMobileActionsOpen((current) => !current)}><Menu size={18} /></button><button className="user-chip" title="Admin intelligence center" aria-label="Open admin intelligence center" onClick={() => openAdmin()}><span className="avatar">NB</span><ChevronDown size={13} /></button>{mobileActionsOpen && <div className="mobile-action-menu"><button onClick={openExperience}>Experience</button><button onClick={openCatalog}>Product catalog</button><button onClick={() => { openAdmin(); setMobileActionsOpen(false); }}>Admin center</button></div>}</div>
       </header>
 
       <section className="context-bar" aria-label="Market context">
@@ -403,6 +524,9 @@ export default function Home() {
 
         <aside className="icp-rail" aria-label="3HUE ICP rotation"><div className="icp-rail-header"><div><p className="eyebrow">Targeting lens</p><h2>Who we are watching</h2></div><span className="rail-code">3HUE / ICP</span></div><div className="icp-carousel" aria-label="3HUE ICP profiles"><div className="icp-track">{icpProfiles.map((profile, index) => { const offset = (index - activeIcpIndex + icpProfiles.length) % icpProfiles.length; return <button key={profile.id} className={`icp-card icp-card-${profile.color} ${offset === 0 ? 'active' : offset === 1 ? 'next' : 'previous'}`} onClick={() => setActiveIcpIndex(index)} aria-label={`Show ${profile.name} ICP`} aria-pressed={offset === 0}><div className="icp-card-top"><span className="eyebrow">{profile.hue}</span><span className="icp-card-index">{String(index + 1).padStart(2, '0')} / {icpProfiles.length}</span></div><strong>{profile.name}</strong><span className="icp-tagline">{profile.tagline}</span><p>{profile.description}</p><span className="icp-signal"><span className="status-dot" />{profile.signal}</span></button>; })}</div><div className="icp-dots" aria-label="Choose ICP">{icpProfiles.map((profile, index) => <button key={profile.id} className={`icp-dot ${index === activeIcpIndex ? 'active' : ''}`} onClick={() => setActiveIcpIndex(index)} aria-label={`Show ${profile.name}`} />)}</div></div><div className="icp-controls"><span className="icp-rotation-status"><span className={`icp-live-dot ${icpPaused ? 'paused' : ''}`} />{icpPaused ? 'Paused' : 'Auto-rotating'}</span><div><button className="icon-button" aria-label="Previous ICP" onClick={() => goToIcp(-1)}><ChevronLeft size={15} /></button><button className="secondary-button small-button" onClick={() => setIcpPaused((current) => !current)}>{icpPaused ? 'Resume' : 'Pause'}</button><button className="icon-button" aria-label="Next ICP" onClick={() => goToIcp(1)}><ChevronRight size={15} /></button></div></div><div className="icp-rail-footer"><Sparkles size={14} /><span>Rotates through the three 3HUE targeting lenses.</span></div></aside>
       </div>
+
+      {showExperience && <ExperienceOverlay activeDoorId={experienceDoorId} onSelectDoor={setExperienceDoorId} onClose={() => setShowExperience(false)} onOpenCatalog={openCatalog} onTalkToTeam={() => announce('Conversation request is ready for the next connected workflow.')} />}
+      {showCatalog && <CatalogOverlay family={catalogFamily} setFamily={setCatalogFamily} query={catalogQuery} setQuery={setCatalogQuery} door={catalogDoor} setDoor={setCatalogDoor} stage={catalogStage} setStage={setCatalogStage} persona={catalogPersona} setPersona={setCatalogPersona} trigger={catalogTrigger} setTrigger={setCatalogTrigger} framework={catalogFramework} setFramework={setCatalogFramework} category={catalogCategory} setCategory={setCatalogCategory} categories={catalogCategories} services={filteredCatalogServices} selectedService={selectedCatalogService} setSelectedService={setSelectedCatalogService} onClose={closeCatalog} />}
 
       {selectedFinding && selectedWorkflow && <div className="drawer-backdrop"><aside className="detail-drawer" aria-label="Finding details"><div className="drawer-hero"><div><p className="eyebrow">{selectedFinding.category} · {selectedFinding.segment}</p><h2>{selectedFinding.title}</h2><p className="drawer-code">{selectedFinding.source} · {selectedFinding.collected}</p></div><button className="drawer-close" onClick={() => setSelectedFinding(null)} aria-label="Close finding details"><X size={19} /></button></div><div className="drawer-body"><p className="drawer-summary">{selectedFinding.summary}</p><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Workflow state</p></div><div className="drawer-chips"><span>{selectedWorkflow.reviewState}</span><span>{selectedWorkflow.decisionState}</span>{selectedWorkflow.saved && <span>Saved</span>}{selectedWorkflow.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">What’s included</p></div><ul className="drawer-checklist"><li><Check size={16} />Reported fact and source context</li><li><Check size={16} />Implication for {selectedFinding.segment.toLowerCase()} buyers</li><li><Check size={16} />Recommended marketing response</li><li><Check size={16} />Freshness and confidence markers</li></ul></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Why it matters</p></div><p className="drawer-copy">{selectedFinding.implication}</p></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Market context</p></div><div className="drawer-chips"><span>{selectedFinding.lens}</span><span>{selectedFinding.segment}</span><span>{selectedFinding.importance} priority</span></div></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Evidence</p></div><div className="evidence-card"><ShieldCheck size={17} /><div><strong>{selectedFinding.source}</strong><p>Reported fact and interpretation are separated. Open the original source before publishing.</p><button className="inline-link" onClick={() => announce('Source link is ready for the connected source.')}>View source <ExternalLink size={13} /></button></div></div></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Suggested action</p></div><button className="action-card" onClick={() => announce(`${selectedFinding.action} started.`)}><Sparkles size={16} /><span>{selectedFinding.action}</span><ArrowUpRight size={15} /></button></div><div className="drawer-actions">{hasAction('review') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { reviewState: 'Reviewed' }, 'Finding marked reviewed across all views.')}><Check size={15} /> Mark reviewed</button>}{hasAction('approve') && <button className="primary-button" onClick={() => updateWorkflow(selectedFinding, { decisionState: 'Approved', reviewState: 'Reviewed' }, 'Finding approved for executive view.')}><Check size={15} /> Approve</button>}{hasAction('hold') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { decisionState: 'Held' }, 'Finding held for more evidence.')}><Clock3 size={15} /> Hold</button>}{hasAction('tag') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { tags: [...selectedWorkflow.tags, 'Analyst review'] }, 'Analyst review tag added.')}><Plus size={15} /> Tag</button>}{hasAction('save') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { saved: true }, 'Finding saved to the shared workspace.')}><Check size={15} /> Save</button>}{hasAction('brief') && <button className="primary-button" onClick={() => addToBrief(selectedFinding)}>Add to brief</button>}{hasAction('acknowledge') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { lastAction: 'Acknowledged by C-suite' }, 'Signal acknowledged for the executive view.')}><Check size={15} /> Acknowledge</button>}</div></div></aside></div>}
 
