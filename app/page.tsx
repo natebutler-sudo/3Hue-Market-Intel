@@ -5,7 +5,6 @@ import { logoData } from './logo-data';
 import {
   Activity,
   ArrowUpRight,
-  BarChart3,
   Bell,
   BriefcaseBusiness,
   Check,
@@ -13,16 +12,19 @@ import {
   CircleHelp,
   Clock3,
   Database,
+  DatabaseZap,
   ExternalLink,
   FileText,
   Filter,
+  Globe2,
   KeyRound,
   LineChart,
   LockKeyhole,
-  Mail,
   Menu,
+  Play,
   Plus,
   Search,
+  RefreshCw,
   Settings2,
   ShieldCheck,
   SlidersHorizontal,
@@ -32,6 +34,27 @@ import {
 } from 'lucide-react';
 
 type View = 'Analyst' | 'Director' | 'C-suite';
+type AdminTab = 'overview' | 'sources' | 'watchlists' | 'runs';
+type SourceStatus = 'Connected' | 'Partially ready' | 'Connector pending' | 'Manual import' | 'Not connected';
+
+type SourceConnection = {
+  id: string;
+  name: string;
+  category: string;
+  description: string;
+  status: SourceStatus;
+  lastRefresh: string;
+  coverage: string;
+};
+
+type ResearchRun = {
+  id: string;
+  label: string;
+  source: string;
+  started: string;
+  status: 'Complete' | 'Partial' | 'Queued';
+  findings: string;
+};
 
 type Finding = {
   id: string;
@@ -90,6 +113,33 @@ const widgets = [
 
 const lensOptions = ['All lenses', 'AI governance', 'Competitive landscape', 'Account movement', 'Buyer questions'];
 
+const sourceConnections: SourceConnection[] = [
+  { id: 'hubspot', name: 'HubSpot CRM', category: 'Revenue', description: 'Read-only accounts, contacts, pipeline, and lifecycle context.', status: 'Connected', lastRefresh: '12 min ago', coverage: '126 contacts · 12 opportunities' },
+  { id: 'ga4', name: 'Google Analytics 4', category: 'Performance', description: 'Web activity and conversion signals for the 3HUE site.', status: 'Connected', lastRefresh: '28 min ago', coverage: '30-day supplied snapshot' },
+  { id: 'search-console', name: 'Search Console', category: 'Search', description: 'Query, page, and visibility trends for organic discovery.', status: 'Partially ready', lastRefresh: 'Historical export', coverage: 'Historical queries only' },
+  { id: 'ubersuggest', name: 'Ubersuggest', category: 'Search', description: 'Keyword demand, competitor gaps, and content opportunities.', status: 'Manual import', lastRefresh: 'No refresh yet', coverage: 'Import CSV or report' },
+  { id: 'youtube', name: 'YouTube', category: 'Content', description: 'Channel, video, and audience signals for owned content.', status: 'Connector pending', lastRefresh: 'No refresh yet', coverage: 'Channel authorization required' },
+  { id: 'vidiq', name: 'vidIQ', category: 'Content', description: 'Video demand, keyword scores, and competitive channel context.', status: 'Connector pending', lastRefresh: 'No refresh yet', coverage: 'Provider authorization required' },
+  { id: 'linkedin', name: 'LinkedIn', category: 'Social', description: 'Company, post, and conversation signals for market movement.', status: 'Not connected', lastRefresh: 'No refresh yet', coverage: 'Account access required' },
+  { id: 'reddit', name: 'Reddit', category: 'Social', description: 'Unfiltered buyer language and emerging problem themes.', status: 'Not connected', lastRefresh: 'No refresh yet', coverage: 'Account access required' },
+  { id: 'tiktok', name: 'TikTok', category: 'Social', description: 'Short-form topic velocity and audience language.', status: 'Not connected', lastRefresh: 'No refresh yet', coverage: 'Account access required' },
+  { id: 'bring-your-ai', name: 'Bring Your AI', category: 'Intelligence', description: 'Provider key and model routing for approved research workflows.', status: 'Not connected', lastRefresh: 'No refresh yet', coverage: 'Provider mapping required' },
+];
+
+const initialWatchlists = [
+  { id: 'wl-1', name: 'ICP: Provable Vendor', detail: 'AI-native vendors that need customer assurance evidence', sources: 'Search · LinkedIn · HubSpot' },
+  { id: 'wl-2', name: 'ICP: Portfolio', detail: 'Portfolio companies entering a more formal control environment', sources: 'HubSpot · Jobs · Public web' },
+  { id: 'wl-3', name: 'ICP: Regulated Operator', detail: 'Operators whose AI use creates evidence and governance pressure', sources: 'Search · Reddit · YouTube' },
+  { id: 'wl-4', name: 'AI governance / customer assurance', detail: 'Market language around ownership, proof, and operating readiness', sources: 'Search · News · Social' },
+  { id: 'wl-5', name: '3HUE competitors', detail: 'Positioning, product movement, and buyer-facing claims', sources: 'Public web · YouTube · LinkedIn' },
+];
+
+const initialResearchRuns: ResearchRun[] = [
+  { id: 'run-1', label: 'Morning market collection', source: 'Search · CRM · public web', started: 'Today · 05:42 CT', status: 'Complete', findings: '18 findings' },
+  { id: 'run-2', label: 'Competitor positioning refresh', source: 'Public web · YouTube', started: 'Yesterday · 17:32 CT', status: 'Partial', findings: '6 findings · 2 blocked sources' },
+  { id: 'run-3', label: 'Next scheduled collection', source: 'All approved watchlists', started: 'In 3h 42m', status: 'Queued', findings: 'Awaiting run' },
+];
+
 function Metric({ label, value, detail, tone = 'cyan' }: { label: string; value: string; detail: string; tone?: 'cyan' | 'orange' | 'navy' }) {
   return <div className="metric-card"><div className={`metric-icon metric-${tone}`}><TrendingUp size={16} /></div><div><p className="eyebrow">{label}</p><p className="metric-value">{value}</p><p className="metric-detail">{detail}</p></div></div>;
 }
@@ -107,6 +157,11 @@ export default function Home() {
   const [showCustomize, setShowCustomize] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showPresent, setShowPresent] = useState(false);
+  const [adminTab, setAdminTab] = useState<AdminTab>('overview');
+  const [sourceFilter, setSourceFilter] = useState('All sources');
+  const [watchlistDraft, setWatchlistDraft] = useState('');
+  const [watchlistItems, setWatchlistItems] = useState(initialWatchlists);
+  const [researchRuns, setResearchRuns] = useState(initialResearchRuns);
   const [search, setSearch] = useState('');
   const [segment, setSegment] = useState('All segments');
   const [lens, setLens] = useState('All lenses');
@@ -128,6 +183,22 @@ export default function Home() {
 
   const toggleWidget = (id: string) => setVisibleWidgets((current) => current.includes(id) ? current.filter((item) => item !== id) : [...current, id]);
   const announce = (message: string) => { setNotice(message); window.setTimeout(() => setNotice(''), 2600); };
+  const openAdmin = (tab: AdminTab = 'overview') => { setAdminTab(tab); setShowSettings(true); };
+  const filteredSources = sourceConnections.filter((source) => sourceFilter === 'All sources' || source.category === sourceFilter);
+  const statusClass = (status: SourceStatus) => status === 'Connected' ? 'connected' : status === 'Partially ready' ? 'partial' : status === 'Manual import' ? 'manual' : status === 'Connector pending' ? 'pending' : 'offline';
+  const queueResearchRun = () => {
+    const run: ResearchRun = { id: `run-${Date.now()}`, label: 'On-demand intelligence collection', source: 'Approved watchlists', started: 'Queued just now', status: 'Queued', findings: 'Awaiting run' };
+    setResearchRuns((current) => [run, ...current]);
+    setAdminTab('runs');
+    announce('Research run queued. Source coverage will be reported when it completes.');
+  };
+  const addWatchlist = () => {
+    const name = watchlistDraft.trim();
+    if (!name) { announce('Enter a watchlist name first.'); return; }
+    setWatchlistItems((current) => [...current, { id: `wl-${Date.now()}`, name, detail: 'New local watchlist · configure sources and audience context next', sources: 'Needs source selection' }]);
+    setWatchlistDraft('');
+    announce('Watchlist saved locally in this preview.');
+  };
   const addToBrief = (finding: Finding) => {
     const alreadyQueued = briefQueue.includes(finding.id);
     setBriefQueue((current) => alreadyQueued ? current : [...current, finding.id]);
@@ -139,8 +210,8 @@ export default function Home() {
       <header className="topbar">
         <div className="brand-lockup"><img className="brand-image" src={logoData} alt="3HUE Executive Consulting" /><span className="brand-divider" aria-hidden="true" /><span className="brand-product-lockup"><span>MARKET</span><strong>INTEL</strong></span></div>
         <nav className="topnav" aria-label="Dashboard view" role="tablist">{(['Analyst', 'Director', 'C-suite'] as View[]).map((view) => <button key={view} className={`topnav-item ${activeView === view ? 'active' : ''}`} onClick={() => setActiveView(view)} role="tab" aria-selected={activeView === view}>{view}</button>)}</nav>
-        <div className="topbar-actions"><label className="top-search"><Search size={14} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search intelligence" aria-label="Search intelligence" /></label><button className="topbar-pill" onClick={() => announce('Guide content is ready for the connected workspace.')}>Guide</button><button className="topbar-pill saved-pill" onClick={() => announce('Saved briefing queue is ready.')}>Saved <span>{briefQueue.length || 0}</span></button><button className="topbar-pill" onClick={() => setShowSettings(true)}>Schedule</button><button className="topbar-pill topbar-present" onClick={() => setShowPresent(true)}>Present</button><button className="icon-button topbar-icon" aria-label="Notifications" onClick={() => announce('No new high-impact alerts.')}><Bell size={17} /></button><button className="user-chip" onClick={() => setShowSettings(true)}><span className="avatar">NB</span><ChevronDown size={14} /></button></div>
-        <div className="mobile-actions"><button className="mobile-overflow-button" aria-label="Open workspace actions" onClick={() => setShowSettings(true)}><Menu size={18} /></button><button className="user-chip" onClick={() => setShowSettings(true)}><span className="avatar">NB</span><ChevronDown size={13} /></button></div>
+        <div className="topbar-actions"><label className="top-search"><Search size={14} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search intelligence" aria-label="Search intelligence" /></label><button className="topbar-pill" onClick={() => announce('Guide content is ready for the connected workspace.')}>Guide</button><button className="topbar-pill saved-pill" onClick={() => announce('Saved briefing queue is ready.')}>Saved <span>{briefQueue.length || 0}</span></button><button className="topbar-pill" onClick={() => openAdmin('runs')}>Schedule</button><button className="topbar-pill topbar-present" onClick={() => setShowPresent(true)}>Present</button><button className="icon-button topbar-icon" aria-label="Notifications" onClick={() => announce('No new high-impact alerts.')}><Bell size={17} /></button><button className="user-chip" title="Admin intelligence center" aria-label="Open admin intelligence center" onClick={() => openAdmin()}><span className="avatar">NB</span><ChevronDown size={14} /></button></div>
+        <div className="mobile-actions"><button className="mobile-overflow-button" aria-label="Open workspace actions" onClick={() => openAdmin()}><Menu size={18} /></button><button className="user-chip" title="Admin intelligence center" aria-label="Open admin intelligence center" onClick={() => openAdmin()}><span className="avatar">NB</span><ChevronDown size={13} /></button></div>
       </header>
 
       <section className="context-bar" aria-label="Market context">
@@ -186,7 +257,15 @@ export default function Home() {
 
       {showPresent && <div className="modal-backdrop presentation-backdrop"><section className="presentation-modal" aria-label="Presentation view"><div className="presentation-header"><div><p className="eyebrow accent-eyebrow">3HUE market intel · {activeView} view</p><h2>Shared briefing</h2><p>Read-only presentation of the intelligence selected for this workspace.</p></div><button className="drawer-close" onClick={() => setShowPresent(false)} aria-label="Close presentation view"><X size={19} /></button></div><div className="presentation-meta"><span><Clock3 size={14} /> Collected today · 05:42 CT</span><span><ShieldCheck size={14} /> Representative data</span><span>{briefingFindings.length} findings</span></div><div className="presentation-grid">{briefingFindings.map((finding) => <article key={finding.id} className="presentation-card"><p className="eyebrow">{finding.category}</p><h3>{finding.title}</h3><p>{finding.summary}</p><div><span>{finding.source}</span><span>{finding.collected}</span></div></article>)}</div><div className="presentation-footer"><span>Sources and interpretations stay separate until reviewed.</span><button className="secondary-button" onClick={() => setShowPresent(false)}>Return to workspace</button></div></section></div>}
 
-      {showSettings && <div className="modal-backdrop"><section className="modal-card settings-modal"><div className="modal-heading"><div><p className="eyebrow accent-eyebrow">Admin settings</p><h2>Connections & access</h2></div><button className="icon-button" onClick={() => setShowSettings(false)} aria-label="Close settings dialog"><X size={18} /></button></div><div className="settings-section"><div className="settings-row"><span className="settings-symbol cyan"><KeyRound size={17} /></span><div><strong>Bring Your AI</strong><p>Add an API key and provider when you are ready. Connections stay inactive until tested.</p></div><button className="secondary-button small-button" onClick={() => announce('Bring Your AI setup is ready for provider mapping.')}>Configure</button></div><div className="settings-row"><span className="settings-symbol orange"><BriefcaseBusiness size={17} /></span><div><strong>HubSpot CRM</strong><p>Read-only account and pipeline data · 12 minute refresh</p></div><span className="connection-state pending">Not connected</span></div><div className="settings-row"><span className="settings-symbol navy"><BarChart3 size={17} /></span><div><strong>GA4 & Search Console</strong><p>Performance and search visibility · historical export available</p></div><span className="connection-state ready">Partially ready</span></div><div className="settings-row"><span className="settings-symbol cyan"><Clock3 size={17} /></span><div><strong>Collection cadence</strong><p>Market, buyer, and account watch refreshes every 4 hours · next collection in 3h 42m</p></div><span className="connection-state ready">Every 4 hours</span></div><div className="settings-row"><span className="settings-symbol cyan"><Mail size={17} /></span><div><strong>Morning digest</strong><p>6:00 a.m. Central · approved recipients only</p></div><span className="connection-state ready">Planned</span></div></div><div className="settings-footnote"><ShieldCheck size={15} /><span>Credentials are stored as protected runtime secrets. This dashboard never displays saved keys.</span></div></section></div>}
+      {showSettings && <div className="modal-backdrop admin-backdrop"><section className="admin-modal" aria-label="Admin intelligence center"><div className="admin-shell"><header className="admin-header"><div><p className="eyebrow accent-eyebrow">Workspace administration</p><h2>Admin intelligence center</h2><p>Control source access, watchlists, collection cadence, and evidence quality from one place.</p></div><button className="icon-button" onClick={() => setShowSettings(false)} aria-label="Close admin intelligence center"><X size={18} /></button></header><nav className="admin-tabs" aria-label="Admin sections" role="tablist">{([['overview', 'Overview'], ['sources', 'Sources'], ['watchlists', 'Watchlists'], ['runs', 'Research runs']] as [AdminTab, string][]).map(([tab, label]) => <button key={tab} className={`admin-tab ${adminTab === tab ? 'active' : ''}`} onClick={() => setAdminTab(tab)} role="tab" aria-selected={adminTab === tab}>{label}</button>)}</nav><div className="admin-body">
+        {adminTab === 'overview' && <div className="admin-view"><div className="admin-summary-grid"><div className="admin-stat"><span className="admin-stat-icon cyan"><Globe2 size={16} /></span><div><p className="eyebrow">Sources</p><strong>10</strong><small>approved providers</small></div></div><div className="admin-stat"><span className="admin-stat-icon green"><ShieldCheck size={16} /></span><div><p className="eyebrow">Ready / partial</p><strong>3</strong><small>usable coverage paths</small></div></div><div className="admin-stat"><span className="admin-stat-icon orange"><DatabaseZap size={16} /></span><div><p className="eyebrow">Watchlists</p><strong>{watchlistItems.length}</strong><small>ICP and market lenses</small></div></div><div className="admin-stat"><span className="admin-stat-icon navy"><Play size={16} /></span><div><p className="eyebrow">Pending runs</p><strong>{researchRuns.filter((run) => run.status === 'Queued').length}</strong><small>next run in 3h 42m</small></div></div></div><div className="admin-grid"><section className="admin-panel"><div className="admin-panel-heading"><div><p className="eyebrow accent-eyebrow">Evidence quality</p><h3>What the workspace can prove</h3></div><button className="text-button" onClick={() => setAdminTab('sources')}>Review sources <ArrowUpRight size={14} /></button></div><div className="admin-evidence-table"><div className="admin-evidence-row admin-evidence-heading"><span>Signal</span><span>Freshness</span><span>Evidence state</span></div><div className="admin-evidence-row"><div><strong>Keyword demand snapshot</strong><small>Search · Ubersuggest</small></div><span>Observed today</span><span className="admin-status manual">Needs source connection</span></div><div className="admin-evidence-row"><div><strong>AI governance explainer</strong><small>YouTube · owned channel</small></div><span>Supplied snapshot</span><span className="admin-status partial">Representative data</span></div><div className="admin-evidence-row"><div><strong>Who owns AI evidence?</strong><small>Social · Reddit</small></div><span>Account access required</span><span className="admin-status pending">Hypothesis</span></div></div></section><section className="admin-panel admin-cadence-panel"><div className="admin-panel-heading"><div><p className="eyebrow orange-eyebrow">Collection cadence</p><h3>Next research run</h3></div><Clock3 size={19} className="orange-icon" /></div><div className="admin-next-run"><strong>Every 4 hours</strong><span>3h 42m</span></div><p>Last successful collection completed today at 05:42 CT. Two providers remain blocked by sign-in or connector setup.</p><button className="primary-button" onClick={queueResearchRun}><Play size={14} /> Start research run</button><button className="text-button" onClick={() => setAdminTab('runs')}>View run history <ArrowUpRight size={14} /></button></section></div><div className="admin-callout"><KeyRound size={16} /><div><strong>Credentials stay out of GitHub</strong><p>OAuth tokens, API keys, and provider secrets belong in protected runtime configuration. This preview only records connection state and evidence quality.</p></div><button className="secondary-button small-button" onClick={() => setAdminTab('sources')}>Manage sources</button></div></div>}
+
+        {adminTab === 'sources' && <div className="admin-view"><div className="admin-view-heading"><div><p className="eyebrow accent-eyebrow">Source registry</p><h3>Connect the intelligence surface</h3><p>Review what is available, what needs authorization, and where a manual import can keep the team moving.</p></div><div className="admin-view-actions"><label className="admin-select"><Filter size={13} /><select value={sourceFilter} onChange={(event) => setSourceFilter(event.target.value)} aria-label="Filter source category"><option>All sources</option><option>Revenue</option><option>Performance</option><option>Search</option><option>Content</option><option>Social</option><option>Intelligence</option></select><ChevronDown size={13} /></label><button className="primary-button" onClick={() => setAdminTab('runs')}><RefreshCw size={14} /> Review collection</button></div></div><div className="admin-source-list">{filteredSources.map((source) => <article key={source.id} className="admin-source-card"><div className={`admin-source-icon ${statusClass(source.status)}`}>{source.id === 'bring-your-ai' ? <KeyRound size={17} /> : source.category === 'Social' ? <Globe2 size={17} /> : source.category === 'Revenue' ? <BriefcaseBusiness size={17} /> : <Database size={17} />}</div><div className="admin-source-meta"><div className="admin-source-title"><div><h4>{source.name}</h4><span>{source.category}</span></div><span className={`admin-status ${statusClass(source.status)}`}>{source.status}</span></div><p>{source.description}</p><div className="admin-source-foot"><span>{source.coverage}</span><span>Last refresh · {source.lastRefresh}</span></div></div><div className="admin-source-actions"><button className="secondary-button small-button" onClick={() => announce(source.status === 'Connected' ? `${source.name} is already connected in this preview.` : `Connection setup is ready for ${source.name}; provider authorization is not active in this preview.`)}>{source.status === 'Connected' ? 'Review' : 'Connect'}</button><button className="icon-button" aria-label={`Queue refresh for ${source.name}`} onClick={() => announce(`Refresh queued for ${source.name}.`)}><RefreshCw size={14} /></button></div></article>)}</div><div className="admin-callout"><ShieldCheck size={16} /><div><strong>Provider authorization is intentionally explicit</strong><p>Live OAuth/API setup is the next wiring step. No credentials are collected or displayed in this front-end preview.</p></div></div></div>}
+
+        {adminTab === 'watchlists' && <div className="admin-view"><div className="admin-view-heading"><div><p className="eyebrow accent-eyebrow">Targeting system</p><h3>Watchlists and ICP lenses</h3><p>Keep the market context tight by telling the collector who and what matters before it searches.</p></div><span className="preview-badge"><Database size={13} /> Local preview state</span></div><div className="admin-input-row"><input value={watchlistDraft} onChange={(event) => setWatchlistDraft(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter') addWatchlist(); }} placeholder="Add a watchlist or ICP lens" aria-label="Add a watchlist or ICP lens" /><button className="primary-button" onClick={addWatchlist}><Plus size={14} /> Add watchlist</button></div><div className="admin-watchlist-list">{watchlistItems.map((watchlist) => <article className="admin-watchlist-item" key={watchlist.id}><span className="watchlist-index">{String(watchlistItems.indexOf(watchlist) + 1).padStart(2, '0')}</span><div><strong>{watchlist.name}</strong><p>{watchlist.detail}</p><small>{watchlist.sources}</small></div><button className="icon-button" aria-label={`Review ${watchlist.name}`} onClick={() => announce(`${watchlist.name} is ready for source and audience configuration.`)}><ArrowUpRight size={15} /></button></article>)}</div><div className="admin-callout"><SlidersHorizontal size={16} /><div><strong>Next step: add audience rules</strong><p>Each watchlist can later carry source filters, geography, named accounts, competitor sets, and AI research instructions.</p></div></div></div>}
+
+        {adminTab === 'runs' && <div className="admin-view"><div className="admin-view-heading"><div><p className="eyebrow accent-eyebrow">Collection operations</p><h3>Research run history</h3><p>Track freshness and gaps before a signal becomes a decision or a customer-facing claim.</p></div><button className="primary-button" onClick={queueResearchRun}><Play size={14} /> Start research run</button></div><div className="admin-run-list">{researchRuns.map((run) => <article className="admin-run-row" key={run.id}><span className={`admin-run-status ${run.status.toLowerCase()}`}><span />{run.status}</span><div><strong>{run.label}</strong><p>{run.source}</p></div><span>{run.started}</span><span>{run.findings}</span><button className="icon-button" aria-label={`Review ${run.label}`} onClick={() => announce(`${run.label} details are ready for review.`)}><ArrowUpRight size={15} /></button></article>)}</div><div className="admin-callout"><Clock3 size={16} /><div><strong>Cadence is set to every 4 hours</strong><p>The next run should refresh approved watchlists and report which sources were complete, partial, blocked, or manually supplied.</p></div><button className="secondary-button small-button" onClick={() => announce('Cadence configuration is ready for the next wiring step.')}>Configure cadence</button></div></div>}
+      </div><footer className="admin-footer"><span><ShieldCheck size={14} /> Representative workspace state · no live credentials shown</span><button className="secondary-button small-button" onClick={() => { setShowSettings(false); announce('Admin center closed.'); }}>Done</button></footer></div></section></div>}
 
       {notice && <output className="toast"><Check size={16} /> {notice}</output>}
     </main>
