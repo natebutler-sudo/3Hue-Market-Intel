@@ -65,6 +65,7 @@ button { cursor: pointer; }
 .content-heading h1 { margin: 8px 0 8px; color: var(--navy); font-size: clamp(26px, 3vw, 37px); letter-spacing: -.04em; line-height: 1.05; }
 .heading-subtitle { margin: 0; color: #71869c; font-size: 14px; }
 .accent-eyebrow { color: var(--cyan); }
+.preview-badge { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; padding: 6px 9px; color: #9a653f; border: 1px solid #f0d4c3; border-radius: 6px; background: #fff7f1; font-size: 10px; font-weight: 800; }
 .heading-actions { display: flex; align-items: center; gap: 9px; padding-bottom: 2px; }
 .primary-button, .secondary-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 38px; padding: 0 14px; border-radius: 8px; font-size: 12px; font-weight: 800; transition: transform .15s ease, box-shadow .15s ease; }
 .primary-button { border: 1px solid var(--navy); background: var(--navy); color: #fff; box-shadow: 0 6px 15px rgba(7, 26, 52, .13); }
