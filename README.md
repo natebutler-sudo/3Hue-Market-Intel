@@ -26,6 +26,8 @@ Potential adaptations discussed include intelligence cards, source-linked detail
 
 ## Materials and organization
 
+The [Experience level-up implementation record](docs/discovery/experience-level-up/README.md) preserves all eight supplied instructions, the 43 original acceptance checks, approved overrides, and independent guardian reviews. Phase 1 is stopped on an undersized clean-image result; no artwork or application changes from that phase are deployed.
+
 Independent public-source research is available in the [September 9, 2026 research dossier](docs/research/2026-09-09/README.md). Four reports cover company/services, markets/buyers/demand, competitors/public proof, and marketing content. Findings distinguish verified evidence, company claims, and analyst hypotheses. No website was built as part of this research.
 
 The authenticated Builder catalog is preserved in the [Solution Builder catalog evidence bundle](docs/discovery/solution-builder-catalog-2026-09-09/README.md), including normalized service records, packages, pricing-status labels, trigger rules, and working buyer-persona mappings.
