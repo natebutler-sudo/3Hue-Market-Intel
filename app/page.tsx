@@ -16,9 +16,7 @@ import {
   ExternalLink,
   FileText,
   Filter,
-  Globe2,
   KeyRound,
-  LayoutDashboard,
   LineChart,
   LockKeyhole,
   Mail,
@@ -30,7 +28,6 @@ import {
   SlidersHorizontal,
   Sparkles,
   TrendingUp,
-  Users,
   X,
 } from 'lucide-react';
 
@@ -91,14 +88,6 @@ const widgets = [
   { id: 'hubspot', label: 'HubSpot funnel', description: 'Read-only CRM rollup', icon: BriefcaseBusiness },
 ];
 
-const navItems = [
-  { label: 'Overview', icon: LayoutDashboard },
-  { label: 'Research', icon: Search },
-  { label: 'Accounts', icon: Users },
-  { label: 'Competitors', icon: Globe2 },
-  { label: 'Briefs', icon: FileText },
-];
-
 const lensOptions = ['All lenses', 'AI governance', 'Competitive landscape', 'Account movement', 'Buyer questions'];
 
 function Metric({ label, value, detail, tone = 'cyan' }: { label: string; value: string; detail: string; tone?: 'cyan' | 'orange' | 'navy' }) {
@@ -114,7 +103,6 @@ function Sparkline({ values, color = '#12b8d4' }: { values: number[]; color?: st
 
 export default function Home() {
   const [activeView, setActiveView] = useState<View>('Director');
-  const [activeNav, setActiveNav] = useState('Overview');
   const [selectedFinding, setSelectedFinding] = useState<Finding | null>(null);
   const [showCustomize, setShowCustomize] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -150,13 +138,13 @@ export default function Home() {
     <main className="app-shell">
       <header className="topbar">
         <div className="brand-lockup"><img className="brand-image" src={logoData} alt="3HUE Executive Consulting" /><span className="brand-divider" aria-hidden="true" /><span className="brand-product-lockup"><span>MARKET</span><strong>INTEL</strong></span></div>
-        <nav className="topnav" aria-label="Primary navigation">{navItems.map(({ label }) => <button key={label} className={`topnav-item ${activeNav === label ? 'active' : ''}`} onClick={() => setActiveNav(label)}>{label}{label === 'Research' && <span className="topnav-count">4</span>}</button>)}</nav>
-        <div className="topbar-actions"><label className="top-search"><Search size={14} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search intelligence" aria-label="Search intelligence" /></label><button className="topbar-pill" onClick={() => announce('Guide content is ready for the connected workspace.')}>Guide</button><button className="topbar-pill saved-pill" onClick={() => setActiveNav('Briefs')}>Saved <span>{briefQueue.length || 0}</span></button><button className="topbar-pill" onClick={() => setShowSettings(true)}>Schedule</button><button className="topbar-pill topbar-present" onClick={() => setShowPresent(true)}>Present</button><button className="icon-button topbar-icon" aria-label="Notifications" onClick={() => announce('No new high-impact alerts.')}><Bell size={17} /></button><button className="user-chip" onClick={() => setShowSettings(true)}><span className="avatar">NB</span><ChevronDown size={14} /></button></div>
+        <nav className="topnav" aria-label="Dashboard view" role="tablist">{(['Analyst', 'Director', 'C-suite'] as View[]).map((view) => <button key={view} className={`topnav-item ${activeView === view ? 'active' : ''}`} onClick={() => setActiveView(view)} role="tab" aria-selected={activeView === view}>{view}</button>)}</nav>
+        <div className="topbar-actions"><label className="top-search"><Search size={14} /><input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Search intelligence" aria-label="Search intelligence" /></label><button className="topbar-pill" onClick={() => announce('Guide content is ready for the connected workspace.')}>Guide</button><button className="topbar-pill saved-pill" onClick={() => announce('Saved briefing queue is ready.')}>Saved <span>{briefQueue.length || 0}</span></button><button className="topbar-pill" onClick={() => setShowSettings(true)}>Schedule</button><button className="topbar-pill topbar-present" onClick={() => setShowPresent(true)}>Present</button><button className="icon-button topbar-icon" aria-label="Notifications" onClick={() => announce('No new high-impact alerts.')}><Bell size={17} /></button><button className="user-chip" onClick={() => setShowSettings(true)}><span className="avatar">NB</span><ChevronDown size={14} /></button></div>
         <div className="mobile-actions"><button className="mobile-overflow-button" aria-label="Open workspace actions" onClick={() => setShowSettings(true)}><Menu size={18} /></button><button className="user-chip" onClick={() => setShowSettings(true)}><span className="avatar">NB</span><ChevronDown size={13} /></button></div>
       </header>
 
-      <section className="context-bar" aria-label="Intelligence scope">
-        <div className="context-title"><div className="context-title-line"><p className="eyebrow">Intelligence scope</p><div className="view-switcher" role="tablist" aria-label="Dashboard view">{(['Analyst', 'Director', 'C-suite'] as View[]).map((view) => <button key={view} className={`view-tab ${activeView === view ? 'active' : ''}`} onClick={() => setActiveView(view)} role="tab" aria-selected={activeView === view}>{view}</button>)}</div></div><strong>Markets 3HUE supports</strong></div>
+      <section className="context-bar" aria-label="Market context">
+        <div className="context-title"><strong>Markets 3HUE supports</strong></div>
         <div className="context-field"><span>ICP</span><strong>Loaded strategy</strong></div>
         <div className="context-field"><span>Last collection</span><strong>Today · 05:42 CT</strong></div>
         <div className="context-field"><span>Source health</span><strong><span className="status-dot" /> 6 healthy</strong></div>
@@ -174,16 +162,16 @@ export default function Home() {
 
           {visibleWidgets.includes('briefing') && <section className="builder-section"><div className="section-heading"><div><p className="eyebrow orange-eyebrow">Curated intelligence</p><h2>What matters today</h2></div><span className="section-count">{filteredFindings.length} findings</span></div><div className="curated-rail">{filteredFindings.slice(0, 3).map((finding, index) => <button key={finding.id} className={`curated-card ${index === 1 ? 'accent-orange' : ''}`} onClick={() => setSelectedFinding(finding)}><span className="card-accent" /><p className="eyebrow">{finding.category}</p><h3>{finding.title}</h3><p className="card-summary">{finding.summary}</p><div className="card-footer"><span>{finding.source}</span><span className="card-link">View <ArrowUpRight size={13} /></span></div></button>)}{filteredFindings.length === 0 && <div className="empty-state"><Search size={20} /><strong>No findings match those filters.</strong><span>Try another market lens or segment.</span></div>}</div></section>}
 
-          {visibleWidgets.includes('signals') && <section className="builder-section"><div className="section-heading"><div><p className="eyebrow accent-eyebrow">Signal catalog</p><h2>Priority signals</h2></div><button className="text-button" onClick={() => setActiveNav('Research')}>View all <ArrowUpRight size={14} /></button></div><div className="signal-grid">{filteredFindings.map((finding) => <button key={finding.id} className="signal-card" onClick={() => setSelectedFinding(finding)}><div className="signal-card-top"><span className="eyebrow">{finding.category}</span><span className={`status-tag ${finding.status === 'Unreviewed' ? 'unreviewed' : 'reviewed'}`}>{finding.status}</span></div><h3>{finding.title}</h3><p>{finding.summary}</p><div className="signal-card-footer"><span>{finding.collected}</span><span className="signal-card-action">Details <ArrowUpRight size={13} /></span></div></button>)}</div></section>}
+          {visibleWidgets.includes('signals') && <section className="builder-section"><div className="section-heading"><div><p className="eyebrow accent-eyebrow">Signal catalog</p><h2>Priority signals</h2></div><button className="text-button" onClick={() => announce('The full signal catalog is ready for review.')}>View all <ArrowUpRight size={14} /></button></div><div className="signal-grid">{filteredFindings.map((finding) => <button key={finding.id} className="signal-card" onClick={() => setSelectedFinding(finding)}><div className="signal-card-top"><span className="eyebrow">{finding.category}</span><span className={`status-tag ${finding.status === 'Unreviewed' ? 'unreviewed' : 'reviewed'}`}>{finding.status}</span></div><h3>{finding.title}</h3><p>{finding.summary}</p><div className="signal-card-footer"><span>{finding.collected}</span><span className="signal-card-action">Details <ArrowUpRight size={13} /></span></div></button>)}</div></section>}
 
           <div className="builder-columns">
             {visibleWidgets.includes('performance') && <section className="panel performance-panel"><div className="panel-heading"><div><p className="eyebrow">3HUE performance</p><h2>Marketing signals</h2></div><span className="connected-pill"><span className="status-dot" /> Supplied snapshot</span></div><div className="performance-layout"><div className="performance-number"><p className="big-number">443</p><p className="metric-detail">active users · supplied 30-day snapshot</p><span className="trend-up"><TrendingUp size={14} /> 12.4%</span></div><Sparkline values={[18, 20, 18, 24, 31, 29, 42, 47, 51]} /></div><div className="performance-bars"><div><span>Organic sessions</span><strong>29</strong><div className="bar-track"><span style={{ width: '38%' }} /></div></div><div><span>New contacts</span><strong>18</strong><div className="bar-track orange-bar"><span style={{ width: '25%' }} /></div></div><div><span>Open pipeline</span><strong>$184k</strong><div className="bar-track navy-bar"><span style={{ width: '64%' }} /></div></div></div><button className="text-button" onClick={() => announce('Performance detail will open after the GA4 and HubSpot connections are verified.')}>Open performance detail <ArrowUpRight size={14} /></button></section>}
 
-            {visibleWidgets.includes('coverage') && <section className="panel coverage-panel"><div className="panel-heading"><div><p className="eyebrow">Coverage health</p><h2>Can we trust today’s view?</h2></div><ShieldCheck size={20} className="cyan-icon" /></div><div className="coverage-score"><div className="score-ring"><span>86</span><small>%</small></div><div><strong>Healthy with gaps</strong><p>Most monitored sources refreshed successfully.</p></div></div><div className="coverage-list"><div className="coverage-row"><span className="status-dot" /> HubSpot CRM <em>Connected</em></div><div className="coverage-row"><span className="status-dot" /> GA4 <em>Connected</em></div><div className="coverage-row warning"><span className="warning-dot" /> Search Console <em>Historical export only</em></div><div className="coverage-row warning"><span className="warning-dot" /> 2 sources <em>Blocked by sign-in</em></div></div><button className="text-button" onClick={() => setActiveNav('Research')}>Review coverage gaps <ArrowUpRight size={14} /></button></section>}
+            {visibleWidgets.includes('coverage') && <section className="panel coverage-panel"><div className="panel-heading"><div><p className="eyebrow">Coverage health</p><h2>Can we trust today’s view?</h2></div><ShieldCheck size={20} className="cyan-icon" /></div><div className="coverage-score"><div className="score-ring"><span>86</span><small>%</small></div><div><strong>Healthy with gaps</strong><p>Most monitored sources refreshed successfully.</p></div></div><div className="coverage-list"><div className="coverage-row"><span className="status-dot" /> HubSpot CRM <em>Connected</em></div><div className="coverage-row"><span className="status-dot" /> GA4 <em>Connected</em></div><div className="coverage-row warning"><span className="warning-dot" /> Search Console <em>Historical export only</em></div><div className="coverage-row warning"><span className="warning-dot" /> 2 sources <em>Blocked by sign-in</em></div></div><button className="text-button" onClick={() => announce('Coverage gaps are ready for review.')}>Review coverage gaps <ArrowUpRight size={14} /></button></section>}
           </div>
 
           <div className="builder-columns lower-columns">
-            {visibleWidgets.includes('content') && <section className="panel content-panel"><div className="panel-heading"><div><p className="eyebrow">Content opportunities</p><h2>Questions worth answering</h2></div><FileText size={20} className="orange-icon" /></div><div className="content-opportunity"><span className="opportunity-rank">01</span><div><strong>Who owns AI evidence after deployment?</strong><p>Buyer question · Regulated Operator · recurring</p></div><button className="small-circle-button" aria-label="Create brief" onClick={() => announce('Brief draft started from this opportunity.')}><Plus size={16} /></button></div><div className="content-opportunity"><span className="opportunity-rank">02</span><div><strong>What does operated readiness change?</strong><p>Message gap · Provable Vendor · rising</p></div><button className="small-circle-button" aria-label="Create brief" onClick={() => announce('Brief draft started from this opportunity.')}><Plus size={16} /></button></div><button className="text-button" onClick={() => setActiveNav('Briefs')}>Open content queue <ArrowUpRight size={14} /></button></section>}
+            {visibleWidgets.includes('content') && <section className="panel content-panel"><div className="panel-heading"><div><p className="eyebrow">Content opportunities</p><h2>Questions worth answering</h2></div><FileText size={20} className="orange-icon" /></div><div className="content-opportunity"><span className="opportunity-rank">01</span><div><strong>Who owns AI evidence after deployment?</strong><p>Buyer question · Regulated Operator · recurring</p></div><button className="small-circle-button" aria-label="Create brief" onClick={() => announce('Brief draft started from this opportunity.')}><Plus size={16} /></button></div><div className="content-opportunity"><span className="opportunity-rank">02</span><div><strong>What does operated readiness change?</strong><p>Message gap · Provable Vendor · rising</p></div><button className="small-circle-button" aria-label="Create brief" onClick={() => announce('Brief draft started from this opportunity.')}><Plus size={16} /></button></div><button className="text-button" onClick={() => announce('Content queue is ready for review.')}>Open content queue <ArrowUpRight size={14} /></button></section>}
 
             {visibleWidgets.includes('hubspot') && <section className="panel hubspot-panel"><div className="panel-heading"><div><p className="eyebrow">HubSpot funnel</p><h2>Commercial pulse</h2></div><span className="read-only-pill"><LockKeyhole size={12} /> Read-only</span></div><div className="funnel"><div className="funnel-row"><span>Contacts</span><strong>126</strong><div className="funnel-bar" style={{ width: '100%' }} /></div><div className="funnel-row"><span>Qualified leads</span><strong>31</strong><div className="funnel-bar" style={{ width: '68%' }} /></div><div className="funnel-row"><span>Open opportunities</span><strong>12</strong><div className="funnel-bar" style={{ width: '42%' }} /></div><div className="funnel-row"><span>Closed won</span><strong>$64k</strong><div className="funnel-bar orange-funnel" style={{ width: '24%' }} /></div></div><p className="data-note"><Database size={13} /> Deal value shown · not accounting revenue</p><button className="text-button" onClick={() => announce('Opening HubSpot is available once the connection is verified.')}>Open HubSpot <ExternalLink size={14} /></button></section>}
           </div>
