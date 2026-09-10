@@ -14,8 +14,8 @@
     "Fail",
     "Not run"
   ],
-  "currentPhase": "1",
-  "phaseStatus": "Candidate 02 accepted under O4; P1-D05 asset checks pending",
+  "currentPhase": "2a",
+  "phaseStatus": "Ready to implement; Phase 1 complete under O4",
   "acceptanceBulletCount": 43,
   "sourceManifest": [
     {
@@ -3855,15 +3855,17 @@
       "sourceClaimsVerified": null,
       "viewports": [],
       "overrideIds": [],
-      "status": "Not run",
-      "measuredResult": "User artwork-OK gate is satisfied. Master and responsive variants are prepared; all AVIF/WebP files are below 500 KB and local dimensions are verified. HTTP 200 checks after publication and confirmation that the live lobby still serves the old image remain not run.",
+      "status": "Pass",
+      "measuredResult": "User artwork-OK gate is satisfied. The master and responsive variants are prepared, all AVIF/WebP files are below 500 KB, and local dimensions are verified. Every saved asset returns HTTP 200 from the published Site. The loaded page module still references `/three-doors-concept.png`, which also returns HTTP 200, so the old scene remains active until Step 2a.",
       "evidence": [
-        "reviews/phase-1-assets.md"
+        "reviews/phase-1-assets.md",
+        "reviews/phase-1-assets-live.md",
+        "reviews/phase-1-assets-live-guardian.md"
       ],
       "acceptanceId": "P1-D05",
       "countAsSeparateAcceptance": false,
-      "candidateReview": "Not run",
-      "publishedReview": "Not run"
+      "candidateReview": "Pass",
+      "publishedReview": "Pass"
     },
     {
       "id": "P1-I022",
@@ -5813,13 +5815,15 @@
       "target": "Clean image, approval gate and responsive assets",
       "viewports": [],
       "overrideIds": [],
-      "status": "Not run",
-      "measuredResult": "User artwork-OK gate is satisfied. Master and responsive variants are prepared; all AVIF/WebP files are below 500 KB and local dimensions are verified. HTTP 200 checks after publication and confirmation that the live lobby still serves the old image remain not run.",
+      "status": "Pass",
+      "measuredResult": "User artwork-OK gate is satisfied. The master and responsive variants are prepared, all AVIF/WebP files are below 500 KB, and local dimensions are verified. Every saved asset returns HTTP 200 from the published Site. The loaded page module still references `/three-doors-concept.png`, which also returns HTTP 200, so the old scene remains active until Step 2a.",
       "evidence": [
-        "reviews/phase-1-assets.md"
+        "reviews/phase-1-assets.md",
+        "reviews/phase-1-assets-live.md",
+        "reviews/phase-1-assets-live-guardian.md"
       ],
-      "candidateReview": "Not run",
-      "publishedReview": "Not run",
+      "candidateReview": "Pass",
+      "publishedReview": "Pass",
       "subconditionsPolicy": "Every clause in sourceInstruction is mandatory; listed viewports are additive, not a substitute for the full instruction."
     },
     {

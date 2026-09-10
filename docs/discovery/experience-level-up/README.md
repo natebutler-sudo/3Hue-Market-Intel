@@ -1,8 +1,8 @@
 # 3HUE Experience — document-led implementation
 
-Current phase: **1 — approved artwork, completing derivative and asset checks**. The supplied plate passes the native-size, removal, geometry and illumination checks under the user's O4 design override, and the user has approved it. P1-D05 remains open for derivatives, file limits, HTTP 200 responses and old-scene-live verification. No application code or deployed artwork has changed in this phase.
+Current phase: **2a — ready to implement**. Phase 1 is complete under the user's O4 design override: the supplied plate passes native-size, removal, geometry and illumination checks, the user approved it, responsive derivatives are published, every saved asset returns HTTP 200, and the independent guardian confirmed the loaded page module still references the old scene. No application code or deployed artwork has been wired to the new plate in Phase 1.
 
-The eight user-supplied Markdown files are preserved byte-for-byte in [source](source/), with SHA-256 hashes in [source-manifest.json](source-manifest.json). Source audit findings remain claims until independently measured. The [override ledger](overrides.md) contains the three confirmed changes to the documents' defaults.
+The eight user-supplied Markdown files are preserved byte-for-byte in [source](source/), with SHA-256 hashes in [source-manifest.json](source-manifest.json). Source audit findings remain claims until independently measured. The [override ledger](overrides.md) contains the four confirmed changes to the documents' defaults.
 
 ## Governing sequence
 
@@ -37,12 +37,14 @@ The implementation agent is the primary agent. `/root/experience_guardian` indep
 - [Phase 1 candidate 01 rejection](reviews/phase-1-candidate-01.md): built-in edit was undersized at 1672×941; artwork not accepted.
 - [Phase 1 candidate 02 rejection](reviews/phase-1-candidate-02.md): supplied 2880×1621 plate passes size, but retains the prohibited header band; artwork not accepted.
 - [Phase 1 candidate 02 acceptance under O4](reviews/phase-1-candidate-02-accepted.md): guardian re-review and explicit user approval pass all candidate checks; P1-D05 remains open.
-- [Phase 1 responsive asset preparation](reviews/phase-1-assets.md): master and AVIF/WebP/JPEG variants are locally measured; HTTP and old-scene-live checks remain open.
+- [Phase 1 responsive asset preparation](reviews/phase-1-assets.md): master and AVIF/WebP/JPEG variants are locally measured.
+- [Phase 1 published asset review](reviews/phase-1-assets-live.md): all saved assets returned HTTP 200 and the published page module still references the old scene.
+- [Phase 1 published guardian review](reviews/phase-1-assets-live-guardian.md): independent guardian Pass for P1-D05 with no required check left unrun.
 - [Documentation guardian review and correction](reviews/documentation-checkpoint.md): archive/register accepted for GitHub; this is not artwork or live-site acceptance.
-- **0 acceptance items Fail; 4 Pass; 39 Not run.** Phase 1 is not complete until P1-D05 passes.
-- Derivative size limits, HTTP 200 checks, and confirmation that the old scene remains live are outstanding. No responsive derivatives or asset publication has occurred.
+- **0 acceptance items Fail; 5 Pass; 38 Not run.** Phase 1 is complete under O4; Step 2a is the active phase.
+- Derivative size limits and HTTP 200 checks pass locally and on the published Site. The old scene remains active; the new assets are staged for Step 2a.
 - Phases 2a–6 are **Not run**, blocked by the sequential phase-1 gate.
-- To finish Phase 1, complete the prescribed derivatives and post-publication HTTP/old-scene checks. O4 is the explicit approved exception for the retained upper band; no other clean-plate requirement is waived.
+- O4 is the explicit approved exception for the retained upper band; no other clean-plate requirement is waived. Step 2a now owns the next implementation and guardian gate.
 
 The undersized built-in result stays outside application assets. The supplied candidate is approved as the Phase 1 master under O4 but is not yet wired into the Experience; the currently published Experience remains as before this execution phase until Step 2a.
 

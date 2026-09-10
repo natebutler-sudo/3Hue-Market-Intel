@@ -1,6 +1,6 @@
 # Confirmed overrides
 
-These are the only three user-approved overrides. They apply wherever the archived originals state a conflicting default, including acceptance checks. Original files remain unchanged.
+These are the only four user-approved overrides. They apply wherever the archived originals state a conflicting default, including acceptance checks. Original files remain unchanged.
 
 | ID | User-approved decision | Application |
 | --- | --- | --- |

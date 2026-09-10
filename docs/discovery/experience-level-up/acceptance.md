@@ -54,17 +54,17 @@ Candidate guardian: Fail. Published guardian: Not run.
 
 Evidence: [reviews/phase-1-candidate-02.md](reviews/phase-1-candidate-02.md), [reviews/phase-1-candidate-01.md](reviews/phase-1-candidate-01.md)
 
-### P1-D05 — Not run
+### P1-D05 — Pass
 
 Source: [1-clean-plate.md, line 27](source/1-clean-plate.md#L27).
 
 - After my OK: every saved file returns 200, each AVIF and WebP copy is 500 KB or less, and the live lobby still shows the old image.
 
-Measured result: User artwork-OK gate is satisfied. Master and responsive variants are prepared; all AVIF/WebP files are below 500 KB and local dimensions are verified. HTTP 200 checks after publication and confirmation that the live lobby still serves the old image remain not run.
+Measured result: User artwork-OK gate is satisfied. The master and responsive variants are prepared, all AVIF/WebP files are below 500 KB, and local dimensions are verified. Every saved asset returns HTTP 200 from the published Site. The loaded page module still references `/three-doors-concept.png`, which also returns HTTP 200, so the old scene remains active until Step 2a.
 
-Candidate guardian: Not run. Published guardian: Not run.
+Candidate guardian: Pass. Published guardian: Pass.
 
-Evidence: [reviews/phase-1-assets.md](reviews/phase-1-assets.md)
+Evidence: [reviews/phase-1-assets.md](reviews/phase-1-assets.md), [reviews/phase-1-assets-live.md](reviews/phase-1-assets-live.md)
 
 ## Phase 2a — 2a-baseline-stage-labels.md
 
