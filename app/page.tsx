@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { logoData } from './logo-data';
 import {
   Activity,
@@ -9,7 +9,8 @@ import {
   BriefcaseBusiness,
   Check,
   ChevronDown,
-  CircleHelp,
+  ChevronLeft,
+  ChevronRight,
   Clock3,
   Database,
   DatabaseZap,
@@ -53,6 +54,15 @@ type FindingWorkflow = {
   saved: boolean;
   tags: string[];
   lastAction?: string;
+};
+type IcpProfile = {
+  id: string;
+  hue: string;
+  name: string;
+  tagline: string;
+  description: string;
+  signal: string;
+  color: 'cyan' | 'orange' | 'navy';
 };
 type AdminTab = 'overview' | 'sources' | 'watchlists' | 'runs';
 type SourceStatus = 'Connected' | 'Partially ready' | 'Connector pending' | 'Manual import' | 'Not connected';
@@ -132,7 +142,7 @@ const viewProfiles: Record<View, ViewProfile> = {
       { id: 'new-findings', label: 'New findings', detail: '+6 since yesterday', tone: 'cyan' },
       { id: 'unreviewed', label: 'Unreviewed', detail: 'Needs evidence review', tone: 'orange' },
       { id: 'coverage', label: 'Evidence coverage', detail: '2 blocked sources', tone: 'cyan' },
-      { id: 'queue', label: 'Research queue', detail: 'Shared briefing items', tone: 'navy' },
+      { id: 'saved', label: 'Saved findings', detail: 'Ready for team review', tone: 'navy' },
     ],
     sections: ['evidence', 'signals', 'coverage', 'content'],
     actions: ['research', 'review', 'tag', 'save', 'brief'],
@@ -213,6 +223,12 @@ const initialResearchRuns: ResearchRun[] = [
   { id: 'run-3', label: 'Next scheduled collection', source: 'All approved watchlists', started: 'In 3h 42m', status: 'Queued', findings: 'Awaiting run' },
 ];
 
+const icpProfiles: IcpProfile[] = [
+  { id: 'provable-vendor', hue: 'HUE 01', name: 'Provable Vendor', tagline: 'Proof creates trust', description: 'AI-native vendors that need customer assurance evidence to win and retain enterprise buyers.', signal: 'AI governance language rising', color: 'cyan' },
+  { id: 'portfolio', hue: 'HUE 02', name: 'Portfolio', tagline: 'Readiness creates timing', description: 'Portfolio companies entering a more formal control environment or preparing for a growth event.', signal: 'Security leadership movement', color: 'orange' },
+  { id: 'regulated-operator', hue: 'HUE 03', name: 'Regulated Operator', tagline: 'Evidence creates confidence', description: 'Operators whose AI use creates pressure around ownership, controls, and customer-facing proof.', signal: 'Buyer questions recurring', color: 'navy' },
+];
+
 function Metric({ label, value, detail, tone = 'cyan' }: { label: string; value: string; detail: string; tone?: 'cyan' | 'orange' | 'navy' }) {
   return <div className="metric-card"><div className={`metric-icon metric-${tone}`}><TrendingUp size={16} /></div><div><p className="eyebrow">{label}</p><p className="metric-value">{value}</p><p className="metric-detail">{detail}</p></div></div>;
 }
@@ -245,10 +261,20 @@ export default function Home() {
   });
   const [workflowByFindingId, setWorkflowByFindingId] = useState(initialWorkflowByFindingId);
   const [briefQueue, setBriefQueue] = useState<string[]>([]);
+  const [activeIcpIndex, setActiveIcpIndex] = useState(0);
+  const [icpPaused, setIcpPaused] = useState(false);
   const [notice, setNotice] = useState('');
 
   const activeProfile = viewProfiles[activeView];
   const visibleWidgets = visibleWidgetsByView[activeView];
+
+  useEffect(() => {
+    if (icpPaused) return;
+    const timer = window.setInterval(() => {
+      setActiveIcpIndex((current) => (current + 1) % icpProfiles.length);
+    }, 6500);
+    return () => window.clearInterval(timer);
+  }, [icpPaused]);
 
   const filteredFindings = useMemo(() => findings.filter((finding) => {
     const searchMatch = !search || `${finding.title} ${finding.summary} ${finding.source}`.toLowerCase().includes(search.toLowerCase());
@@ -277,7 +303,7 @@ export default function Home() {
   const metricValue = (metricId: string) => {
     if (metricId === 'new-findings') return String(filteredFindings.length + 14);
     if (metricId === 'unreviewed') return String(Object.values(workflowByFindingId).filter((item) => item.reviewState === 'Unreviewed').length);
-    if (metricId === 'queue') return String(briefQueue.length);
+    if (metricId === 'saved') return String(Object.values(workflowByFindingId).filter((item) => item.saved).length);
     if (metricId === 'market-shifts') return String(filteredFindings.filter((finding) => finding.category === 'Market shift' || finding.category === 'Competitor').length);
     if (metricId === 'business-impact') return String(filteredFindings.filter((finding) => finding.importance === 'High').length);
     if (metricId === 'confidence') return '86%';
@@ -307,6 +333,9 @@ export default function Home() {
     const alreadyQueued = briefQueue.includes(finding.id);
     setBriefQueue((current) => alreadyQueued ? current : [...current, finding.id]);
     announce(alreadyQueued ? 'This finding is already in your brief queue.' : 'Added to the shared briefing queue.');
+  };
+  const goToIcp = (direction: number) => {
+    setActiveIcpIndex((current) => (current + direction + icpProfiles.length) % icpProfiles.length);
   };
   const selectedWorkflow = selectedFinding ? workflowFor(selectedFinding) : null;
 
@@ -372,7 +401,7 @@ export default function Home() {
           </div>
         </section>
 
-        <aside className="brief-rail" aria-label="Research queue"><div className="rail-header"><div><p className="eyebrow">Research queue</p><h2>Shared briefing</h2></div><span className="rail-code">3HUE-MI</span></div><div className="rail-body">{briefQueue.length > 0 ? briefQueue.map((id) => { const finding = findings.find((item) => item.id === id); return finding ? <button key={id} className="rail-item" onClick={() => setSelectedFinding(finding)}><span className="rail-item-dot" /><span><strong>{finding.title}</strong><small>{finding.category} · ready to brief</small></span><ArrowUpRight size={14} /></button> : null; }) : <div className="rail-empty"><FileText size={27} /><strong>Your brief is empty.</strong><span>Add intelligence cards to build a focused briefing.</span></div>}<div className="rail-divider" /><div className="rail-help"><CircleHelp size={15} /><span>Sources and interpretations stay separate until reviewed.</span></div></div><div className="rail-footer"><button className="primary-button rail-primary" onClick={() => announce(briefQueue.length ? 'Brief draft opened with selected findings.' : 'Add a finding before opening a brief draft.')}>Open brief</button><button className="secondary-button rail-secondary" onClick={() => announce('Brief queue saved to your private workspace.')}>Save queue</button></div></aside>
+        <aside className="icp-rail" aria-label="3HUE ICP rotation"><div className="icp-rail-header"><div><p className="eyebrow">Targeting lens</p><h2>Who we are watching</h2></div><span className="rail-code">3HUE / ICP</span></div><div className="icp-carousel" aria-label="3HUE ICP profiles"><div className="icp-track">{icpProfiles.map((profile, index) => { const offset = (index - activeIcpIndex + icpProfiles.length) % icpProfiles.length; return <button key={profile.id} className={`icp-card icp-card-${profile.color} ${offset === 0 ? 'active' : offset === 1 ? 'next' : 'previous'}`} onClick={() => setActiveIcpIndex(index)} aria-label={`Show ${profile.name} ICP`} aria-pressed={offset === 0}><div className="icp-card-top"><span className="eyebrow">{profile.hue}</span><span className="icp-card-index">{String(index + 1).padStart(2, '0')} / {icpProfiles.length}</span></div><strong>{profile.name}</strong><span className="icp-tagline">{profile.tagline}</span><p>{profile.description}</p><span className="icp-signal"><span className="status-dot" />{profile.signal}</span></button>; })}</div><div className="icp-dots" aria-label="Choose ICP">{icpProfiles.map((profile, index) => <button key={profile.id} className={`icp-dot ${index === activeIcpIndex ? 'active' : ''}`} onClick={() => setActiveIcpIndex(index)} aria-label={`Show ${profile.name}`} />)}</div></div><div className="icp-controls"><span className="icp-rotation-status"><span className={`icp-live-dot ${icpPaused ? 'paused' : ''}`} />{icpPaused ? 'Paused' : 'Auto-rotating'}</span><div><button className="icon-button" aria-label="Previous ICP" onClick={() => goToIcp(-1)}><ChevronLeft size={15} /></button><button className="secondary-button small-button" onClick={() => setIcpPaused((current) => !current)}>{icpPaused ? 'Resume' : 'Pause'}</button><button className="icon-button" aria-label="Next ICP" onClick={() => goToIcp(1)}><ChevronRight size={15} /></button></div></div><div className="icp-rail-footer"><Sparkles size={14} /><span>Rotates through the three 3HUE targeting lenses.</span></div></aside>
       </div>
 
       {selectedFinding && selectedWorkflow && <div className="drawer-backdrop"><aside className="detail-drawer" aria-label="Finding details"><div className="drawer-hero"><div><p className="eyebrow">{selectedFinding.category} · {selectedFinding.segment}</p><h2>{selectedFinding.title}</h2><p className="drawer-code">{selectedFinding.source} · {selectedFinding.collected}</p></div><button className="drawer-close" onClick={() => setSelectedFinding(null)} aria-label="Close finding details"><X size={19} /></button></div><div className="drawer-body"><p className="drawer-summary">{selectedFinding.summary}</p><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Workflow state</p></div><div className="drawer-chips"><span>{selectedWorkflow.reviewState}</span><span>{selectedWorkflow.decisionState}</span>{selectedWorkflow.saved && <span>Saved</span>}{selectedWorkflow.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">What’s included</p></div><ul className="drawer-checklist"><li><Check size={16} />Reported fact and source context</li><li><Check size={16} />Implication for {selectedFinding.segment.toLowerCase()} buyers</li><li><Check size={16} />Recommended marketing response</li><li><Check size={16} />Freshness and confidence markers</li></ul></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Why it matters</p></div><p className="drawer-copy">{selectedFinding.implication}</p></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Market context</p></div><div className="drawer-chips"><span>{selectedFinding.lens}</span><span>{selectedFinding.segment}</span><span>{selectedFinding.importance} priority</span></div></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Evidence</p></div><div className="evidence-card"><ShieldCheck size={17} /><div><strong>{selectedFinding.source}</strong><p>Reported fact and interpretation are separated. Open the original source before publishing.</p><button className="inline-link" onClick={() => announce('Source link is ready for the connected source.')}>View source <ExternalLink size={13} /></button></div></div></div><div className="drawer-section"><div className="drawer-section-heading"><p className="eyebrow">Suggested action</p></div><button className="action-card" onClick={() => announce(`${selectedFinding.action} started.`)}><Sparkles size={16} /><span>{selectedFinding.action}</span><ArrowUpRight size={15} /></button></div><div className="drawer-actions">{hasAction('review') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { reviewState: 'Reviewed' }, 'Finding marked reviewed across all views.')}><Check size={15} /> Mark reviewed</button>}{hasAction('approve') && <button className="primary-button" onClick={() => updateWorkflow(selectedFinding, { decisionState: 'Approved', reviewState: 'Reviewed' }, 'Finding approved for executive view.')}><Check size={15} /> Approve</button>}{hasAction('hold') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { decisionState: 'Held' }, 'Finding held for more evidence.')}><Clock3 size={15} /> Hold</button>}{hasAction('tag') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { tags: [...selectedWorkflow.tags, 'Analyst review'] }, 'Analyst review tag added.')}><Plus size={15} /> Tag</button>}{hasAction('save') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { saved: true }, 'Finding saved to the shared workspace.')}><Check size={15} /> Save</button>}{hasAction('brief') && <button className="primary-button" onClick={() => addToBrief(selectedFinding)}>Add to brief</button>}{hasAction('acknowledge') && <button className="secondary-button" onClick={() => updateWorkflow(selectedFinding, { lastAction: 'Acknowledged by C-suite' }, 'Signal acknowledged for the executive view.')}><Check size={15} /> Acknowledge</button>}</div></div></aside></div>}
